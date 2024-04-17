@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 
-class Vector3D {
+class Factory {
 public:
     
 };

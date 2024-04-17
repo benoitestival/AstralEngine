@@ -1,14 +1,13 @@
 cmake_minimum_required(VERSION 3.25)
 
 set(CMAKE_CXX_STANDARD 20)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BUILD_SFML "Build Engine with sfml" ON)
 
 # Configure Vcpkg
 find_program(VCPKG_EXECUTABLE vcpkg)#find in PATH a vcpkg variable
 get_filename_component(VCPKG_ROOT ${VCPKG_EXECUTABLE} DIRECTORY)
-include(CMakePrintHelpers)
-cmake_print_variables(VCPKG_EXECUTABLE)
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 include(${CMAKE_TOOLCHAIN_FILE})
 
