@@ -1,5 +1,5 @@
 #pragma once
-
+#include <type_traits>
 
 /**
  * Concatenation Macro
@@ -75,3 +75,9 @@
 
 #define VA_ARGS_CODE_EXECUTE(CodeBlock, ...)\
     GET_APPROPRIATE_FOR_EACH(_0,__VA_ARGS__,FOR_EACH_16,FOR_EACH_15,FOR_EACH_14,FOR_EACH_13,FOR_EACH_12,FOR_EACH_11,FOR_EACH_10,FOR_EACH_9,FOR_EACH_8,FOR_EACH_7,FOR_EACH_6,FOR_EACH_5,FOR_EACH_4,FOR_EACH_3,FOR_EACH_2,FOR_EACH_1,FOR_EACH_O)(CodeBlock,__VA_ARGS__)
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+#define IS_POINTER(Variable)\
+    //std::is_pointer<Variable>
+

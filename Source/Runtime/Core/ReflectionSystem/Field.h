@@ -1,5 +1,3 @@
-// ReSharper disable CppRedundantBaseClassAccessSpecifier
-// ReSharper disable CppRedundantAccessSpecifier
 #pragma once
 #include <string>
 #include <vector>
@@ -21,6 +19,8 @@ struct FClass : public FField{
 public:
     FClass();
     FClass(std::string ClassID_, const std::vector<FClass>& Parents);
+
+    std::vector<FClass> GetAllParents(bool recursive = true);
 protected:
     std::vector<FClass> DirectParents;
 };

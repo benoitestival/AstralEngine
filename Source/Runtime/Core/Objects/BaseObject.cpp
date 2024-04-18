@@ -15,6 +15,11 @@ bool ABaseObject::IsA(const FClass& Class) {
     return GetClass() == Class;
 }
 
+bool ABaseObject::IsChildOf(const FClass& Class) {
+    std::vector<FClass> Parents = GetClass().GetAllParents();
+    return std::find(Parents.begin(), Parents.end(), Class) != Parents.end();
+}
+
 void ABaseObject::Destroy() {
     AObjectManager::Get()->DestroyObject(this);
 }

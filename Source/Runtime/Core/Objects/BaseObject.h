@@ -21,6 +21,7 @@ public:
     
     [[nodiscard]] ABaseObject* GetOuter();
     [[nodiscard]] bool IsA(const FClass& Class);
+    [[nodiscard]] bool IsChildOf(const FClass& Class);
     
     void Destroy();
 protected:
