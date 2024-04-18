@@ -11,7 +11,7 @@ get_filename_component(VCPKG_ROOT ${VCPKG_EXECUTABLE} DIRECTORY)
 set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 include(${CMAKE_TOOLCHAIN_FILE})
 
-project(Engine CXX)#project definition + check and initialization of all settings and compilateur suffs
+project(AstralEngine CXX)#project definition + check and initialization of all settings and compilateur suffs
 
 if (BUILD_SFML)
 	find_package(SFML CONFIG REQUIRED COMPONENTS graphics audio system window)

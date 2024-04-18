@@ -2,11 +2,11 @@
 
 #include "../Systems/ObjectManager.h"
 
-UEntity::UEntity() {
+AEntity::AEntity() {
 }
 
-void UEntity::BeginPlay() {
+void AEntity::BeginPlay() {
 }
 
-void UEntity::Tick(float DeltaTime) {
+void AEntity::Tick(float DeltaTime) {
 }

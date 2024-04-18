@@ -1,40 +1,20 @@
 ﻿#include "BaseObject.h"
 
-#include "Systems/ObjectManager.h"
-
-FClass::FClass() : FClass(""){
-}
-
-FClass::FClass(std::string ClassName) : ClassID(ClassName) {
-    
-}
-
-bool FClass::operator==(const FClass& Other) const {
-    return ClassID == Other.ClassID;
-}
-
-bool FClass::operator!=(const FClass& Other) const {
-    return !(*this == Other);
-}
+#include "../Systems/ObjectManager.h"
 
 
 //////////////////////////////////////////////////////////////////////////
-
-UBaseObject::UBaseObject() {
+ABaseObject::ABaseObject() {
 }
 
-UBaseObject* UBaseObject::GetOuter() {
+ABaseObject* ABaseObject::GetOuter() {
     return Outer;
 }
 
-bool UBaseObject::IsA(const FClass& Class) {
+bool ABaseObject::IsA(const FClass& Class) {
     return GetClass() == Class;
 }
 
-void UBaseObject::Test(UBaseObject* Object) {
-    
-}
-
-void UBaseObject::Destroy() {
-    UObjectManager::Get()->DestroyObject(this);
+void ABaseObject::Destroy() {
+    AObjectManager::Get()->DestroyObject(this);
 }

@@ -1,5 +1,5 @@
 {
-    "name": "spark",
+    "name": "astralengine",
     "description": "Engine",
     "version-string": "0.1.0",
     "dependencies": [

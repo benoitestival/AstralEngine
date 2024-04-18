@@ -1,22 +1,22 @@
 ﻿#include "ObjectManager.h"
 
-UObjectManager* UObjectManager::ObjectManager = nullptr;
+AObjectManager* AObjectManager::ObjectManager = nullptr;
 
-UObjectManager::UObjectManager() {
+AObjectManager::AObjectManager() {
 }
 
-UObjectManager::~UObjectManager() {
+AObjectManager::~AObjectManager() {
     Clear();
 }
 
-UObjectManager* UObjectManager::Get() {
+AObjectManager* AObjectManager::Get() {
     if (ObjectManager == nullptr) {
-        ObjectManager = new UObjectManager();
+        ObjectManager = new AObjectManager();
     }
     return ObjectManager;
 }
 
-bool UObjectManager::DestroyObject(UBaseObject* TargetObject) {
+bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
     bool SuccessfullyDestroy = false;
 
     auto Iterator = std::find(ObjectRegistry.begin(), ObjectRegistry.end(), TargetObject);
@@ -31,6 +31,6 @@ bool UObjectManager::DestroyObject(UBaseObject* TargetObject) {
     return SuccessfullyDestroy;
 }
 
-void UObjectManager::Clear() {
+void AObjectManager::Clear() {
     ObjectRegistry.clear();
 }

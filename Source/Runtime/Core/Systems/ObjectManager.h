@@ -1,34 +1,35 @@
 ﻿#pragma once
 #include <vector>
 
-#include "../BaseObject.h"
+#include "../Objects/BaseObject.h"
 
-class UObjectManager : public UBaseObject {
+
+class AObjectManager : public ABaseObject {
 public:
-    DECLARE_RTTI(UObjectManager)
+    DECLARE_RTTI(UObjectManager, ABaseObject)
 
 private:
-    UObjectManager();
-    static UObjectManager* ObjectManager;
+    AObjectManager();
+    static AObjectManager* ObjectManager;
 public:
 
-    ~UObjectManager() override;
-    static UObjectManager* Get();
+    ~AObjectManager() override;
+    static AObjectManager* Get();
     
-    template<class T = UBaseObject>
-    [[nodiscard]] T* InstanciateNewObject(UBaseObject* ParentObject) {
+    template<class T = ABaseObject>
+    [[nodiscard]] T* InstanciateNewObject(ABaseObject* ParentObject) {
         T* NewObject = new T(ParentObject == nullptr ? RootObject : ParentObject);
         ObjectRegistry.push_back(NewObject);
         return NewObject;
     }
 
-    bool DestroyObject(UBaseObject* TargetObject);
+    bool DestroyObject(ABaseObject* TargetObject);
 
     void Clear();
 private:
 
-    UBaseObject* RootObject = nullptr;
-    std::vector<UBaseObject*> ObjectRegistry;
+    ABaseObject* RootObject = nullptr;
+    std::vector<ABaseObject*> ObjectRegistry;
     
 };
 

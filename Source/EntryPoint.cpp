@@ -1,25 +1,23 @@
 
-#include "Runtime/Maths/Vector3D.h"
 #include <SFML/Graphics.hpp>
 #include <filesystem>
 #include <iostream>
 
-#include "Runtime/Utils/FilerHelpers.h"
-//#include <SFML/System/>
+#include "Runtime/Core/Entities/Entity.h"
 
 int main(int argc, char* argv[]){
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
-
+   
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event))
         {
-            
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
+         
+         if (event.type == sf::Event::Closed) {
+             window.close();
+         }
         }
         // std::filesystem::path OffsetPath = "../../";
         // std::filesystem::path Path = std::filesystem::current_path();
@@ -32,11 +30,10 @@ int main(int argc, char* argv[]){
         // std::cout << test2;
 
         //std::cout << FilerHelpers::GetProjectDirectoryAsString();
-        
+
         window.clear();
         window.draw(shape);
         window.display();
     }
-
     return 0;
-}
+ }

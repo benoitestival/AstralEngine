@@ -1,16 +1,24 @@
 ﻿#pragma once
-#include "../BaseObject.h"
+#include "../Objects/BaseObject.h"
 
 /**
  * Base Class for all game entities
  */
-class UEntity : public UBaseObject{
+class AEntity : public ABaseObject {
 public:
-    DECLARE_RTTI(Entity)
+    DECLARE_RTTI(AEntity, ABaseObject)
 
-    UEntity();
-    DECLARE_FACTORY_CONSTRUCTOR(UEntity)
+    AEntity();
+    DECLARE_FACTORY_CONSTRUCTOR(AEntity)
 
     virtual void BeginPlay();
     virtual void Tick(float DeltaTime);
+};
+
+class ATest : public AEntity {
+public:
+    DECLARE_RTTI(ATest, AEntity)
+
+    ATest(){};
+   // DECLARE_FACTORY_CONSTRUCTOR(AEntity)
 };
