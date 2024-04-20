@@ -23,3 +23,9 @@ bool ABaseObject::IsChildOf(const FClass& Class) {
 void ABaseObject::Destroy() {
     AObjectManager::Get()->DestroyObject(this);
 }
+
+void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
+    if (Outer == nullptr) {
+        Outer = ObjectOuter;
+    }
+}

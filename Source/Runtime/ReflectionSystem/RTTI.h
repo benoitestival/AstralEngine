@@ -13,8 +13,8 @@ public:
     public RTTI
 
 #define INTERNAL_GET_PARENT_CLASS(ClassID)\
-    ClassID::GetStaticClass(),
+    ClassID::StaticClass()
 
 #define DECLARE_RTTI(ClassID, ...)\
     [[nodiscard]] virtual FClass GetClass() override {return FClass(#ClassID, {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});};\
-    [[nodiscard]] static FClass GetStaticClass() {return FClass(#ClassID, {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});};
+    [[nodiscard]] static FClass StaticClass() {return FClass(#ClassID, {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});};

@@ -3,7 +3,9 @@
 #include <filesystem>
 #include <iostream>
 
+#include "Runtime/Core/Engine/Engine.h"
 #include "Runtime/Core/Entities/Entity.h"
+#include "Runtime/Core/Systems/ObjectManager.h"
 
 int main(int argc, char* argv[]){
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
@@ -19,6 +21,12 @@ int main(int argc, char* argv[]){
              window.close();
          }
         }
+
+        auto object1 = AObjectManager::Get()->InstanciateNewObject<AEntity>(AEntity::StaticClass());
+        auto object2 = AObjectManager::Get()->InstanciateNewObject<AEngine>(AEngine::StaticClass());
+
+        Factory<ABaseObject>* Factory = AObjectManager::Get()->InternFactory;
+        std::cout << "test";
         // std::filesystem::path OffsetPath = "../../";
         // std::filesystem::path Path = std::filesystem::current_path();
         // auto test = Path.parent_path();

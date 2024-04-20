@@ -3,6 +3,7 @@
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
+    InternFactory = new Factory<ABaseObject>();
 }
 
 AObjectManager::~AObjectManager() {
@@ -33,4 +34,5 @@ bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
 
 void AObjectManager::Clear() {
     ObjectRegistry.clear();
+    delete InternFactory;
 }

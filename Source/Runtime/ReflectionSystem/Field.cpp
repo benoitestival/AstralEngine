@@ -22,6 +22,10 @@ FClass::FClass() : FClass("", {}){
 FClass::FClass(std::string ClassID_, const std::vector<FClass>& Parents) : FField(ClassID_), DirectParents(Parents){
 }
 
+std::string FClass::GetClassName() const {
+    return FieldID;
+}
+
 std::vector<FClass> FClass::GetAllParents(bool recursive) {
     std::vector<FClass> Parents = std::vector<FClass>();
     for (auto& Parent : DirectParents) {

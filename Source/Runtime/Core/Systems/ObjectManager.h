@@ -1,26 +1,30 @@
 ﻿#pragma once
 #include <vector>
 
+#include "../../Utils/Factory.h"
 #include "../Objects/BaseObject.h"
 
 
 class AObjectManager : public ABaseObject {
 public:
-    DECLARE_RTTI(UObjectManager, ABaseObject)
-
+    DECLARE_ASTRAL_ENGINE_CLASS(AObjectManager, ABaseObject)
+    
 private:
     AObjectManager();
     static AObjectManager* ObjectManager;
 public:
-
     ~AObjectManager() override;
     static AObjectManager* Get();
-    
+
+    Factory<ABaseObject>* InternFactory;
     template<class T = ABaseObject>
-    [[nodiscard]] T* InstanciateNewObject(ABaseObject* ParentObject) {
-        T* NewObject = new T(ParentObject == nullptr ? RootObject : ParentObject);
+    [[nodiscard]] T* InstanciateNewObject(const FClass& Class, ABaseObject* ParentObject = nullptr) {
+        if (!InternFactory->IsRegistred(Class)) {
+            InternFactory->RegisterNew(Class, new DerivedCreator<ABaseObject, T>());
+        }
+        ABaseObject* NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
         ObjectRegistry.push_back(NewObject);
-        return NewObject;
+        return (T*)NewObject;
     }
 
     bool DestroyObject(ABaseObject* TargetObject);
