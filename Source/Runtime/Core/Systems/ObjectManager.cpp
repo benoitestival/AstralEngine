@@ -1,5 +1,7 @@
 ﻿#include "ObjectManager.h"
 
+#include "../../Maths/Maths.h"
+
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
@@ -8,6 +10,10 @@ AObjectManager::AObjectManager() {
 
 AObjectManager::~AObjectManager() {
     Clear();
+
+    FVector2D A;
+    FVector2D B;
+    A + B;
 }
 
 AObjectManager* AObjectManager::Get() {

@@ -19,19 +19,20 @@ bool FField::operator!=(const FField& Other) const {
 FClass::FClass() : FClass("", {}){
 }
 
-FClass::FClass(std::string ClassID_, const std::vector<FClass>& Parents) : FField(ClassID_), DirectParents(Parents){
+FClass::FClass(std::string ClassID_, const std::vector<FClass*>& Parents) : FField(ClassID_), DirectParents(Parents){
+    
 }
 
 std::string FClass::GetClassName() const {
     return FieldID;
 }
 
-std::vector<FClass> FClass::GetAllParents(bool recursive) {
-    std::vector<FClass> Parents = std::vector<FClass>();
+std::vector<FClass*> FClass::GetAllParents(bool recursive) {
+    std::vector<FClass*> Parents = std::vector<FClass*>();
     for (auto& Parent : DirectParents) {
         Parents.push_back(Parent);
         if (recursive) {
-            std::vector<FClass> TopParents = Parent.GetAllParents(recursive);
+            std::vector<FClass*> TopParents = Parent->GetAllParents(recursive);
             Parents.insert(Parents.end(), TopParents.begin(), TopParents.end());
         }
     }

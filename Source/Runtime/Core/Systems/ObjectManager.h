@@ -15,10 +15,12 @@ private:
 public:
     ~AObjectManager() override;
     static AObjectManager* Get();
-
+    
+private:
     Factory<ABaseObject>* InternFactory;
+public:
     template<class T = ABaseObject>
-    [[nodiscard]] T* InstanciateNewObject(const FClass& Class, ABaseObject* ParentObject = nullptr) {
+    T* InstanciateNewObject(const FClass& Class, ABaseObject* ParentObject = nullptr) {
         if (!InternFactory->IsRegistred(Class)) {
             InternFactory->RegisterNew(Class, new DerivedCreator<ABaseObject, T>());
         }

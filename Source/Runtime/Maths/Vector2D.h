@@ -2,9 +2,6 @@
 #include <valarray>
 
 
-#define DECLARE_CONCRETE_MATH_TYPE(ConcreteName, GenericType)\
-    using ConcreteName = GenericType;
-
 
 template<typename T>
 struct TVector2D {
@@ -67,7 +64,7 @@ struct TVector2D {
         return std::sqrt(std::pow(X, 2) + std::pow(Y, 2));
     };
     
-    float Dot(const TVector2D& Other) {
+    float Dot(const TVector2D& Other) const {
         return X * Other.X + Y * Other.Y;  
     };
     static float Dot(const TVector2D& A, const TVector2D& B) {
@@ -81,5 +78,3 @@ public:
     
 };
 
-DECLARE_CONCRETE_MATH_TYPE(FVector2D, TVector2D<float>)
-DECLARE_CONCRETE_MATH_TYPE(FIntVector2D, TVector2D<int>)

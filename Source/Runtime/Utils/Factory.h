@@ -30,17 +30,17 @@ public:
         Clear();
     };
     
-    void RegisterNew(const FClass& ObjectClass, Creator<BaseClass>* FactoryCreator){
+    void RegisterNew(const FClass ObjectClass, Creator<BaseClass>* FactoryCreator){
         if (!FactoryConstructors.contains(ObjectClass)) {
             FactoryConstructors.insert(std::make_pair(ObjectClass, FactoryCreator));
         }
     };
 
-    bool IsRegistred(const FClass& ObjectClass) {
+    bool IsRegistred(const FClass ObjectClass) {
         return FactoryConstructors.contains(ObjectClass);  
     };
     
-    BaseClass* ConstructNew(const FClass& Class, ABaseObject* Outer = nullptr) {
+    BaseClass* ConstructNew(const FClass Class, ABaseObject* Outer = nullptr) {
         BaseClass* Object = nullptr;
         if (FactoryConstructors.contains(Class)) {
             Object = FactoryConstructors.at(Class)->Create(Outer);

@@ -11,8 +11,7 @@ template<typename ...Args>
 class Delegate {
 
 public:
-    Delegate()
-        : CurrentId(0){
+    Delegate() : CurrentId(0){
     }
     ~Delegate() {
         UnbindAll();
