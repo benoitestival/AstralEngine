@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <functional>
-#include <map>
+#include <unordered_map>
+
 #include "../ReflectionSystem/Field.h"
 
 class ABaseObject;
@@ -30,20 +31,20 @@ public:
         Clear();
     };
     
-    void RegisterNew(const FClass ObjectClass, Creator<BaseClass>* FactoryCreator){
-        if (!FactoryConstructors.contains(ObjectClass)) {
-            FactoryConstructors.insert(std::make_pair(ObjectClass, FactoryCreator));
+    void RegisterNew(const FClass* ObjectClass, Creator<BaseClass>* FactoryCreator){
+        if (!IsRegistred(ObjectClass)) {
+            FactoryConstructors.insert(std::make_pair(ObjectClass->GetClassName(), FactoryCreator));
         }
     };
 
-    bool IsRegistred(const FClass ObjectClass) {
-        return FactoryConstructors.contains(ObjectClass);  
+    bool IsRegistred(const FClass* ObjectClass) {
+        return FactoryConstructors.contains(ObjectClass->GetClassName());  
     };
     
-    BaseClass* ConstructNew(const FClass Class, ABaseObject* Outer = nullptr) {
+    BaseClass* ConstructNew(const FClass* Class, ABaseObject* Outer = nullptr) {
         BaseClass* Object = nullptr;
-        if (FactoryConstructors.contains(Class)) {
-            Object = FactoryConstructors.at(Class)->Create(Outer);
+        if (FactoryConstructors.contains(Class->GetClassName())) {
+            Object = FactoryConstructors.at(Class->GetClassName())->Create(Outer);
         }
         return Object;
     };
@@ -53,5 +54,5 @@ public:
     }
     
 public:
-    std::unordered_map<FClass, Creator<BaseClass>*> FactoryConstructors;
+    std::unordered_map<std::string, Creator<BaseClass>*> FactoryConstructors;
 };

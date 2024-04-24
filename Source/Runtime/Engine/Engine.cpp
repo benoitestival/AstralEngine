@@ -11,5 +11,4 @@ void AEngine::Run() {
 }
 
 void AEngine::End() {
-    RTTIRegistry::Clear();
 }

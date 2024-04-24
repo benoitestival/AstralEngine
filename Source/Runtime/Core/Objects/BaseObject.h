@@ -1,10 +1,12 @@
 ﻿// ReSharper disable CppInitializedValueIsAlwaysRewritten
 #pragma once
 #include <string>
+
+#include "../../Configs/ApplicationRegistries.h"
 #include "../../ReflectionSystem/RTTI.h"
 #include "../../Utils/Delegate.h"
-#include "../../Utils/Factory.h"
 #include "../../Utils/Macro.h"
+
 
 
 #define DECLARE_ASTRAL_ENGINE_CLASS(CLASS, ...)\
@@ -19,7 +21,6 @@
 class ABaseObject : RTTI_CLASS {
 public:
     ABaseObject();
-
     [[nodiscard]] virtual FClass* GetClass() override;
     [[nodiscard]] static FClass* StaticClass();
 

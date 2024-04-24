@@ -5,15 +5,9 @@
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
-    InternFactory = new Factory<ABaseObject>();
 }
 
 AObjectManager::~AObjectManager() {
-    Clear();
-
-    FVector2D A;
-    FVector2D B;
-    A + B;
 }
 
 AObjectManager* AObjectManager::Get() {
@@ -38,7 +32,3 @@ bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
     return SuccessfullyDestroy;
 }
 
-void AObjectManager::Clear() {
-    ObjectRegistry.clear();
-    delete InternFactory;
-}

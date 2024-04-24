@@ -4,6 +4,7 @@
 #include <iostream>
 #include <json/json.h>
 
+#include "Application.h"
 #include "Runtime/Configs/ConfigUtils.h"
 #include "Runtime/Core/Systems/ObjectManager.h"
 #include "Runtime/Engine/Engine.h"
@@ -12,6 +13,10 @@
 
 int main(int argc, char* argv[]){
 
+    Application* App = new Application();
+    App->Start();
+    delete App;
+    
     // AParserBase* Parser = AObjectManager::Get()->InstanciateNewObject<AJsonParser>(AJsonParser::StaticClass());
     // Parser->WriteDataToFile("", "", nullptr);
     // FVector2D A;

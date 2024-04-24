@@ -23,6 +23,10 @@ FClass::FClass(std::string ClassID_, const std::vector<FClass*>& Parents) : FFie
     
 }
 
+FClass::~FClass() {
+    DirectParents.clear();
+}
+
 std::string FClass::GetClassName() const {
     return FieldID;
 }

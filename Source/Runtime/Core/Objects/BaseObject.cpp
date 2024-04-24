@@ -12,13 +12,12 @@ FClass* ABaseObject::GetClass() {
 }
 
 FClass* ABaseObject::StaticClass() {
-    FClass* Class = nullptr;
-    if(RTTIRegistry::IsRegistred("ABaseObject")) {
-        Class = RTTIRegistry::GetClass("ABaseObject");
+    FClass* Class = nullptr;\
+    if(ApplicationRegistries::IsClassRegister("ABaseObject")){
+        Class = ApplicationRegistries::GetClass("ABaseObject");
     }
-    else {
+    else{
         Class = new FClass("ABaseObject", {});
-        RTTIRegistry::RegisterClass(Class);
     }
     return Class;
 }

@@ -19,20 +19,13 @@ struct FClass : public FField{
 public:
     FClass();
     FClass(std::string ClassID_, const std::vector<FClass*>& Parents);
-    
+    ~FClass();
     std::string GetClassName() const;
     std::vector<FClass*> GetAllParents(bool recursive = true);
     
 protected:
     std::vector<FClass*> DirectParents;
 };
-
-// template <>
-// struct std::hash<FClass>{
-//     std::size_t operator()(const FClass& Class) const noexcept {
-//         return std::hash<std::string>()(Class.GetClassName());
-//     }
-// };
 
 template <>
 struct std::hash<FClass>{
