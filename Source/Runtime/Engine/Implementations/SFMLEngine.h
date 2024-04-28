@@ -9,6 +9,8 @@ public:
    virtual void Start() override;
    virtual void Run() override;
    virtual void End() override;
+
+   void HandleSFMLEvents();
 private:
    sf::RenderWindow* m_window = nullptr;
 };

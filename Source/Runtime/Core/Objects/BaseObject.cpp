@@ -7,21 +7,6 @@
 ABaseObject::ABaseObject() {
 }
 
-FClass* ABaseObject::GetClass() {
-    return ABaseObject::StaticClass();
-}
-
-FClass* ABaseObject::StaticClass() {
-    FClass* Class = nullptr;\
-    if(ApplicationRegistries::IsClassRegister("ABaseObject")){
-        Class = ApplicationRegistries::GetClass("ABaseObject");
-    }
-    else{
-        Class = new FClass("ABaseObject", {});
-    }
-    return Class;
-}
-
 ABaseObject* ABaseObject::GetOuter() {
     return Outer;
 }

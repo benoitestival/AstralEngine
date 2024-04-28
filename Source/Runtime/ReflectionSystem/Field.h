@@ -22,7 +22,8 @@ public:
     ~FClass();
     std::string GetClassName() const;
     std::vector<FClass*> GetAllParents(bool recursive = true);
-    
+    void AddParent(FClass* ParentClass);
+    void AddParents(const std::vector<FClass*>& ParentsClass);
 protected:
     std::vector<FClass*> DirectParents;
 };

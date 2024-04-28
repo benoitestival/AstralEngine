@@ -25,49 +25,49 @@
 #define FOR_EACH_1(Code, x, ...)\
     Code(x)
 #define FOR_EACH_2(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_1(Code,  __VA_ARGS__);
 #define FOR_EACH_3(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_2(Code, __VA_ARGS__);
 #define FOR_EACH_4(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_3(Code,  __VA_ARGS__);
 #define FOR_EACH_5(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_4(Code,  __VA_ARGS__);
 #define FOR_EACH_6(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_5(Code,  __VA_ARGS__);
 #define FOR_EACH_7(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_6(Code,  __VA_ARGS__);
 #define FOR_EACH_8(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_7(Code,  __VA_ARGS__);
 #define FOR_EACH_9(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_8(Code,  __VA_ARGS__);
 #define FOR_EACH_10(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_9(Code, __VA_ARGS__);
 #define FOR_EACH_11(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_10(Code,  __VA_ARGS__);
 #define FOR_EACH_12(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_11(Code,  __VA_ARGS__);
 #define FOR_EACH_13(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_12(Code,  __VA_ARGS__);
 #define FOR_EACH_14(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_13(Code,  __VA_ARGS__);
 #define FOR_EACH_15(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_14(Code,  __VA_ARGS__);
 #define FOR_EACH_16(Code, x, ...)\
-    ,Code(x)\
+    Code(x)\
     FOR_EACH_15(Code  __VA_ARGS__);
 
 

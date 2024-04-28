@@ -42,3 +42,13 @@ std::vector<FClass*> FClass::GetAllParents(bool recursive) {
     }
     return Parents;
 }
+
+void FClass::AddParent(FClass* ParentClass) {
+    DirectParents.push_back(ParentClass);
+}
+
+void FClass::AddParents(const std::vector<FClass*>& ParentsClass) {
+    for (auto Parent: ParentsClass) {
+        AddParent(Parent);
+    }
+}

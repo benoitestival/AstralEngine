@@ -19,18 +19,20 @@ public:
 #define INTERNAL_GET_PARENT_CLASS(ClassID)\
     ClassID::StaticClass()
 
-#define DECLARE_RTTI(ClassID, ...)\
+#define CREATE_RTTI_BASE_CLASS_INSTANCE(ClassID)\
+    new FClass(#ClassID, {})
+
+#define CREATE_RTTI_CLASS_INSTANCE(ClassID, ...)\
+    new FClass(#ClassID, {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)})
+
+#define DECLARE_RTTI(ClassID)\
     [[nodiscard]] virtual FClass* GetClass() override {\
         return ClassID::StaticClass();\
     };\
     [[nodiscard]] static FClass* StaticClass() {\
         FClass* Class = nullptr;\
-        if(ApplicationRegistries::IsClassRegister(#ClassID)){\
-            Class = ApplicationRegistries::GetClass(#ClassID);\
-        }\
-        else{\
-            /*Should only be called if the App is initialized, TODO Add a check*/\
-            Class = new FClass(#ClassID, {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});\
+        if(AstralEngineStatics::IsClassRegister(#ClassID)){\
+            Class = AstralEngineStatics::GetClass(#ClassID);\
         }\
         return Class;\
     };

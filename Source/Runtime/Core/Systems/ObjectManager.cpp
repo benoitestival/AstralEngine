@@ -1,13 +1,17 @@
 ﻿#include "ObjectManager.h"
 
-#include "../../Maths/Maths.h"
-
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
+    InternFactory = new Factory<ABaseObject>();
+    std::vector<FClass*> RegistredClasses = AstralEngineStatics::GetAllFactoryClasses();
+    for(auto& Class : RegistredClasses) {
+        InternFactory->RegisterNew(Class, AstralEngineStatics::GetCreator(Class));
+    }
 }
 
 AObjectManager::~AObjectManager() {
+    Clear();
 }
 
 AObjectManager* AObjectManager::Get() {
@@ -30,5 +34,10 @@ bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
     }
     
     return SuccessfullyDestroy;
+}
+
+void AObjectManager::Clear() {
+    delete InternFactory;
+    InternFactory = nullptr;
 }
 

@@ -15,16 +15,16 @@ public:
     static AObjectManager* Get();
     
 private:
+    Factory<ABaseObject>* InternFactory;
 public:
     template<class T = ABaseObject>
     T* InstanciateNewObject(const FClass* Class, ABaseObject* ParentObject = nullptr) {
-        ABaseObject* NewObject = ApplicationRegistries::GetCreatorFactory()->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
+        ABaseObject* NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
         ObjectRegistry.push_back(NewObject);
         return (T*)NewObject;
     }
 
     bool DestroyObject(ABaseObject* TargetObject);
-
     void Clear();
 private:
 

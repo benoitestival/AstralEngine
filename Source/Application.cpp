@@ -1,15 +1,23 @@
 #include "Application.h"
-#include "Runtime/Configs/ApplicationRegistries.h"
+#include "Runtime/Configs/AstralEngineStatics.h"
 #include "Runtime/Configs/ConfigUtils.h"
 #include "Runtime/Core/Systems/ObjectManager.h"
 #include "Runtime/Engine/Engine.h"
 
 void Application::Start() {
-    ApplicationRegistries::FillRegistries();
+    AstralEngineStatics::LoadStaticsUtils();
+    
     Engine = AObjectManager::Get()->InstanciateNewObject<AEngine>(ConfigUtils::GetEngineClass(), nullptr);
+    Engine->OnEngineStop.Bind(this, &Application::End);
+    
     Engine->Start();
 }
 
 void Application::End() {
-    ApplicationRegistries::ClearRegistries();
+    delete Engine;
+    Engine = nullptr;
+
+    //TODO delete all managers
+    
+    AstralEngineStatics::ClearStaticsUtils();
 }
