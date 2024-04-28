@@ -27,12 +27,13 @@
 #define LINK_ASTRAL_CLASS_PARENTS(Class, ...)\
     Class::StaticClass()->AddParents({VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});        
 
+class Application;
 struct FClass;
 
 class AstralEngineStatics {
 public:
-    static void LoadStaticsUtils(); 
-    static void ClearStaticsUtils();
+    static void InitAstralEngineStatics(Application* App); 
+    static void ClearAstralEngineStatics();
 
     static void RegisterAstralClasses();
     static void LinkAstralClassesParents();
@@ -43,12 +44,14 @@ public:
     static void RegisterClass(FClass* Class);
     static void RegisterCreator(FClass* Class, Creator<ABaseObject>* Creator);
 
+    static Application* GetApp();
     static FClass* GetClass(const std::string& ClassName);
     static Creator<ABaseObject>* GetCreator(const FClass* Class);
 
     static std::vector<FClass*> GetAllRegistredClasses();
     static std::vector<FClass*> GetAllFactoryClasses();
 private:
+    static Application* AstralEngineApp ;
     static std::unordered_map<std::string, FClass*> ClassRegistry; 
     static std::unordered_map<std::string, Creator<ABaseObject>*> CreatorRegistry;
 };

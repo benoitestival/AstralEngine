@@ -11,6 +11,7 @@ public:
    virtual void End() override;
 
    void HandleSFMLEvents();
+   bool IsSFMLEventInputType(const sf::Event& Event) const;
 private:
    sf::RenderWindow* m_window = nullptr;
 };

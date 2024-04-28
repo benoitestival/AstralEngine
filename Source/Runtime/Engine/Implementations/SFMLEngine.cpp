@@ -1,5 +1,7 @@
 #include "SFMLEngine.h"
 
+#include "../../Core/Systems/Inputs/Implementations/SFMLInputManager.h"
+
 void ASFMLEngine::Start() {
     Super::Start();
 
@@ -12,7 +14,7 @@ void ASFMLEngine::Run() {
 
     sf::CircleShape shape(100.f);
     while (m_window->isOpen()) {
-        HandleSFMLEvents();
+        HandleSFMLEvents();//Handle All Events including Inputs
 
         m_window->clear();
         m_window->draw(shape);
@@ -24,10 +26,23 @@ void ASFMLEngine::Run() {
 void ASFMLEngine::HandleSFMLEvents() {
     sf::Event event;
     while (m_window->pollEvent(event)){
+        //First Handling all cosmetic SFML events
         if (event.type == sf::Event::Closed) {
             m_window->close();
         }
+
+        //Handle the inputs
+        if (IsSFMLEventInputType(event)) {
+            ASFMLInputManager* SFMLInputManager = (ASFMLInputManager*)GetInputManager();
+            if (SFMLInputManager != nullptr) {
+                SFMLInputManager->HandleSFMLInputEvent(event);
+            }
+        }
     }
+}
+
+bool ASFMLEngine::IsSFMLEventInputType(const sf::Event& Event) const {
+    return Event.type == sf::Event::KeyPressed || Event.type == sf::Event::KeyReleased || Event.type == sf::Event::MouseMoved || Event.type == sf::Event::MouseButtonPressed ||Event.type == sf::Event::MouseButtonReleased || Event.type == sf::Event::MouseWheelMoved || Event.type == sf::Event::MouseWheelScrolled;
 }
 
 

@@ -5,7 +5,7 @@
 #include "Runtime/Engine/Engine.h"
 
 void Application::Start() {
-    AstralEngineStatics::LoadStaticsUtils();
+    AstralEngineStatics::InitAstralEngineStatics(this);
     
     Engine = AObjectManager::Get()->InstanciateNewObject<AEngine>(ConfigUtils::GetEngineClass(), nullptr);
     Engine->OnEngineStop.Bind(this, &Application::End);
@@ -19,5 +19,9 @@ void Application::End() {
 
     //TODO delete all managers
     
-    AstralEngineStatics::ClearStaticsUtils();
+    AstralEngineStatics::ClearAstralEngineStatics();
+}
+
+AEngine* Application::GetEngine() {
+    return Engine;
 }
