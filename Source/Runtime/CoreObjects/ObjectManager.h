@@ -1,6 +1,9 @@
 ﻿#pragma once
 #include <vector>
-#include "../Objects/BaseObject.h"
+
+#include "../Utils/Factory.h"
+#include "../Utils/TemplateUtils.h"
+#include "Objects/BaseObject.h"
 
 
 class AObjectManager : public ABaseObject {
@@ -21,7 +24,7 @@ public:
     T* InstanciateNewObject(const FClass* Class, ABaseObject* ParentObject = nullptr) {
         ABaseObject* NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
         ObjectRegistry.push_back(NewObject);
-        return (T*)NewObject;
+        return Cast<T>(NewObject);
     }
 
     bool DestroyObject(ABaseObject* TargetObject);

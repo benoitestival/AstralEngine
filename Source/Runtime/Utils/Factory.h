@@ -1,8 +1,8 @@
 ﻿#pragma once
-#include <functional>
 #include <unordered_map>
 
-#include "../ReflectionSystem/Field.h"
+#include "../Core/ReflectionSystem/Field.h"
+
 
 class ABaseObject;
 
@@ -43,7 +43,7 @@ public:
     
     BaseClass* ConstructNew(const FClass* Class, ABaseObject* Outer = nullptr) {
         BaseClass* Object = nullptr;
-        if (FactoryConstructors.contains(Class->GetClassName())) {
+        if (IsRegistred(Class)) {
             Object = FactoryConstructors.at(Class->GetClassName())->Create(Outer);
         }
         return Object;

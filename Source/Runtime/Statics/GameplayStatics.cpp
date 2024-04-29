@@ -1,7 +1,8 @@
 #include "GameplayStatics.h"
 
-#include "../../../Application.h"
-#include "../../Engine/Engine.h"
+#include "../../Application.h"
+#include "../Engine/Engine.h"
+
 
 AEngine* GameplayStatics::GetEngine() {
     return AstralEngineStatics::GetApp()->GetEngine();

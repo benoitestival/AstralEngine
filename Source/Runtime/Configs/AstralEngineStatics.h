@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../ReflectionSystem/RTTI.h"
+#include "../Core/ReflectionSystem/RTTI.h"
 #include "../Utils/Factory.h"
 
 #define REGISTER_ASTRAL_CLASS(Class)\

@@ -1,6 +1,7 @@
 #include "SFMLEngine.h"
 
-#include "../../Core/Systems/Inputs/Implementations/SFMLInputManager.h"
+#include "../../Inputs/Implementations/SFMLInputManager.h"
+#include "../../Utils/TemplateUtils.h"
 
 void ASFMLEngine::Start() {
     Super::Start();
@@ -33,7 +34,7 @@ void ASFMLEngine::HandleSFMLEvents() {
 
         //Handle the inputs
         if (IsSFMLEventInputType(event)) {
-            ASFMLInputManager* SFMLInputManager = (ASFMLInputManager*)GetInputManager();
+            ASFMLInputManager* SFMLInputManager = Cast<ASFMLInputManager>(GetInputManager());
             if (SFMLInputManager != nullptr) {
                 SFMLInputManager->HandleSFMLInputEvent(event);
             }

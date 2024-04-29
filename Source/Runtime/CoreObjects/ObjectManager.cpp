@@ -1,5 +1,7 @@
 ﻿#include "ObjectManager.h"
 
+#include "../../Engine/Engine.h"
+
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
@@ -39,5 +41,7 @@ bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
 void AObjectManager::Clear() {
     delete InternFactory;
     InternFactory = nullptr;
+
+    ObjectRegistry.clear();
 }
 

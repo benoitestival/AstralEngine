@@ -1,7 +1,8 @@
 #include "Engine.h"
 
 #include "../Configs/ConfigUtils.h"
-#include "../Core/Systems/ObjectManager.h"
+#include "../CoreObjects/ObjectManager.h"
+
 
 void AEngine::Start() {
     InputManager = AObjectManager::Get()->InstanciateNewObject<AInpuManager>(ConfigUtils::GetInputManagerClass());

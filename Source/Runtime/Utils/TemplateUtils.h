@@ -1,6 +1,8 @@
 #pragma once
 #include <type_traits>
 
+class ABaseObject;
+
 template<class TypeA, class TypeB>
 static constexpr bool IsConstructible(){
     return std::is_constructible<TypeA, TypeB>::value;
@@ -31,6 +33,10 @@ static bool IsAstralObject() {
     return false;
 }
 
+template<class T, class S = ABaseObject>
+static T* Cast(S* BaseObject) {
+    return (T*)BaseObject;
+}
 
 // template<class Type>
 // using WriteOsStream = decltype(std::declval<std::ostringstream>() << std::declval<Type>());

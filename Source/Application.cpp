@@ -1,8 +1,8 @@
 #include "Application.h"
 #include "Runtime/Configs/AstralEngineStatics.h"
 #include "Runtime/Configs/ConfigUtils.h"
-#include "Runtime/Core/Systems/ObjectManager.h"
 #include "Runtime/Engine/Engine.h"
+#include "Runtime/CoreObjects/ObjectManager.h"
 
 void Application::Start() {
     AstralEngineStatics::InitAstralEngineStatics(this);

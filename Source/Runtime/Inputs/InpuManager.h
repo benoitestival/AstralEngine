@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Objects/BaseObject.h"
+#include "../CoreObjects/Objects/BaseObject.h"
 
 class AInpuManager : public ABaseObject{
 public:
