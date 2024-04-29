@@ -4,4 +4,7 @@
 class ARenderManager : public ABaseObject{
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(ARenderManager, ABaseObject)
+
+    virtual void Draw();
+    virtual void Clear();
 };

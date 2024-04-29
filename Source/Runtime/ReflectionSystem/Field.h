@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "../Utils/Array.h"
 
 
 struct FField {
@@ -18,14 +19,14 @@ protected:
 struct FClass : public FField{
 public:
     FClass();
-    FClass(std::string ClassID_, const std::vector<FClass*>& Parents);
+    FClass(std::string ClassID_, const TArray<FClass*>& Parents);
     ~FClass();
     std::string GetClassName() const;
-    std::vector<FClass*> GetAllParents(bool recursive = true);
+    TArray<FClass*> GetAllParents(bool recursive = true);
     void AddParent(FClass* ParentClass);
-    void AddParents(const std::vector<FClass*>& ParentsClass);
+    void AddParents(const TArray<FClass*>& ParentsClass);
 protected:
-    std::vector<FClass*> DirectParents;
+    TArray<FClass*> DirectParents;
 };
 
 template <>

@@ -11,3 +11,7 @@ AEngine* GameplayStatics::GetEngine() {
 AInpuManager* GameplayStatics::GetInputManager() {
     return GameplayStatics::GetEngine()->GetInputManager();
 }
+
+ARenderManager* GameplayStatics::GetRenderManager() {
+    return GameplayStatics::GetEngine()->GetRenderManager();
+}

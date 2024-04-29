@@ -2,7 +2,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "../Core/ReflectionSystem/RTTI.h"
+#include "../ReflectionSystem/RTTI.h"
+#include "../Utils/Array.h"
 #include "../Utils/Factory.h"
 
 #define REGISTER_ASTRAL_CLASS(Class)\
@@ -48,8 +49,8 @@ public:
     static FClass* GetClass(const std::string& ClassName);
     static Creator<ABaseObject>* GetCreator(const FClass* Class);
 
-    static std::vector<FClass*> GetAllRegistredClasses();
-    static std::vector<FClass*> GetAllFactoryClasses();
+    static TArray<FClass*> GetAllRegistredClasses();
+    static TArray<FClass*> GetAllFactoryClasses();
 private:
     static Application* AstralEngineApp ;
     static std::unordered_map<std::string, FClass*> ClassRegistry; 

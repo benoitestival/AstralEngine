@@ -1,8 +1,10 @@
 ﻿#pragma once
+#include <SFML/Graphics/Sprite.hpp>
+
 #include "../../CoreObjects/Components/Implementations/PrimitiveComponent.h"
 
-#define REGISTER_DRAWCALL()
-
+#define REGISTER_DRAWCALL(Sprite, ZOrder)\
+    Cast<ASFMLRenderManager>(GameplayStatics::GetRenderManager())->RegisterSpriteDrawcall(Sprite, Transform, ZOrder);
 
 class ASFMLSpriteRenderer : public APrimitiveComponent{
 public:
@@ -11,4 +13,5 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 private:
+    sf::Sprite* Sprite;
 };

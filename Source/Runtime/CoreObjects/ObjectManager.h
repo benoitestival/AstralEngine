@@ -32,7 +32,7 @@ public:
 private:
 
     ABaseObject* RootObject = nullptr;
-    std::vector<ABaseObject*> ObjectRegistry;
+    TArray<ABaseObject*> ObjectRegistry;
     
 };
 

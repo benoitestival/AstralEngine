@@ -46,6 +46,10 @@ bool ASFMLEngine::IsSFMLEventInputType(const sf::Event& Event) const {
     return Event.type == sf::Event::KeyPressed || Event.type == sf::Event::KeyReleased || Event.type == sf::Event::MouseMoved || Event.type == sf::Event::MouseButtonPressed ||Event.type == sf::Event::MouseButtonReleased || Event.type == sf::Event::MouseWheelMoved || Event.type == sf::Event::MouseWheelScrolled;
 }
 
+sf::RenderWindow* ASFMLEngine::GetWindow() {
+    return m_window;
+}
+
 
 void ASFMLEngine::End() {
     

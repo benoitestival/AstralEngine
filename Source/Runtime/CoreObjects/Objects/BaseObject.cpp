@@ -1,6 +1,8 @@
 ﻿// ReSharper disable CppInitializedValueIsAlwaysRewritten
 #include "BaseObject.h"
-#include "../Systems/ObjectManager.h"
+
+#include "../ObjectManager.h"
+#include "../../Utils/Array.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -16,7 +18,7 @@ bool ABaseObject::IsA(const FClass* Class) {
 }
 
 bool ABaseObject::IsChildOf(const FClass* Class) {
-    std::vector<FClass*> Parents = GetClass()->GetAllParents();
+    TArray<FClass*> Parents = GetClass()->GetAllParents();
     return std::find(Parents.begin(), Parents.end(), Class) != Parents.end();
 }
 

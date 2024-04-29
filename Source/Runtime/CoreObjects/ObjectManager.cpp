@@ -1,12 +1,11 @@
 ﻿#include "ObjectManager.h"
 
-#include "../../Engine/Engine.h"
 
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
 AObjectManager::AObjectManager() {
     InternFactory = new Factory<ABaseObject>();
-    std::vector<FClass*> RegistredClasses = AstralEngineStatics::GetAllFactoryClasses();
+    TArray<FClass*> RegistredClasses = AstralEngineStatics::GetAllFactoryClasses();
     for(auto& Class : RegistredClasses) {
         InternFactory->RegisterNew(Class, AstralEngineStatics::GetCreator(Class));
     }

@@ -1,6 +1,5 @@
 ﻿#include "Entity.h"
 
-#include "../Systems/ObjectManager.h"
 
 AEntity::AEntity() {
 }

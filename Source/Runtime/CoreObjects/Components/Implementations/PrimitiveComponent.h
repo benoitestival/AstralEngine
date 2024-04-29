@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include "SceneComponent.h"
 
-class APrimitiveComponent : ASceneComponent {
+class APrimitiveComponent : public ASceneComponent {
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(APrimitiveComponent, ASceneComponent)
 

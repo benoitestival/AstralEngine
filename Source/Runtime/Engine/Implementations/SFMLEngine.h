@@ -12,6 +12,8 @@ public:
 
    void HandleSFMLEvents();
    bool IsSFMLEventInputType(const sf::Event& Event) const;
+
+   sf::RenderWindow* GetWindow();
 private:
    sf::RenderWindow* m_window = nullptr;
 };

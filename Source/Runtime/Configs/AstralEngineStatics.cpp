@@ -124,16 +124,16 @@ Creator<ABaseObject>* AstralEngineStatics::GetCreator(const FClass* Class) {
     return CreatorRegistry.at(Class->GetClassName());
 }
 
-std::vector<FClass*> AstralEngineStatics::GetAllRegistredClasses() {
-    std::vector<FClass*> Classes = {};
+TArray<FClass*> AstralEngineStatics::GetAllRegistredClasses() {
+    TArray<FClass*> Classes = {};
     for(auto KeyVal : ClassRegistry) {
         Classes.push_back(KeyVal.second);
     }
     return Classes;
 }
 
-std::vector<FClass*> AstralEngineStatics::GetAllFactoryClasses() {
-    std::vector<FClass*> Classes = {};
+TArray<FClass*> AstralEngineStatics::GetAllFactoryClasses() {
+    TArray<FClass*> Classes = {};
     for(auto KeyVal : ClassRegistry) {
         if (CreatorRegistry.contains(KeyVal.second->GetClassName())) {
             Classes.push_back(KeyVal.second);
