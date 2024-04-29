@@ -6,4 +6,5 @@ class ConfigUtils {
 public:
     static FClass* GetEngineClass();
     static FClass* GetInputManagerClass();
+    static FClass* GetRenderManagerClass();
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "../CoreObjects/Objects/BaseObject.h"
 
+class ARenderManager;
 class AInpuManager;
 
 class AEngine : public ABaseObject{
@@ -16,7 +17,9 @@ public:
     virtual void End();
 
     AInpuManager* GetInputManager();
+    ARenderManager* GetRenderManager();
 protected:
 
     AInpuManager* InputManager = nullptr;
+    ARenderManager* RenderManager = nullptr;
 };
