@@ -9,4 +9,5 @@ public:
     static AEngine* GetEngine();
     static AInpuManager* GetInputManager();
     static ARenderManager* GetRenderManager();
+    static float GetDeltaTime();
 };

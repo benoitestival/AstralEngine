@@ -8,8 +8,10 @@
 #include "../../../Utils/Array.h"
 
 
+class ASFMLSpriteComponent;
+
 struct FRenderPlan {
-    TArray<sf::Sprite*> RenderPlanSprites;
+    TArray<ASFMLSpriteComponent*> RenderPlanSprites;
 };
 
 class ASFMLRenderManager : public ARenderManager{
@@ -19,8 +21,8 @@ public:
     virtual void Draw() override;
     virtual void Clear() override;
     
-    void RegisterSpriteDrawcall(sf::Sprite* Sprite, const FTransform& SpriteTransform, int SpriteZOrder);
-    bool IsSpriteInCameraView(sf::Sprite* Sprite, const FTransform& SpriteTransform);
+    void RegisterSpriteDrawcall(ASFMLSpriteComponent* SpriteComponent, int SpriteZOrder);
+    bool IsSpriteInCameraView(ASFMLSpriteComponent* SpriteComponent);
 private:
     sf::RenderWindow* GetRenderWindow();
     

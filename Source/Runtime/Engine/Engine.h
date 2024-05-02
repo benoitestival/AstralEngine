@@ -18,8 +18,11 @@ public:
 
     AInpuManager* GetInputManager();
     ARenderManager* GetRenderManager();
+
+    float GetDeltaTime() const;
 protected:
 
+    float DeltaTime = 0.0f;
     AInpuManager* InputManager = nullptr;
     ARenderManager* RenderManager = nullptr;
 };

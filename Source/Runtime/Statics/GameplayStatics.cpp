@@ -15,3 +15,7 @@ AInpuManager* GameplayStatics::GetInputManager() {
 ARenderManager* GameplayStatics::GetRenderManager() {
     return GameplayStatics::GetEngine()->GetRenderManager();
 }
+
+float GameplayStatics::GetDeltaTime() {
+    return GameplayStatics::GetEngine()->GetDeltaTime();
+}

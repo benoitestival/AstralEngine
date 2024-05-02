@@ -15,6 +15,9 @@ void ASFMLEngine::Run() {
 
     sf::CircleShape shape(100.f);
     while (m_window->isOpen()) {
+
+        DeltaTime = 0;
+        
         HandleSFMLEvents();//Handle All Events including Inputs
 
         m_window->clear();

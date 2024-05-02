@@ -23,3 +23,7 @@ AInpuManager* AEngine::GetInputManager() {
 ARenderManager* AEngine::GetRenderManager() {
     return RenderManager;
 }
+
+float AEngine::GetDeltaTime() const {
+    return DeltaTime;
+}
