@@ -1,6 +1,6 @@
 #include "SFMLEngine.h"
 
-#include "../../Inputs/Implementations/SFMLInputManager.h"
+#include "../../Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../../Utils/TemplateUtils.h"
 
 void ASFMLEngine::Start() {

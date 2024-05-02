@@ -6,10 +6,12 @@
 #include "../CoreObjects/Components/Component.h"
 #include "../CoreObjects/Components/Implementations/PrimitiveComponent.h"
 #include "../CoreObjects/Components/Implementations/SceneComponent.h"
-#include "../Inputs/InpuManager.h"
-#include "../Inputs/Implementations/SFMLInputManager.h"
 #include "../Engine/Engine.h"
 #include "../Engine/Implementations/SFMLEngine.h"
+#include "../Inputs/Components/InputComponent.h"
+#include "../Inputs/Components/Implementations/SFMLInputComponent.h"
+#include "../Inputs/Objects/InputAction.h"
+#include "../Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
 #include "../Render/Systems/RenderManager.h"
@@ -55,17 +57,23 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_PURE_CLASS(ABaseBinaryParser)
     REGISTER_ASTRAL_CLASS(AJsonParser)
     //////////////////////
+    REGISTER_ASTRAL_CLASS(AInputAction)
+    
     
     //Entities
     REGISTER_ASTRAL_CLASS(AEntity)
 
     //Components
     REGISTER_ASTRAL_CLASS(AComponent)
+    //////////////////////
     REGISTER_ASTRAL_CLASS(ASceneComponent)
     REGISTER_ASTRAL_CLASS(APrimitiveComponent)
     REGISTER_ASTRAL_CLASS(ASFMLSpriteComponent)
     REGISTER_ASTRAL_CLASS(ASFMLStaticSpriteComponent)
     REGISTER_ASTRAL_CLASS(ASFMLAnimatedSpriteComponent)
+    //////////////////////
+    REGISTER_ASTRAL_CLASS(AInputComponent)
+    //REGISTER_ASTRAL_CLASS(ASFMLInputComponent)
 }
 
 void AstralEngineStatics::LinkAstralClassesParents() {
@@ -86,6 +94,8 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)
     LINK_ASTRAL_CLASS_PARENTS(ABaseBinaryParser, AParserBase)
     LINK_ASTRAL_CLASS_PARENTS(AJsonParser, ABaseStringParser)
+    //////////////////////
+    LINK_ASTRAL_CLASS_PARENTS(AInputAction, ABaseObject)
 
     //Entities
     LINK_ASTRAL_CLASS_PARENTS(AEntity, ABaseObject)
@@ -97,6 +107,9 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ASFMLSpriteComponent, APrimitiveComponent)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLStaticSpriteComponent, ASFMLSpriteComponent)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLAnimatedSpriteComponent, ASFMLSpriteComponent)
+    //////////////////////
+    LINK_ASTRAL_CLASS_PARENTS(AInputComponent, AComponent)
+    //LINK_ASTRAL_CLASS_PARENTS(ASFMLInputComponent, AInputComponent)
 }
 
 bool AstralEngineStatics::IsClassRegister(const std::string& ClassName) {

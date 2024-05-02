@@ -19,15 +19,15 @@ public:
     
     //Handle member functions
     template<typename T>
-    int Bind(T* Instance, void(T::*func)(Args...)) {
+    int Bind(T* Instance, void(T::*Func)(Args...)) {
         return Bind([=](Args... _args) {
-            (Instance->*func)(_args...);
+            (Instance->*Func)(_args...);
         });
     }
 
     //Handle Lambda and static function
-    int Bind(const std::function<void(Args...)>& _slot){
-        CallBacks.insert({ CurrentId++, _slot });
+    int Bind(const std::function<void(Args...)>& Func){
+        CallBacks.insert({ CurrentId++, Func });
         return CurrentId;
     }
 	
@@ -43,6 +43,19 @@ public:
         for (auto& Slot : CallBacks) {
             Slot.second(Params...);
         }
+    }
+
+    static Delegate<Args...> FromLambda(const std::function<void(Args...)>& Lambda) {
+        Delegate<Args...> ResultDelegate = Delegate<Args...>();
+        ResultDelegate.Bind(Lambda);
+        return ResultDelegate;
+    }
+    
+    template<typename T>
+    static Delegate<Args...> FromObject(T* Instance, void(T::*Func)(Args...)) {
+        Delegate<Args...> ResultDelegate = Delegate<Args...>();
+        ResultDelegate.Bind(Instance, Func);
+        return ResultDelegate;
     }
 	
 private:
