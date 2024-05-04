@@ -1,13 +1,13 @@
 #pragma once
 
 class ARenderManager;
-class AInpuManager;
+class AInputManager;
 class AEngine;
 
 class GameplayStatics {
 public:
     static AEngine* GetEngine();
-    static AInpuManager* GetInputManager();
+    static AInputManager* GetInputManager();
     static ARenderManager* GetRenderManager();
     static float GetDeltaTime();
 };

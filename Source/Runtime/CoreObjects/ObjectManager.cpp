@@ -23,17 +23,9 @@ AObjectManager* AObjectManager::Get() {
 }
 
 bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
-    bool SuccessfullyDestroy = false;
-
-    auto Iterator = std::find(ObjectRegistry.begin(), ObjectRegistry.end(), TargetObject);
-    if (Iterator != ObjectRegistry.end()) {
-        ObjectRegistry.erase(Iterator);
-        delete TargetObject;
-        TargetObject = nullptr;
-
-        SuccessfullyDestroy = true;
-    }
-    
+    bool SuccessfullyDestroy = ObjectRegistry.Remove(TargetObject);
+    delete TargetObject;
+    TargetObject = nullptr;
     return SuccessfullyDestroy;
 }
 

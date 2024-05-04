@@ -2,7 +2,7 @@
 #include "../CoreObjects/Objects/BaseObject.h"
 
 class ARenderManager;
-class AInpuManager;
+class AInputManager;
 
 class AEngine : public ABaseObject{
 public:
@@ -16,13 +16,13 @@ public:
     virtual void Run();
     virtual void End();
 
-    AInpuManager* GetInputManager();
+    AInputManager* GetInputManager();
     ARenderManager* GetRenderManager();
 
     float GetDeltaTime() const;
 protected:
 
     float DeltaTime = 0.0f;
-    AInpuManager* InputManager = nullptr;
+    AInputManager* InputManager = nullptr;
     ARenderManager* RenderManager = nullptr;
 };

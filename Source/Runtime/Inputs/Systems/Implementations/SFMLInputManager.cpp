@@ -65,7 +65,7 @@ void ASFMLInputManager::HandleSFMLInputEvent(sf::Event& Event) {
         sf::Keyboard::Key SFMLKey = Event.key.code;
         if (SupportSFMLKeyboardInput(SFMLKey)) {
             EKey AstralEngineKey = SFMLKeyCodeToAstralEngineKeyCode(SFMLKey);
-            HandleKeyboardInput(AstralEngineKey, Event.type == sf::Event::KeyPressed ? EKeyboardKeyState::Pressed : EKeyboardKeyState::Released);
+            HandleKeyInput(AstralEngineKey, Event.type == sf::Event::KeyPressed ? EInputState::Pressed : EInputState::Released);
         }
     }
     else if(IsMouseInput(Event)) {

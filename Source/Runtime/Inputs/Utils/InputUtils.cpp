@@ -53,6 +53,21 @@ TArray<EKey> InputUtils::Keys = {
    EKey::ARROWLEFT,
 };
 
+FInputValue::FInputValue() {
+   ActualType = EInputValueType::EInputBool;
+   InputBool = false;
+}
+
+FInputValue::FInputValue(EInputValueType DesiredType, EInputState InputState) {
+   ActualType = DesiredType;
+   if (DesiredType == EInputValueType::EInputBool) {
+      InputBool = InputState == EInputState::Pressed ? true : false;
+   }
+   else if(DesiredType == EInputValueType::EInputAxis1D) {
+      InputFloat = InputState == EInputState::Pressed ? 1.0f : 0.0f;
+   }
+}
+
 TArray<EKey> InputUtils::GetKeys() {
    return Keys;
 }

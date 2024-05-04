@@ -5,7 +5,7 @@
 
 
 void AEngine::Start() {
-    InputManager = AObjectManager::Get()->InstanciateNewObject<AInpuManager>(ConfigUtils::GetInputManagerClass());
+    InputManager = AObjectManager::Get()->InstanciateNewObject<AInputManager>(ConfigUtils::GetInputManagerClass());
     RenderManager = AObjectManager::Get()->InstanciateNewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass());
 }
 
@@ -16,7 +16,7 @@ void AEngine::End() {
     OnEngineStop.BroadCast();
 }
 
-AInpuManager* AEngine::GetInputManager() {
+AInputManager* AEngine::GetInputManager() {
     return InputManager;
 }
 

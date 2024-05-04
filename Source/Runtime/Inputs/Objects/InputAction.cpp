@@ -1,21 +1,13 @@
 ﻿#include "InputAction.h"
 
-bool AInputAction::ShouldExecuteKeyboardAction(EKey Key, EKeyboardKeyState KeyState) const {
-    return Key == LinkedKey;
+EInputValueType AInputAction::GetDesiredValueType() {
+    return ActionValueType;
 }
 
-void AInputAction::ExecuteKeyboardAction(EKey Key, EKeyboardKeyState KeyState) {
-    if (LinkedKeyState == EKeyboardKeyState::Released && KeyState == EKeyboardKeyState::Pressed) {
-        OnInputStart.BroadCast(Key, this);
-    }
+std::unordered_map<EKey, TArray<AInputTrigger*>> AInputAction::GetTriggerConditions() {
+    return InputTriggerConditions;
+}
 
-    if (KeyState == EKeyboardKeyState::Pressed) {
-        OnInputTrigger.BroadCast(Key, this);
-    }
-
-    if (LinkedKeyState == EKeyboardKeyState::Pressed && KeyState == EKeyboardKeyState::Released) {
-        OnInputStop.BroadCast(Key, this);
-    }
-
-    LinkedKeyState = KeyState;
+std::unordered_map<EKey, TArray<AInputModifier*>> AInputAction::GetInputModifiers() {
+    return InputModifiers;
 }

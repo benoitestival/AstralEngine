@@ -3,9 +3,9 @@
 
 #include "../InpuManager.h"
 
-class ASFMLInputManager : public  AInpuManager{
+class ASFMLInputManager : public  AInputManager{
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(ASFMLInputManager, AInpuManager)
+    DECLARE_ASTRAL_ENGINE_CLASS(ASFMLInputManager, AInputManager)
 
 public:
     virtual void Init() override;

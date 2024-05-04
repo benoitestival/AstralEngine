@@ -8,7 +8,7 @@ AEngine* GameplayStatics::GetEngine() {
     return AstralEngineStatics::GetApp()->GetEngine();
 }
 
-AInpuManager* GameplayStatics::GetInputManager() {
+AInputManager* GameplayStatics::GetInputManager() {
     return GameplayStatics::GetEngine()->GetInputManager();
 }
 

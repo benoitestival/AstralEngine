@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../Objects/BaseObject.h"
 
+class AInputComponent;
 /**
  * Base Class for all game entities
  */
@@ -12,5 +13,9 @@ public:
 
     virtual void BeginPlay();
     virtual void Tick(float DeltaTime);
+
+public:
+
+    AInputComponent* EntityInputComponent;
 };
 

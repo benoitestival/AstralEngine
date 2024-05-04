@@ -9,8 +9,9 @@
 #include "../Engine/Engine.h"
 #include "../Engine/Implementations/SFMLEngine.h"
 #include "../Inputs/Components/InputComponent.h"
-#include "../Inputs/Components/Implementations/SFMLInputComponent.h"
 #include "../Inputs/Objects/InputAction.h"
+#include "../Inputs/Objects/Modifiers/InputModifier.h"
+#include "../Inputs/Objects/Triggers/InputTrigger.h"
 #include "../Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
@@ -41,7 +42,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
     //Managers
     REGISTER_ASTRAL_SINGLETON_CLASS(AObjectManager)
-    REGISTER_ASTRAL_CLASS(AInpuManager)
+    REGISTER_ASTRAL_CLASS(AInputManager)
     REGISTER_ASTRAL_CLASS(ASFMLInputManager)
     REGISTER_ASTRAL_CLASS(ARenderManager)
     REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
@@ -58,6 +59,8 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AJsonParser)
     //////////////////////
     REGISTER_ASTRAL_CLASS(AInputAction)
+    REGISTER_ASTRAL_CLASS(AInputTrigger)
+    REGISTER_ASTRAL_CLASS(AInputModifier)
     
     
     //Entities
@@ -79,8 +82,8 @@ void AstralEngineStatics::RegisterAstralClasses() {
 void AstralEngineStatics::LinkAstralClassesParents() {
     //Managers
     LINK_ASTRAL_CLASS_PARENTS(AObjectManager, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(AInpuManager, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInpuManager)
+    LINK_ASTRAL_CLASS_PARENTS(AInputManager, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(ARenderManager, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
     
@@ -96,6 +99,8 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AJsonParser, ABaseStringParser)
     //////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AInputAction, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(AInputTrigger, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(AInputModifier, ABaseObject)
 
     //Entities
     LINK_ASTRAL_CLASS_PARENTS(AEntity, ABaseObject)

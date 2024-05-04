@@ -1,5 +1,7 @@
 ﻿#pragma once
+#include "../../Maths/Maths.h"
 #include "../../Utils/Array.h"
+
 
 enum class EKey{
     A = 0,
@@ -56,10 +58,32 @@ enum class EKey{
 };
 
 
-enum EKeyboardKeyState {
+enum EInputState {
     Pressed = 0,
-    Released = 0,
+    Released = 1,
 };
+
+
+
+enum EInputValueType {
+    EInputBool = 0,
+    EInputAxis1D = 0,
+};
+struct FInputValue {
+public:
+
+    FInputValue();
+    FInputValue(EInputValueType DesiredType, EInputState InputState);
+    
+    EInputValueType ActualType;
+    union {
+        bool InputBool;
+        float InputFloat;
+    };
+   
+};
+
+
 class InputUtils {
 public:
     static TArray<EKey> GetKeys();
