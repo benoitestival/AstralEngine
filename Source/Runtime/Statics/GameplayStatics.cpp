@@ -16,6 +16,10 @@ ARenderManager* GameplayStatics::GetRenderManager() {
     return GameplayStatics::GetEngine()->GetRenderManager();
 }
 
+ATimerManager* GameplayStatics::GetTimerManager() {
+    return GameplayStatics::GetEngine()->GetTimerManager();
+}
+
 float GameplayStatics::GetDeltaTime() {
     return GameplayStatics::GetEngine()->GetDeltaTime();
 }

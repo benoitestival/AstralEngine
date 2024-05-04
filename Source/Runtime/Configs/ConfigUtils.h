@@ -1,5 +1,5 @@
 #pragma once
-#include "../ReflectionSystem/Field.h"
+#include "../RTTI/Field.h"
 
 //Static class for help and loading configs
 class ConfigUtils {

@@ -10,7 +10,7 @@ public:
    virtual void Run() override;
    virtual void End() override;
 
-   void HandleSFMLEvents();
+   void HandleSFMLInputs();
    bool IsSFMLEventInputType(const sf::Event& Event) const;
 
    sf::RenderWindow* GetWindow();

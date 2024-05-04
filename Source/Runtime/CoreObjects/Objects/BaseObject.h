@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../../Configs/AstralEngineStatics.h"
-#include "../../ReflectionSystem/RTTI.h"
+#include "../../RTTI/RTTI.h"
 #include "../../Utils/Delegate.h"
 #include "../../Utils/Macro.h"
 

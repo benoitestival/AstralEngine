@@ -15,26 +15,24 @@ void ASFMLEngine::Run() {
 
     sf::CircleShape shape(100.f);
     while (m_window->isOpen()) {
-
-        DeltaTime = 0;
         
-        HandleSFMLEvents();//Handle All Events including Inputs
+        float DeltaTime = CalculateDeltaSeconds();//Handling DeltaSeconds --DONE--
+        HandleSFMLInputs();//Handling Inputs --DONE--
 
-        m_window->clear();
-        m_window->draw(shape);
-        m_window->display();
+        //TODO world tick
+        //TODO world rendering
     }
     End();
 }
 
-void ASFMLEngine::HandleSFMLEvents() {
+void ASFMLEngine::HandleSFMLInputs() {
     sf::Event event;
     while (m_window->pollEvent(event)){
         //First Handling all cosmetic SFML events
         if (event.type == sf::Event::Closed) {
             m_window->close();
         }
-
+        
         //Handle the inputs
         if (IsSFMLEventInputType(event)) {
             ASFMLInputManager* SFMLInputManager = Cast<ASFMLInputManager>(GetInputManager());

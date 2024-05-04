@@ -1,6 +1,7 @@
 #pragma once
 #include "../CoreObjects/Objects/BaseObject.h"
 
+class ATimerManager;
 class ARenderManager;
 class AInputManager;
 
@@ -16,13 +17,17 @@ public:
     virtual void Run();
     virtual void End();
 
+    float CalculateDeltaSeconds();
+    
     AInputManager* GetInputManager();
     ARenderManager* GetRenderManager();
+    ATimerManager* GetTimerManager();
 
     float GetDeltaTime() const;
 protected:
 
-    float DeltaTime = 0.0f;
+    float EngineDeltaTime = 0.0f;
     AInputManager* InputManager = nullptr;
     ARenderManager* RenderManager = nullptr;
+    ATimerManager* TimerManager = nullptr;
 };

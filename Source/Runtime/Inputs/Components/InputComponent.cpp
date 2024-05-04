@@ -17,7 +17,11 @@ void AInputComponent::RegisterAction(EKey Key, AInputAction* Action) {
 }
 
 void AInputComponent::UnRegisterActionFromAllKeys(AInputAction* Action) {
-    //TODO being able to get all keys map to an action
+    for (auto Key : GetAllMappedKeys()) {
+        if (RegistredActions.at(Key).Contains(Action)) {
+            RegistredActions.at(Key).Remove(Action);
+        }
+    }
 }
 
 void AInputComponent::UnRegisterActionForKey(AInputAction* Action, EKey Key) {
@@ -75,4 +79,12 @@ void AInputComponent::ExecuteAction(EKey Key, EInputState KeyState) {
 
 AInputManager* AInputComponent::GetInputManager() {
     return GameplayStatics::GetInputManager();
+}
+
+TArray<EKey> AInputComponent::GetAllMappedKeys() {
+    TArray<EKey> Keys = {};
+    for (auto& Pair : RegistredActions) {
+        Keys.push_back(Pair.first);
+    }
+    return Keys;
 }

@@ -8,6 +8,7 @@
 #include "../CoreObjects/Components/Implementations/SceneComponent.h"
 #include "../Engine/Engine.h"
 #include "../Engine/Implementations/SFMLEngine.h"
+#include "../Engine/Time/TimerManager.h"
 #include "../Inputs/Components/InputComponent.h"
 #include "../Inputs/Objects/InputAction.h"
 #include "../Inputs/Objects/Modifiers/InputModifier.h"
@@ -46,6 +47,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ASFMLInputManager)
     REGISTER_ASTRAL_CLASS(ARenderManager)
     REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
+    REGISTER_ASTRAL_CLASS(ATimerManager)
 
     //Engines
     REGISTER_ASTRAL_CLASS(AEngine)
@@ -61,6 +63,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AInputAction)
     REGISTER_ASTRAL_CLASS(AInputTrigger)
     REGISTER_ASTRAL_CLASS(AInputModifier)
+    ////////////////////
     
     
     //Entities
@@ -86,6 +89,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(ARenderManager, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
+    LINK_ASTRAL_CLASS_PARENTS(ATimerManager, ABaseObject)
     
     //Engines
     LINK_ASTRAL_CLASS_PARENTS(AEngine, ABaseObject)

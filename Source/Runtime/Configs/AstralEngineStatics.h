@@ -2,7 +2,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../ReflectionSystem/RTTI.h"
+#include "../RTTI/RTTI.h"
 #include "../Utils/Array.h"
 #include "../Utils/Factory.h"
 

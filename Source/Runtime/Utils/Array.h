@@ -20,6 +20,11 @@ public:
     TArray(const std::initializer_list<T>& List) : std::vector<T>(List){};
     /////////////////////////
 
+    bool Contains(T element) const {
+        auto Iterator = std::find(std::vector<T>::begin(), std::vector<T>::end(), element);
+        return Iterator != std::vector<T>::end();
+    }
+    
     bool Remove(T element) {
         bool SuccessfullyRemove = false;
         auto Iterator = std::find(std::vector<T>::begin(), std::vector<T>::end(), element);
@@ -29,4 +34,6 @@ public:
         }
         return SuccessfullyRemove;
     }
+
+   
 };
