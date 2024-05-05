@@ -1,5 +1,6 @@
 #pragma once
 #include "../CoreObjects/Objects/BaseObject.h"
+#include "../Time/AstralClock.h"
 
 class ATimerManager;
 class ARenderManager;
@@ -14,7 +15,7 @@ public:
     FOnEngineStop OnEngineStop;
     
     virtual void Start();
-    virtual void Run();
+    virtual void Tick(float DeltaTime);
     virtual void End();
 
     float CalculateDeltaSeconds();
@@ -25,7 +26,7 @@ public:
 
     float GetDeltaTime() const;
 protected:
-
+    FAstralClock EngineClock;
     float EngineDeltaTime = 0.0f;
     AInputManager* InputManager = nullptr;
     ARenderManager* RenderManager = nullptr;

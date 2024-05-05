@@ -7,7 +7,9 @@ class ASFMLEngine : public AEngine {
 public:
    DECLARE_ASTRAL_ENGINE_CLASS(ASFMLEngine, AEngine)
    virtual void Start() override;
-   virtual void Run() override;
+   void GuardedLoop();
+   
+   virtual void Tick(float DeltaTime) override;
    virtual void End() override;
 
    void HandleSFMLInputs();

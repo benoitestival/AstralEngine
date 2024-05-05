@@ -2,7 +2,7 @@
 
 #include "../Configs/ConfigUtils.h"
 #include "../CoreObjects/ObjectManager.h"
-#include "Time/TimerManager.h"
+#include "../Time/TimerManager.h"
 
 
 void AEngine::Start() {
@@ -10,17 +10,19 @@ void AEngine::Start() {
     RenderManager = AObjectManager::Get()->InstanciateNewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass());
     
     TimerManager = AObjectManager::Get()->InstanciateNewObject<ATimerManager>(ATimerManager::StaticClass());
+    EngineClock = FAstralClock();
 }
 
-void AEngine::Run() {
+void AEngine::Tick(float DeltaTime) {
 }
+
 
 void AEngine::End() {
     OnEngineStop.BroadCast();
 }
 
 float AEngine::CalculateDeltaSeconds() {
-    EngineDeltaTime = 0.0f;
+    EngineDeltaTime = EngineClock.GetElapsedTime();
     return EngineDeltaTime;
 }
 

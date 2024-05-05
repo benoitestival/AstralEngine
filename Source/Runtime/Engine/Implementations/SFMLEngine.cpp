@@ -7,23 +7,27 @@ void ASFMLEngine::Start() {
     Super::Start();
 
     m_window = new sf::RenderWindow(sf::VideoMode(200, 200), "Astral Engine");
-    Run();
+    GuardedLoop();
 }
 
-void ASFMLEngine::Run() {
-    Super::Run();
-
-    sf::CircleShape shape(100.f);
+void ASFMLEngine::GuardedLoop() {
     while (m_window->isOpen()) {
-        
         float DeltaTime = CalculateDeltaSeconds();//Handling DeltaSeconds --DONE--
-        HandleSFMLInputs();//Handling Inputs --DONE--
-
-        //TODO world tick
-        //TODO world rendering
+        Tick(DeltaTime);
     }
     End();
 }
+
+
+void ASFMLEngine::Tick(float DeltaTime) {
+    AEngine::Tick(DeltaTime);
+
+    HandleSFMLInputs();//Handling Inputs --DONE--
+
+    //TODO tick
+    //TODO rendering
+}
+
 
 void ASFMLEngine::HandleSFMLInputs() {
     sf::Event event;
@@ -50,6 +54,7 @@ bool ASFMLEngine::IsSFMLEventInputType(const sf::Event& Event) const {
 sf::RenderWindow* ASFMLEngine::GetWindow() {
     return m_window;
 }
+
 
 
 void ASFMLEngine::End() {

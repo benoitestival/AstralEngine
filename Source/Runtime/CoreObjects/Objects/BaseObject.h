@@ -28,7 +28,8 @@ public:
     [[nodiscard]] ABaseObject* GetOuter();
     [[nodiscard]] bool IsA(const FClass* Class);
     [[nodiscard]] bool IsChildOf(const FClass* Class);
-    
+
+    virtual void Initialize(){};
     void Destroy();
 
     //Can only work once, you cannot override an outer already set

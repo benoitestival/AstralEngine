@@ -8,7 +8,7 @@
 #include "../CoreObjects/Components/Implementations/SceneComponent.h"
 #include "../Engine/Engine.h"
 #include "../Engine/Implementations/SFMLEngine.h"
-#include "../Engine/Time/TimerManager.h"
+#include "../Time/TimerManager.h"
 #include "../Inputs/Components/InputComponent.h"
 #include "../Inputs/Objects/InputAction.h"
 #include "../Inputs/Objects/Modifiers/InputModifier.h"
