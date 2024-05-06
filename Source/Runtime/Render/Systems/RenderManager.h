@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "../../CoreObjects/Objects/BaseObject.h"
+#include "../../Engine/CoreObjects/Objects/BaseObject.h"
 
 class ARenderManager : public ABaseObject{
 public:

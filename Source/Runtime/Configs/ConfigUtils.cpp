@@ -1,7 +1,7 @@
 #include "ConfigUtils.h"
 
-#include "../Engine/Implementations/SFMLEngine.h"
-#include "../Inputs/Systems/Implementations/SFMLInputManager.h"
+#include "../Engine/Engine/Implementations/SFMLEngine.h"
+#include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 
 

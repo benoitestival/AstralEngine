@@ -1,7 +1,7 @@
 ﻿#include "ASFMLRenderManager.h"
 
-#include "../../../Engine/Implementations/SFMLEngine.h"
-#include "../../../Statics/GameplayStatics.h"
+#include "../../../Engine/Engine/Implementations/SFMLEngine.h"
+#include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../../Utils/TemplateUtils.h"
 #include "../../Components/SFML/SFMLSpriteComponent.h"
 

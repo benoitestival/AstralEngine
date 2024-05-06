@@ -2,11 +2,12 @@
 
 #include <chrono>
 
-FAstralClock::FAstralClock() : Time(std::chrono std::chrono::steady_clock::now()){
+FAstralClock::FAstralClock() : Time(){
 }
 
 void FAstralClock::Restart() {
 }
 
 float FAstralClock::GetElapsedTime() {
+    return 0.0f;
 }

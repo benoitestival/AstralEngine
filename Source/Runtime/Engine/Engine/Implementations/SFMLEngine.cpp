@@ -1,7 +1,6 @@
 #include "SFMLEngine.h"
 
 #include "../../Inputs/Systems/Implementations/SFMLInputManager.h"
-#include "../../Utils/TemplateUtils.h"
 
 void ASFMLEngine::Start() {
     Super::Start();
@@ -12,8 +11,7 @@ void ASFMLEngine::Start() {
 
 void ASFMLEngine::GuardedLoop() {
     while (m_window->isOpen()) {
-        float DeltaTime = CalculateDeltaSeconds();//Handling DeltaSeconds --DONE--
-        Tick(DeltaTime);
+        Tick(CalculateDeltaSeconds());
     }
     End();
 }

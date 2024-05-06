@@ -2,10 +2,11 @@
 #pragma once
 #include <string>
 
-#include "../../Configs/AstralEngineStatics.h"
-#include "../../RTTI/RTTI.h"
-#include "../../Utils/Delegate.h"
-#include "../../Utils/Macro.h"
+#include "../../../Configs/AstralEngineStatics.h"
+#include "../../../Utils/TemplateUtils.h"
+#include "../../../Utils/Delegate.h"
+#include "../../../Utils/Array.h"
+#include "../../../RTTI/RTTI.h"
 
 #define DECLARE_ASTRAL_ENGINE_CLASS_NO_PARENTS(CLASS)\
     DECLARE_RTTI(CLASS)\

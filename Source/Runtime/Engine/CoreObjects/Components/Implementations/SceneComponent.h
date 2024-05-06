@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "../Component.h"
-#include "../../../Maths/Transform.h"
+#include "../../../../Maths/Transform.h"
 
 class ASceneComponent : public AComponent{
 public:

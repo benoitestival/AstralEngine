@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics/Sprite.hpp>
-#include "../../../CoreObjects/Components/Implementations/PrimitiveComponent.h"
-#include "../../../Statics/GameplayStatics.h"
+#include "../../../Engine/CoreObjects/Components/Implementations/PrimitiveComponent.h"
+#include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../Systems/Implementations/ASFMLRenderManager.h"
 #include "../../../Utils/TemplateUtils.h"
 #define REGISTER_DRAWCALL(ZOrder)\

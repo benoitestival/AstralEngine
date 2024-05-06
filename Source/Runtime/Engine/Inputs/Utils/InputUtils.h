@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "../../Maths/Maths.h"
-#include "../../Utils/Array.h"
+#include "../../../Utils/Array.h"
 
 
 enum class EKey{

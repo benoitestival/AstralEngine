@@ -1,7 +1,8 @@
 #pragma once
 #include <sstream>
 
-#include "../CoreObjects/Objects/BaseObject.h"
+#include "../Engine/CoreObjects/Objects/BaseObject.h"
+
 
 struct ParserReadParams {
     //inherit in parser subclass to pass dynamic params to write to file

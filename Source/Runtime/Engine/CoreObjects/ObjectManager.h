@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include <vector>
 
-#include "../Utils/Factory.h"
-#include "../Utils/TemplateUtils.h"
+#include "../../Utils/TemplateUtils.h"
 #include "Objects/BaseObject.h"
 
 
