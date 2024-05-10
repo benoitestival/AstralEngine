@@ -38,6 +38,10 @@ ATimerManager* AEngine::GetTimerManager() {
     return TimerManager;
 }
 
+AWorld* AEngine::GetActiveWorld() {
+    return ActiveWorld;
+}
+
 float AEngine::GetDeltaTime() const {
     return EngineDeltaTime;
 }

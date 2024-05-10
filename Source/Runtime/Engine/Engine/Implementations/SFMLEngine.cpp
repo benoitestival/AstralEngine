@@ -1,6 +1,9 @@
 #include "SFMLEngine.h"
 
+#include "../../../Render/Systems/RenderManager.h"
 #include "../../Inputs/Systems/Implementations/SFMLInputManager.h"
+#include "../../Time/TimerManager.h"
+#include "../../World/World.h"
 
 void ASFMLEngine::Start() {
     Super::Start();
@@ -20,10 +23,12 @@ void ASFMLEngine::GuardedLoop() {
 void ASFMLEngine::Tick(float DeltaTime) {
     AEngine::Tick(DeltaTime);
 
-    HandleSFMLInputs();//Handling Inputs --DONE--
+    HandleSFMLInputs();
+    
+    GetTimerManager()->Tick(DeltaTime);
+    GetActiveWorld()->Tick(DeltaTime);
 
-    //TODO tick
-    //TODO rendering
+    GetRenderManager()->Draw();
 }
 
 

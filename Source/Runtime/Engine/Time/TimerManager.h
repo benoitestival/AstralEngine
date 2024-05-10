@@ -5,7 +5,8 @@
 #include "TimerHandle.h"
 #include "../CoreObjects/Objects/BaseObject.h"
 
-DECLARE_DELEGATE(FTimerDelegate)
+
+
 
 class ATimerManager : public ABaseObject{
 public:
@@ -15,9 +16,10 @@ public:
     void Tick(float DeltaTime);
     virtual void Initialize() override;
 
-    FTimerHandle RegisterHandle(FTimerDelegate& Delegate);
-    void UnregisterHandle(FTimerHandle& Handle);
+    FTimerHandle RegisterTimer(const FTimerDelegate& Delegate, float TimerLenght = 1.0f, bool Loop = false);
+    FTimerHandle RegisterTimerUntilNextTick(const FTimerDelegate& Delegate);
+    void UnregisterTimer(FTimerHandle& Handle);
     
 private:
-    std::unordered_map<FTimerHandle, FTimerDelegate> RegistredTimers;
+    TArray<FTimer> RegistredTimers;
 };

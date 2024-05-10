@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <chrono>
 
 struct FAstralClock {
 public:
@@ -7,5 +8,6 @@ public:
     void Restart();
     float GetElapsedTime();
 private:
-    float Time = 0.0f;
+    std::chrono::steady_clock::time_point ClockStart;
+    std::chrono::steady_clock::time_point ClockLastPoint;
 };

@@ -2,6 +2,7 @@
 #include "../CoreObjects/Objects/BaseObject.h"
 #include "../Time/AstralClock.h"
 
+class AWorld;
 class ATimerManager;
 class ARenderManager;
 class AInputManager;
@@ -24,11 +25,16 @@ public:
     ARenderManager* GetRenderManager();
     ATimerManager* GetTimerManager();
 
+    AWorld* GetActiveWorld();
+
     float GetDeltaTime() const;
 protected:
     FAstralClock EngineClock;
     float EngineDeltaTime = 0.0f;
+    
     AInputManager* InputManager = nullptr;
     ARenderManager* RenderManager = nullptr;
     ATimerManager* TimerManager = nullptr;
+
+    AWorld* ActiveWorld = nullptr;
 };

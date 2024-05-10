@@ -9,6 +9,7 @@
 #include "../Engine/Inputs/Objects/Triggers/InputTrigger.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Engine/Time/TimerManager.h"
+#include "../Engine/World/World.h"
 #include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
 #include "../Render/Systems/RenderManager.h"
@@ -49,6 +50,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ASFMLEngine)
 
     //Objects
+    REGISTER_ASTRAL_CLASS(AWorld)
     ///////////////////////
     REGISTER_ASTRAL_PURE_CLASS(AParserBase)
     REGISTER_ASTRAL_PURE_CLASS(ABaseStringParser)
@@ -91,6 +93,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ASFMLEngine, AEngine)
     
     //Objects
+    LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
     ///////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AParserBase, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)
