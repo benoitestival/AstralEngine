@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "../Serialization/Archive.h"
 #include "../Utils/Array.h"
 
 
@@ -25,6 +26,9 @@ public:
     TArray<FClass*> GetAllParents(bool recursive = true);
     void AddParent(FClass* ParentClass);
     void AddParents(const TArray<FClass*>& ParentsClass);
+
+    friend FStream& operator<<(FArchive& Ar, FClass& Class);
+    friend FStream& operator>>(FArchive& Ar, FClass& Class);
 protected:
     TArray<FClass*> DirectParents;
 };

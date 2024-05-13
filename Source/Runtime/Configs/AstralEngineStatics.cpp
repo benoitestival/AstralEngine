@@ -53,9 +53,9 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AWorld)
     ///////////////////////
     REGISTER_ASTRAL_PURE_CLASS(AParserBase)
-    REGISTER_ASTRAL_PURE_CLASS(ABaseStringParser)
-    REGISTER_ASTRAL_PURE_CLASS(ABaseBinaryParser)
-    REGISTER_ASTRAL_CLASS(AJsonParser)
+    //REGISTER_ASTRAL_PURE_CLASS(ABaseStringParser)
+    //REGISTER_ASTRAL_PURE_CLASS(ABaseBinaryParser)
+    //REGISTER_ASTRAL_CLASS(AJsonParser)
     //////////////////////
     REGISTER_ASTRAL_CLASS(AInputAction)
     REGISTER_ASTRAL_CLASS(AInputTrigger)
@@ -96,9 +96,9 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
     ///////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AParserBase, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)
-    LINK_ASTRAL_CLASS_PARENTS(ABaseBinaryParser, AParserBase)
-    LINK_ASTRAL_CLASS_PARENTS(AJsonParser, ABaseStringParser)
+    //LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)
+    //LINK_ASTRAL_CLASS_PARENTS(ABaseBinaryParser, AParserBase)
+    //LINK_ASTRAL_CLASS_PARENTS(AJsonParser, ABaseStringParser)
     //////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AInputAction, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(AInputTrigger, ABaseObject)

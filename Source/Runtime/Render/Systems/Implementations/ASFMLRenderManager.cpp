@@ -31,6 +31,7 @@ void ASFMLRenderManager::RegisterSpriteDrawcall(ASFMLSpriteComponent* SpriteComp
             RenderPlans[SpriteZOrder].RenderPlanSprites.push_back(SpriteComponent);
         }
     }
+    
 }
 
 bool ASFMLRenderManager::IsSpriteInCameraView(ASFMLSpriteComponent* SpriteComponent) {
