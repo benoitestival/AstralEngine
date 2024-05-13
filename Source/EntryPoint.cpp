@@ -3,6 +3,13 @@
 #include "Runtime/Serialization/Archive.h"
 
 int main(int argc, char* argv[]){
+
+    FArchive Ar;
+    int test;
+    FClass Class;
+    Ar.AddField("test", test);
+    Ar.AddField("test2", Class);
+    
     Application* App = new Application();
     
     App->Start();

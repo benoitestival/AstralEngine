@@ -17,7 +17,7 @@ protected:
     std::string FieldID;
 };
 
-struct FClass : public FField{
+struct FClass : public FField, public ISerializable{
 public:
     FClass();
     FClass(std::string ClassID_, const TArray<FClass*>& Parents);

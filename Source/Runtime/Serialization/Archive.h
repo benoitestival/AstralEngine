@@ -4,11 +4,11 @@
 #include <unordered_map>
 
 
-template <typename T>
-concept SupportSerialization = requires(std::stringstream& Stream, T value) {
-    { Stream << value } -> std::convertible_to<std::ostream&>;
-    { Stream >> value } -> std::convertible_to<std::istream&>;
+class ISerializable {
+public:
+    
 };
+
 
 struct FStream {
 public:
@@ -21,10 +21,25 @@ public:
     std::stringstream InternStream;
 };
 
+template <typename T>
+concept SupportSerialization = requires(std::stringstream& Stream, T value) {
+    { Stream << value } -> std::convertible_to<std::ostream&>;
+    { Stream >> value } -> std::convertible_to<std::istream&>;
+};
+
 struct FArchive {
 public:
     FArchive() = default;
 
+    template<class T = ISerializable>
+    void AddField(const std::string& FieldID, T& FieldValue) {
+        
+    }
+    template<class T = ISerializable>
+    T GetField(const std::string& FieldID) {
+        
+    }
+    
     template<SupportSerialization T>
     void AddField(const std::string& FieldID, T& FieldValue) {
         ArchiveDatas.insert(std::make_pair(FieldID, DataAsString(FieldValue)));
@@ -35,31 +50,20 @@ public:
         return DataFromString<T>(ArchiveDatas.at(FieldID));
     }
 private:
-    template<SupportSerialization T>
-    FArchive& operator<<(T& Value) {
-        FStream Stream = FStream();
-        Stream.InternStream << Value;
-        return *this;
-    }
-
-    template<SupportSerialization T>
-    FArchive& operator>>(T& Value) {
-        DataStream.InternStream >> Value;
-        return *this;
-    }
     template<class T>
     std::string DataAsString(T& FieldValue) {
-        return (*this << FieldValue).str();
+        FStream Stream = FStream();
+        Stream.InternStream << FieldValue;
+        return Stream.ToString();
     }
     template<class T>
     T DataFromString(std::string& FieldValue) {
         T Data = T();
-        *this >> Data;
+        FStream(FieldValue).InternStream >> Data;
         return Data;
     }
 
 private:
-    FStream DataStream;
     std::unordered_map<std::string, std::string> ArchiveDatas;
 };
 
