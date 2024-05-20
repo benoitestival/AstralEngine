@@ -26,6 +26,8 @@ public:
         return Iterator != std::vector<T>::end();
     }
 
+    
+    
     template<class CompareType>
     bool Remove(CompareType element) {
         bool SuccessfullyRemove = false;
@@ -36,6 +38,23 @@ public:
         }
         return SuccessfullyRemove;
     }
+
+    bool Remove(int Index) {
+        bool SuccessfullyRemove = false;
+        if (Index >= LastIndex()) {
+            std::vector<T>::erase(std::vector<T>::begin() + Index);
+            SuccessfullyRemove = true;
+        }
+        return SuccessfullyRemove;
+    }
+
+    int LastIndex() {
+        return std::vector<T>::size() - 1;
+    }
     
+    T& Last() {
+        return *this[LastIndex()];
+    }
+
    
 };

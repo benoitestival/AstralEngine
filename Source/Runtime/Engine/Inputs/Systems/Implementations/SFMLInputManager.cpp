@@ -94,5 +94,12 @@ bool ASFMLInputManager::IsMouseInput(sf::Event& Event) const {
 }
 
 bool ASFMLInputManager::IsKeyPressed(EKey Key) const {
+    // DECLARE_DELEGATE(FTest, std::string);
+    // auto Lambda = [this](std::string String) {
+    //     auto test = AstralEngineKeyCodeToSFMLKeyCode(EKey::A);
+    // };
+    //
+    // FTest::FromLambda(Lambda);
+    
     return sf::Keyboard::isKeyPressed(AstralEngineKeyCodeToSFMLKeyCode(Key));
 }

@@ -9,4 +9,5 @@ void AComponent::Init(AEntity* Owner) {
 }
 
 void AComponent::Tick(float DeltaTime) {
+    
 }
