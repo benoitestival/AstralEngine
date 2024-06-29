@@ -30,3 +30,11 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
         Outer = ObjectOuter;
     }
 }
+
+void ABaseObject::Serialize(FArchive& Archive) {
+    Archive << EArchiveEntryType::AR_KEY << "Class";
+    Archive << EArchiveEntryType::AR_VALUE << GetClass();
+}
+
+void ABaseObject::Deserialize(FArchive& Archive) {
+}

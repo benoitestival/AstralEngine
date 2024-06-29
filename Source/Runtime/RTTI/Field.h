@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-#include "../Serialization/Archive.h"
+#include "../Serialization/Archive/Archive.h"
 #include "../Utils/Array.h"
 
 
@@ -17,7 +17,7 @@ protected:
     std::string FieldID;
 };
 
-struct FClass : public FField, public ISerializable{
+struct FClass : public FField{
 public:
     FClass();
     FClass(std::string ClassID_, const TArray<FClass*>& Parents);
@@ -27,8 +27,8 @@ public:
     void AddParent(FClass* ParentClass);
     void AddParents(const TArray<FClass*>& ParentsClass);
 
-    friend FStream& operator<<(FArchive& Ar, FClass& Class);
-    friend FStream& operator>>(FArchive& Ar, FClass& Class);
+    friend FArchive& operator<<(FArchive& Ar, FClass* Class);
+    friend FArchive& operator>>(FArchive& Ar, FClass& Class);
 protected:
     TArray<FClass*> DirectParents;
 };

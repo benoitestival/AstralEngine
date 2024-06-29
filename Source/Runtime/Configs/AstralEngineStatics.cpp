@@ -14,10 +14,8 @@
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
 #include "../Render/Systems/RenderManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
-#include "../Serialization/ParserBase.h"
-#include "../Serialization/BinaryParsers/BaseBinaryParser.h"
-#include "../Serialization/StringParsers/BaseStringParser.h"
-#include "../Serialization/StringParsers/Implementations/JsonParser.h"
+#include "../Serialization/Parsers/ParserBase.h"
+
 
 Application* AstralEngineStatics::AstralEngineApp = nullptr;
 std::unordered_map<std::string, FClass*> AstralEngineStatics::ClassRegistry = {};

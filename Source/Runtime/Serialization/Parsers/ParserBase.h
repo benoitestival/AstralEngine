@@ -1,7 +1,7 @@
 #pragma once
 #include <sstream>
 
-#include "../Engine/CoreObjects/Objects/BaseObject.h"
+#include "../../Engine/CoreObjects/Objects/BaseObject.h"
 
 
 struct ParserReadParams {

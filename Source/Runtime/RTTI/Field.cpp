@@ -53,10 +53,16 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
     }
 }
 
-FStream& operator<<(FArchive& Ar, FClass& Class) {
-    return Ar.AddField("ClassName", Class.GetClassName()); 
+FArchive& operator<<(FArchive& Ar, FClass* Class) {
+
+    Ar << EArchiveEntryType::AR_START_SUB_ARCHIVE;
+    Ar << EArchiveEntryType::AR_KEY << "ClassName";
+    Ar << EArchiveEntryType::AR_VALUE << Class->GetClassName();
+    Ar << EArchiveEntryType::AR_END_SUB_ARCHIVE;
+
+    return Ar; 
 }
 
-FStream& operator>>(FArchive& Ar, FClass& Class) {
-    return Ar >> Class.FieldID; 
+FArchive& operator>>(FArchive& Ar, FClass& Class) {
+    return Ar; 
 }

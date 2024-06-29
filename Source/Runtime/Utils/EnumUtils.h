@@ -1,10 +1,14 @@
 ﻿#pragma once
+#include "TemplateUtils.h"
+//
+// template <typename T>
+// concept IsBitFlagTestable = IsPrimaryType<T>();
 
 class EnumUtils {
 public:
     template<typename EnumType>
     static bool HasFlag(const EnumType Flag, int& Flags){
-        return (Flags & Flag) != 0; 
+        return (Flags & static_cast<int>(Flag)) != 0; 
     }
 
     template<typename EnumType>
@@ -14,11 +18,11 @@ public:
 
     template<typename EnumType>
     static void AddFlag(const EnumType Flag, int& Flags){
-        Flags = Flags | Flag;
+        Flags = Flags | static_cast<int>(Flag);
     }
 
     template<typename EnumType>
     static void RemoveFlag(const EnumType Flag, int& Flags){
-        Flags = Flags & (~Flag);
+        Flags = Flags & (~static_cast<int>(Flag));
     }
 };

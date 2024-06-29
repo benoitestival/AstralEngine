@@ -29,7 +29,7 @@ enum class ENodeDataType {
 
 
 template <typename T>
-concept SupportStringSerialization = requires(std::stringstream& Stream, T value) {
+concept SupportStringSerialization = requires(std::stringstream& Stream, T& value) {
     { Stream << value } -> std::convertible_to<std::ostream&>;
     { Stream >> value } -> std::convertible_to<std::istream&>;
 };

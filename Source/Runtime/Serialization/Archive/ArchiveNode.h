@@ -13,6 +13,8 @@ struct FArchiveNodeData {
     bool IsRawString();
     bool IsNodeArray();
 
+    void InsertRawData(const std::string& Data);
+    
     void InsertNewNode(FArchiveNode* Node);
     void RemoveNode(FArchiveNode* Node);
     
@@ -37,8 +39,11 @@ public:
     FArchiveNode* AddSubNode();
     void RemoveSubNode(FArchiveNode* Node);
     FArchiveNode* GetRootNode();
-    
+
+    void StartEditNode();
     void FinishEditNode();
+
+    bool IsActiveNode();
     
     template<class T>
     void InsertData(T& Data) {
@@ -49,7 +54,10 @@ public:
         }
         if(ArchiveNodeEntryType == EArchiveEntryType::AR_VALUE) {
             if (NodeData.IsRawString()) {
-                
+                NodeData.InsertRawData(Stream.ToString());
+            }
+            else {
+                //output error
             }
         }
     }

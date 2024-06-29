@@ -1,14 +1,23 @@
+#include <iostream>
+
 #include "Application.h"
+#include "Runtime/Engine/CoreObjects/Objects/BaseObject.h"
 #include "Runtime/RTTI/Field.h"
-#include "Runtime/Serialization/Archive.h"
 
 int main(int argc, char* argv[]){
 
     FArchive Ar;
     int test;
     FClass Class;
-    Ar.AddField("test", test);
-    Ar.AddField("test2", Class);
+    ABaseObject* Test = new ABaseObject();
+    Test->Serialize(Ar);
+    // std::stringstream Stream;
+    // Stream << "test";
+    
+    std::cout << "test";
+    delete Test;
+    Test = nullptr;
+
     
     Application* App = new Application();
     

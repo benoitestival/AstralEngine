@@ -3,7 +3,7 @@
 #include "../../Utils/TemplateUtils.h"
 
 
-FArchiveNodeData::FArchiveNodeData()  : DataType(ENodeDataType::NT_RawString), String(INVALID_STRING), Nodes({}) {
+FArchiveNodeData::FArchiveNodeData()  : DataType(ENodeDataType::NT_RawString), String(INVALID_STRING) {
 }
 
 FArchiveNodeData::~FArchiveNodeData() {
@@ -16,7 +16,10 @@ bool FArchiveNodeData::IsRawString() {
 
 bool FArchiveNodeData::IsNodeArray() {
     return DataType == ENodeDataType::NT_SubNodes;
+}
 
+void FArchiveNodeData::InsertRawData(const std::string& Data) {
+    String = String + Data;
 }
 
 void FArchiveNodeData::InsertNewNode(FArchiveNode* Node) {
@@ -55,7 +58,7 @@ void FArchiveNodeData::SetupDataType() {
         String = "";
     }
     if (DataType == ENodeDataType::NT_SubNodes) {
-        Nodes = {};
+        Nodes.clear();
     }
 }
 
@@ -95,9 +98,18 @@ FArchiveNode* FArchiveNode::GetRootNode() {
     return RootNode;
 }
 
+void FArchiveNode::StartEditNode() {
+    Cast<FArchiveRootNode>(GetRootNode())->SetActiveNode(this);
+    ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;
+}
+
 void FArchiveNode::FinishEditNode() {
     ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;
     Cast<FArchiveRootNode>(GetRootNode())->SetActiveNode(ParentNode);
+}
+
+bool FArchiveNode::IsActiveNode() {
+    return Cast<FArchiveRootNode>(GetRootNode())->GetActiveNode() == this;
 }
 
 FArchiveRootNode::FArchiveRootNode() : ActiveNode(this){
