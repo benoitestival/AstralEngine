@@ -3,7 +3,7 @@
 #include "../../Utils/TemplateUtils.h"
 
 
-FArchiveNodeData::FArchiveNodeData()  : DataType(ENodeDataType::NT_RawString), String(INVALID_STRING) {
+FArchiveNodeData::FArchiveNodeData() : DataType(ENodeDataType::NT_RawString), Data(INVALID_STRING){
 }
 
 FArchiveNodeData::~FArchiveNodeData() {
@@ -18,16 +18,24 @@ bool FArchiveNodeData::IsNodeArray() {
     return DataType == ENodeDataType::NT_SubNodes;
 }
 
-void FArchiveNodeData::InsertRawData(const std::string& Data) {
-    String = String + Data;
+void FArchiveNodeData::InsertRawData(const std::string& RawData) {
+    if (!IsRawString()) {
+        SwitchToNodeData(ENodeDataType::NT_RawString);
+    }
+    Data.RawString = Data.RawString + RawData;
 }
 
 void FArchiveNodeData::InsertNewNode(FArchiveNode* Node) {
-    Nodes.push_back(Node);
+    if (!IsNodeArray()) {
+        SwitchToNodeData(ENodeDataType::NT_SubNodes);
+    }
+    Data.SubNodes.Add(Node);
 }
 
 void FArchiveNodeData::RemoveNode(FArchiveNode* Node) {
-    Nodes.Remove(Node);
+    if (IsNodeArray()) {
+        Data.SubNodes.Remove(Node);
+    }
 }
 
 void FArchiveNodeData::SwitchToNodeData(ENodeDataType NewDataType) {
@@ -42,23 +50,24 @@ void FArchiveNodeData::SwitchToNodeData(ENodeDataType NewDataType) {
 
 void FArchiveNodeData::ResetDataType() {
     if (DataType == ENodeDataType::NT_RawString) {
-        String = "";
+        Data.RawString = "";
     }
     if (DataType == ENodeDataType::NT_SubNodes) {
-        for (auto SubNode : Nodes) {
+        for (auto SubNode : Data.SubNodes) {
             delete SubNode;
             SubNode = nullptr;
         }
-        Nodes.clear();
+        Data.SubNodes.Clear();
+        Data.SubNodes = {};
     }
 }
 
 void FArchiveNodeData::SetupDataType() {
     if (DataType == ENodeDataType::NT_RawString) {
-        String = "";
+        Data.RawString = "";
     }
     if (DataType == ENodeDataType::NT_SubNodes) {
-        Nodes.clear();
+        Data.SubNodes = {};
     }
 }
 

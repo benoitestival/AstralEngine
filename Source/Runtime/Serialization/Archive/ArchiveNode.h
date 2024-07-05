@@ -5,6 +5,19 @@
 
 struct FArchiveNode;
 
+union NodeData {
+    std::string RawString;
+    TArray<FArchiveNode*> SubNodes;
+    //std::vector<FArchiveNode*> SubNodes;
+
+    NodeData() : RawString(INVALID_STRING) {};
+    NodeData(const std::string& String) : RawString(String) {};
+    //NodeData(const std::vector<FArchiveNode*>& Nodes) : SubNodes(Nodes) {};
+    NodeData(const TArray<FArchiveNode*>& Nodes) : SubNodes(Nodes) {};
+
+    ~NodeData() {};
+};
+
 struct FArchiveNodeData {
 
     FArchiveNodeData();
@@ -13,7 +26,7 @@ struct FArchiveNodeData {
     bool IsRawString();
     bool IsNodeArray();
 
-    void InsertRawData(const std::string& Data);
+    void InsertRawData(const std::string& RawData);
     
     void InsertNewNode(FArchiveNode* Node);
     void RemoveNode(FArchiveNode* Node);
@@ -24,10 +37,7 @@ struct FArchiveNodeData {
     void SetupDataType();
 private:
     ENodeDataType DataType;
-    union {
-        std::string String;
-        TArray<FArchiveNode*> Nodes;
-    };
+    NodeData Data;
 };
 
 struct FArchiveNode {

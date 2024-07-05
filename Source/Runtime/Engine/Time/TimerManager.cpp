@@ -19,12 +19,12 @@ void ATimerManager::Tick(float DeltaTime) {
 
 
 FTimerHandle ATimerManager::RegisterTimer(const FTimerDelegate& Delegate, float TimerLenght, bool Loop) {
-    FTimerHandle TimerHandle = FTimerHandle::GenerateHandle(RegistredTimers.size());
+    FTimerHandle TimerHandle = FTimerHandle::GenerateHandle(RegistredTimers.Lenght());
     TimerHandle.InitialTimerLenght = TimerLenght;
     
     if (!RegistredTimers.Contains(TimerHandle)) {
         FTimer Timer = FTimer(TimerHandle, Delegate, Loop);
-        RegistredTimers.push_back(Timer);
+        RegistredTimers.Add(Timer);
     }
     else {
         TimerHandle = FTimerHandle::Invalid();
@@ -37,6 +37,6 @@ FTimerHandle ATimerManager::RegisterTimerUntilNextTick(const FTimerDelegate& Del
 }
 
 void ATimerManager::UnregisterTimer(FTimerHandle& Handle) {
-    RegistredTimers.Remove(Handle);
+    RegistredTimers.RemoveByKey(Handle);
 }
 

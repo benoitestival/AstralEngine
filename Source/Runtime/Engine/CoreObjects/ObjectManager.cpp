@@ -33,6 +33,6 @@ void AObjectManager::Clear() {
     delete InternFactory;
     InternFactory = nullptr;
 
-    ObjectRegistry.clear();
+    ObjectRegistry.Clear();
 }
 

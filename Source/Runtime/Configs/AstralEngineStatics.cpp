@@ -152,7 +152,7 @@ Creator<ABaseObject>* AstralEngineStatics::GetCreator(const FClass* Class) {
 TArray<FClass*> AstralEngineStatics::GetAllRegistredClasses() {
     TArray<FClass*> Classes = {};
     for(auto KeyVal : ClassRegistry) {
-        Classes.push_back(KeyVal.second);
+        Classes.Add(KeyVal.second);
     }
     return Classes;
 }
@@ -161,7 +161,7 @@ TArray<FClass*> AstralEngineStatics::GetAllFactoryClasses() {
     TArray<FClass*> Classes = {};
     for(auto KeyVal : ClassRegistry) {
         if (CreatorRegistry.contains(KeyVal.second->GetClassName())) {
-            Classes.push_back(KeyVal.second);
+            Classes.Add(KeyVal.second);
         }
     }
     return Classes;

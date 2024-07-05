@@ -22,7 +22,7 @@ public:
     template<class T = ABaseObject>
     T* InstanciateNewObject(const FClass* Class, ABaseObject* ParentObject = nullptr) {
         ABaseObject* NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
-        ObjectRegistry.push_back(NewObject);
+        ObjectRegistry.Add(NewObject);
         return Cast<T>(NewObject);
     }
 

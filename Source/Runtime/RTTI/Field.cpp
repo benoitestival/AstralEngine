@@ -24,7 +24,7 @@ FClass::FClass(std::string ClassID_, const TArray<FClass*>& Parents) : FField(Cl
 }
 
 FClass::~FClass() {
-    DirectParents.clear();
+    DirectParents.Clear();
 }
 
 std::string FClass::GetClassName() const {
@@ -34,17 +34,16 @@ std::string FClass::GetClassName() const {
 TArray<FClass*> FClass::GetAllParents(bool recursive) {
     TArray<FClass*> Parents = TArray<FClass*>();
     for (auto& Parent : DirectParents) {
-        Parents.push_back(Parent);
+        Parents.Add(Parent);
         if (recursive) {
-            TArray<FClass*> TopParents = Parent->GetAllParents(recursive);
-            Parents.insert(Parents.end(), TopParents.begin(), TopParents.end());
+            Parents.Append(Parent->GetAllParents(recursive));
         }
     }
     return Parents;
 }
 
 void FClass::AddParent(FClass* ParentClass) {
-    DirectParents.push_back(ParentClass);
+    DirectParents.Add(ParentClass);
 }
 
 void FClass::AddParents(const TArray<FClass*>& ParentsClass) {

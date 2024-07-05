@@ -10,7 +10,7 @@ void ASFMLRenderManager::Draw() {
 }
 
 void ASFMLRenderManager::Clear() {
-    RenderPlans.clear();
+    RenderPlans.Clear();
     
     sf::RenderWindow* Window = GetRenderWindow();
     Window->clear();
@@ -20,15 +20,15 @@ void ASFMLRenderManager::Clear() {
 
 void ASFMLRenderManager::RegisterSpriteDrawcall(ASFMLSpriteComponent* SpriteComponent, int SpriteZOrder) {
     if (IsSpriteInCameraView(SpriteComponent) && SpriteComponent != nullptr) {
-        if (RenderPlans.size() > SpriteZOrder) {
-            RenderPlans[SpriteZOrder].RenderPlanSprites.push_back(SpriteComponent);
+        if (RenderPlans.Lenght() > SpriteZOrder) {
+            RenderPlans[SpriteZOrder].RenderPlanSprites.Add(SpriteComponent);
         }
         else {
-            const int PlanSizeDifference = SpriteZOrder - (RenderPlans.size() - 1);
+            const int PlanSizeDifference = SpriteZOrder - (RenderPlans.Lenght() - 1);
             for (int PLAN_INDEX = 0; PLAN_INDEX < PlanSizeDifference; PLAN_INDEX++) {
-                RenderPlans.push_back(FRenderPlan());
+                RenderPlans.Add(FRenderPlan());
             }
-            RenderPlans[SpriteZOrder].RenderPlanSprites.push_back(SpriteComponent);
+            RenderPlans[SpriteZOrder].RenderPlanSprites.Add(SpriteComponent);
         }
     }
     

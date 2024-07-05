@@ -8,7 +8,7 @@
 
 void AInputComponent::RegisterAction(EKey Key, AInputAction* Action) {
     if (RegistredActions.contains(Key)) {
-        RegistredActions.at(Key).push_back(Action);
+        RegistredActions.at(Key).Add(Action);
     }
     else {
         TArray<AInputAction*> Actions = {Action};
@@ -84,7 +84,7 @@ AInputManager* AInputComponent::GetInputManager() {
 TArray<EKey> AInputComponent::GetAllMappedKeys() {
     TArray<EKey> Keys = {};
     for (auto& Pair : RegistredActions) {
-        Keys.push_back(Pair.first);
+        Keys.Add(Pair.first);
     }
     return Keys;
 }
