@@ -3,100 +3,15 @@
 #include "../../Utils/TemplateUtils.h"
 
 
-FArchiveNodeData::FArchiveNodeData() : DataType(ENodeDataType::NT_RawString), Data(INVALID_STRING){
+
+FArchiveNode::FArchiveNode() : NodeKey(INVALID_STRING), ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), ParentNode(nullptr), NodeType(ENodeType::NT_NONE){
 }
 
-FArchiveNodeData::~FArchiveNodeData() {
-    ResetDataType();
-}
-
-bool FArchiveNodeData::IsRawString() {
-    return DataType == ENodeDataType::NT_RawString;
-}
-
-bool FArchiveNodeData::IsNodeArray() {
-    return DataType == ENodeDataType::NT_SubNodes;
-}
-
-void FArchiveNodeData::InsertRawData(const std::string& RawData) {
-    if (!IsRawString()) {
-        SwitchToNodeData(ENodeDataType::NT_RawString);
-    }
-    Data.RawString = Data.RawString + RawData;
-}
-
-void FArchiveNodeData::InsertNewNode(FArchiveNode* Node) {
-    if (!IsNodeArray()) {
-        SwitchToNodeData(ENodeDataType::NT_SubNodes);
-    }
-    Data.SubNodes.Add(Node);
-}
-
-void FArchiveNodeData::RemoveNode(FArchiveNode* Node) {
-    if (IsNodeArray()) {
-        Data.SubNodes.Remove(Node);
-    }
-}
-
-void FArchiveNodeData::SwitchToNodeData(ENodeDataType NewDataType) {
-    if (NewDataType != DataType) {
-        ResetDataType();
-
-        DataType = NewDataType;
-
-        SetupDataType();
-    }
-}
-
-void FArchiveNodeData::ResetDataType() {
-    if (DataType == ENodeDataType::NT_RawString) {
-        Data.RawString = "";
-    }
-    if (DataType == ENodeDataType::NT_SubNodes) {
-        for (auto SubNode : Data.SubNodes) {
-            delete SubNode;
-            SubNode = nullptr;
-        }
-        Data.SubNodes.Clear();
-        Data.SubNodes = {};
-    }
-}
-
-void FArchiveNodeData::SetupDataType() {
-    if (DataType == ENodeDataType::NT_RawString) {
-        Data.RawString = "";
-    }
-    if (DataType == ENodeDataType::NT_SubNodes) {
-        Data.SubNodes = {};
-    }
-}
-
-FArchiveNode::FArchiveNode() : ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), NodeKey(INVALID_STRING), NodeData(), ParentNode(nullptr){
-}
-
-FArchiveNode::FArchiveNode(FArchiveNode* Parent) : ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), NodeKey(INVALID_STRING), NodeData(), ParentNode(Parent){
+FArchiveNode::FArchiveNode(FArchiveNode* Parent, ENodeType Type) : NodeKey(INVALID_STRING), ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), ParentNode(Parent), NodeType(Type){
 }
 
 FArchiveNode::~FArchiveNode() {
-    NodeData.ResetDataType();
     ParentNode = nullptr;
-}
-
-FArchiveNode* FArchiveNode::AddSubNode() {
-    if (NodeData.IsRawString()) {
-        NodeData.SwitchToNodeData(ENodeDataType::NT_SubNodes);
-    }
-
-    FArchiveNode* NewSubNode = new FArchiveNode(this);
-    NodeData.InsertNewNode(NewSubNode);
-    
-    return NewSubNode;
-}
-
-void FArchiveNode::RemoveSubNode(FArchiveNode* Node) {
-    if (NodeData.IsNodeArray()) {
-        NodeData.RemoveNode(Node);
-    }
 }
 
 FArchiveNode* FArchiveNode::GetRootNode() {
@@ -121,7 +36,33 @@ bool FArchiveNode::IsActiveNode() {
     return Cast<FArchiveRootNode>(GetRootNode())->GetActiveNode() == this;
 }
 
-FArchiveRootNode::FArchiveRootNode() : ActiveNode(this){
+std::string FArchiveNode::GetNodeKey() const {
+    return NodeKey;
+}
+
+void FArchiveNode::SetArchiveNodeKey(const std::string& NewNodeKey) {
+    NodeKey = NewNodeKey;
+}
+
+EArchiveEntryType FArchiveNode::GetNodeExpectingEntry() const {
+    return ArchiveNodeEntryType;
+}
+
+void FArchiveNode::SetNodeExpectingEntry(EArchiveEntryType NewEntry) {
+    ArchiveNodeEntryType = NewEntry;
+}
+
+ENodeType FArchiveNode::GetNodeType() const {
+    return NodeType;
+}
+
+FArchiveNode* FArchiveNode::GetParentNode() {
+    return ParentNode;
+}
+
+FArchiveRootNode::FArchiveRootNode(){
+   ActiveNode = AddSubNode(ENodeType::NT_LEAF);//If no active node is provided we provid our own
+
 }
 
 FArchiveRootNode::FArchiveRootNode(FArchiveNode* NodeActive) : ActiveNode(NodeActive){
@@ -137,4 +78,65 @@ FArchiveNode* FArchiveRootNode::GetActiveNode() {
 
 void FArchiveRootNode::SetActiveNode(FArchiveNode* NewActiveNode) {
     ActiveNode = NewActiveNode;
+}
+
+FArchiveParentNode::FArchiveParentNode() {
+}
+
+FArchiveParentNode::FArchiveParentNode(FArchiveNode* Parent, ENodeType Type) : FArchiveNode(Parent, Type), SubNodes({}){
+}
+
+FArchiveParentNode::~FArchiveParentNode() {
+    for (auto Node : SubNodes) {
+        delete Node;
+        Node = nullptr;
+    }
+    SubNodes.Clear();
+}
+
+FArchiveNode* FArchiveParentNode::AddSubNode(ENodeType NodeType) {
+    FArchiveNode* NewNode = nullptr;
+    if (NodeType == ENodeType::NT_PARENT) {
+        NewNode = new FArchiveParentNode(this, NodeType);
+    }
+    else if(NodeType == ENodeType::NT_LEAF) {
+        NewNode = new FArchiveLeafNode(this, NodeType);
+    }
+    else {
+        //error
+    }
+    SubNodes.Add(NewNode);
+    return NewNode;
+}
+
+void FArchiveParentNode::RemoveSubNode(FArchiveNode* Node) {
+    SubNodes.Remove(Node);
+    delete Node;
+    Node = nullptr;
+}
+
+FArchiveNode* FArchiveParentNode::SwitchSubNodeToType(FArchiveNode* Node, ENodeType NewNodeType) {
+    FArchiveNode* NewNode = nullptr;
+    if (Node) {
+        if (Node->IsActiveNode()) {
+            Node->FinishEditNode();
+        }
+        std::string NodeKey = Node->GetNodeKey();
+        RemoveSubNode(Node);
+        NewNode = AddSubNode(NewNodeType);
+        NewNode->SetArchiveNodeKey(NodeKey);
+
+        Cast<FArchiveRootNode>(GetRootNode())->SetActiveNode(NewNode);
+    }
+    return NewNode;
+}
+
+
+FArchiveLeafNode::FArchiveLeafNode() {
+}
+
+FArchiveLeafNode::FArchiveLeafNode(FArchiveNode* Parent, ENodeType Type) {
+}
+
+FArchiveLeafNode::~FArchiveLeafNode() {
 }

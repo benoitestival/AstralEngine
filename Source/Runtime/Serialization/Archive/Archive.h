@@ -10,25 +10,20 @@ public:
     FArchive();
     
     FArchive& operator<<(const EArchiveEntryType& EntryType);
-    FArchive& operator<<(const EArchiveEntryTypeOption& EntryTypeOption);
+    //FArchive& operator<<(const EArchiveEntryTypeOption& EntryTypeOption);
     template<SupportStringSerialization T>
     FArchive& operator<<(const T& Value) {
-        if (ArchiveRootNode->GetActiveNode()->ArchiveNodeEntryType != EArchiveEntryType::AR_INVALID) {
-            if (ArchiveRootNode->GetActiveNode()->ArchiveNodeEntryType == EArchiveEntryType::AR_KEY) {
-                ArchiveRootNode->GetActiveNode()->InsertData(Value);
-                ArchiveRootNode->GetActiveNode()->ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;//Clear the archive entry type
+        if (ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() != EArchiveEntryType::AR_INVALID) {
+            if (ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() == EArchiveEntryType::AR_KEY) {
+                ArchiveRootNode->GetActiveNode()->SetArchiveNodeKey(Value);
             }
-            else if(ArchiveRootNode->GetActiveNode()->ArchiveNodeEntryType == EArchiveEntryType::AR_VALUE) {
-                if (EnumUtils::HasFlag(EArchiveFlag::AR_Array,ArchiveFlags)) {
-                    ArchiveRootNode->GetActiveNode()->InsertData(Value);
-                    ArchiveRootNode->GetActiveNode()->InsertData(ARRAY_SEPARATOR);
-                }
-                else {
-                    ArchiveRootNode->GetActiveNode()->InsertData(Value);
-                    ArchiveRootNode->GetActiveNode()->ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;//Clear the archive entry type
+            else if(ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() == EArchiveEntryType::AR_VALUE) {
+                if (ArchiveRootNode->GetActiveNode()->GetNodeType() == ENodeType::NT_LEAF) {
+                    Cast<FArchiveLeafNode>(ArchiveRootNode->GetActiveNode())->InsertDataInNode(Value);
                 }
             }
-            
+            ArchiveRootNode->GetActiveNode()->SetNodeExpectingEntry(EArchiveEntryType::AR_INVALID);//Clear the archive entry type
+
         }
         else {
             //output error

@@ -3,91 +3,73 @@
 #include "../../Utils/Array.h"
 #include "../Utils/SerializationUtils.h"
 
-struct FArchiveNode;
 
-union NodeData {
-    std::string RawString;
-    TArray<FArchiveNode*> SubNodes;
-    //std::vector<FArchiveNode*> SubNodes;
-
-    NodeData() : RawString(INVALID_STRING) {};
-    NodeData(const std::string& String) : RawString(String) {};
-    //NodeData(const std::vector<FArchiveNode*>& Nodes) : SubNodes(Nodes) {};
-    NodeData(const TArray<FArchiveNode*>& Nodes) : SubNodes(Nodes) {};
-
-    ~NodeData() {};
-};
-
-struct FArchiveNodeData {
-
-    FArchiveNodeData();
-    ~FArchiveNodeData();
-    
-    bool IsRawString();
-    bool IsNodeArray();
-
-    void InsertRawData(const std::string& RawData);
-    
-    void InsertNewNode(FArchiveNode* Node);
-    void RemoveNode(FArchiveNode* Node);
-    
-    void SwitchToNodeData(ENodeDataType NewDataType);
-    
-    void ResetDataType();
-    void SetupDataType();
-private:
-    ENodeDataType DataType;
-    NodeData Data;
-};
 
 struct FArchiveNode {
 public:
     FArchiveNode();
-    FArchiveNode(FArchiveNode* Parent);
-    ~FArchiveNode();
-
-    FArchiveNode* AddSubNode();
-    void RemoveSubNode(FArchiveNode* Node);
-    FArchiveNode* GetRootNode();
-
+    FArchiveNode(FArchiveNode* Parent, ENodeType Type);
+    virtual ~FArchiveNode();
+    
     void StartEditNode();
     void FinishEditNode();
 
+    FArchiveNode* GetRootNode();
     bool IsActiveNode();
-    
-    template<class T>
-    void InsertData(T& Data) {
-        FStream Stream = FStream();
-        Stream.Stream() << Data;
-        if (ArchiveNodeEntryType == EArchiveEntryType::AR_KEY) {
-            NodeKey = Stream.ToString();
-        }
-        if(ArchiveNodeEntryType == EArchiveEntryType::AR_VALUE) {
-            if (NodeData.IsRawString()) {
-                NodeData.InsertRawData(Stream.ToString());
-            }
-            else {
-                //output error
-            }
-        }
-    }
-public:
-    EArchiveEntryType ArchiveNodeEntryType;
-    
-    std::string NodeKey;
-    FArchiveNodeData NodeData;
 
+    std::string GetNodeKey() const;
+    void SetArchiveNodeKey(const std::string& NewNodeKey);
+
+    EArchiveEntryType GetNodeExpectingEntry() const;
+    void SetNodeExpectingEntry(EArchiveEntryType NewEntry);
+
+    ENodeType GetNodeType() const;
+    FArchiveNode* GetParentNode();;
 private:
+    std::string NodeKey;
+    EArchiveEntryType ArchiveNodeEntryType;
+
     FArchiveNode* ParentNode;
+    ENodeType NodeType;
 };
 
-struct FArchiveRootNode : FArchiveNode{
+struct FArchiveParentNode : FArchiveNode {
+public:
+    FArchiveParentNode();
+    FArchiveParentNode(FArchiveNode* Parent, ENodeType Type);
+    virtual ~FArchiveParentNode();
+    
+    FArchiveNode* AddSubNode(ENodeType NodeType);
+    void RemoveSubNode(FArchiveNode* Node);
+
+    FArchiveNode* SwitchSubNodeToType(FArchiveNode* Node, ENodeType NewNodeType);
+private:
+    TArray<FArchiveNode*> SubNodes;
+};
+
+struct FArchiveRootNode : FArchiveParentNode{
 public:
     FArchiveRootNode();
     FArchiveRootNode(FArchiveNode* NodeActive);
-    ~FArchiveRootNode();
+    virtual ~FArchiveRootNode();
     FArchiveNode* GetActiveNode();
     void SetActiveNode(FArchiveNode* NewActiveNode);
 private:
     FArchiveNode* ActiveNode;
+};
+
+struct FArchiveLeafNode : FArchiveNode {
+public:
+    FArchiveLeafNode();
+    FArchiveLeafNode(FArchiveNode* Parent, ENodeType Type);
+    virtual ~FArchiveLeafNode();
+
+    template<class T>
+    void InsertDataInNode(T& Data) {
+        FStream Stream = FStream();
+        Stream.Stream() << Data;
+        NodeData = Stream.ToString();
+    }
+private:
+    std::string NodeData;
 };

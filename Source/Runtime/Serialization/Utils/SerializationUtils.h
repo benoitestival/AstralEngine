@@ -3,6 +3,13 @@
 
 #define INVALID_STRING "INVALID"
 
+enum class ENodeType {
+    NT_NONE = 0,
+    NT_ROOT = 1,
+    NT_PARENT = 2,
+    NT_LEAF = 3,
+};
+
 enum class EArchiveEntryType {
     AR_INVALID = 0,
     AR_KEY = 1,

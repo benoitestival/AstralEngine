@@ -13,10 +13,10 @@ public:
     TArray(const std::initializer_list<T>& List) : InternVector(List) {};
 
     ///////COPY CONSTRUCTOR///////
-    TArray(const TArray<T>& Array) : InternVector(Array.InternVector) {};
+    TArray(const TArray<T>& Array) : InternVector(Array.ToSTDVector()) {};
 
     ///////MOVE CONSTRUCTOR///////
-    TArray(TArray<T>&& Array) noexcept : InternVector(std::move(Array.InternVector)) {}
+    TArray(TArray<T>&& Array) noexcept : InternVector(std::move(Array.ToSTDVector())) {}
     
     ///////DESTRUCTOR////////
     ~TArray() {
@@ -26,13 +26,13 @@ public:
     ///////OPERATOR = ///////
     TArray<T>& operator=(const TArray<T>& Array) {
         if (this != &Array) {
-            InternVector = Array.InternVector;
+            InternVector = Array.ToSTDVector();
         }
         return *this;
     }
     TArray<T>& operator=(TArray<T>&& Array) noexcept {
         if (this != &Array) {
-            InternVector = std::move(Array.InternVector);
+            InternVector = std::move(Array.ToSTDVector());
         }
         return *this;
     }
@@ -43,42 +43,42 @@ public:
 
     //////OPERTAOR [] ///////
     T& operator[](size_t index) {
-        return InternVector[index];
+        return ToSTDVector()[index];
     }
 
     const T& operator[](size_t index) const {
-        return InternVector[index];
+        return ToSTDVector()[index];
     }
 
     ///////ITERATORS///////
     auto begin() {
-        return InternVector.begin();
+        return ToSTDVector().begin();
     }
     auto begin() const {
-        return InternVector.begin();
+        return ToSTDVector().begin();
     }
     
     auto end() {
-        return InternVector.end();
+        return ToSTDVector().end();
     }
     auto end() const {
-        return InternVector.end();
+        return ToSTDVector().end();
     }
     
     ////////METHODS////////
     void Add(const T& Element) {
-        return InternVector.push_back(Element);
+        return ToSTDVector().push_back(Element);
     }
 
     void Append(const TArray<T>& Array) {
-        InternVector.insert(end(), Array.begin(), Array.end());
+        ToSTDVector().insert(end(), Array.begin(), Array.end());
     }
     
     bool Remove(const T& element) {
         bool SuccessfullyRemove = false;
         auto Iterator = std::find(begin(), end(), element);
         if (Iterator != end()) {
-            InternVector.erase(Iterator);
+            ToSTDVector().erase(Iterator);
             SuccessfullyRemove = true;
         }
         return SuccessfullyRemove;
@@ -89,7 +89,7 @@ public:
         bool SuccessfullyRemove = false;
         auto Iterator = std::find(begin(), end(), element);
         if (Iterator != end()) {
-            InternVector.erase(Iterator);
+            ToSTDVector().erase(Iterator);
             SuccessfullyRemove = true;
         }
         return SuccessfullyRemove;
@@ -98,14 +98,14 @@ public:
     bool RemoveAt(int Index) {
         bool SuccessfullyRemove = false;
         if (Index >= LastIndex()) {
-            InternVector.erase(begin() + Index);
+            ToSTDVector().erase(begin() + Index);
             SuccessfullyRemove = true;
         }
         return SuccessfullyRemove;
     }
 
     void Clear() {
-        InternVector.clear();
+        ToSTDVector().clear();
     }
     
     template<class CompareType>
@@ -115,7 +115,7 @@ public:
     }
 
     int Lenght() {
-        return InternVector.size();
+        return ToSTDVector().size();
     }
     
     int LastIndex() {
