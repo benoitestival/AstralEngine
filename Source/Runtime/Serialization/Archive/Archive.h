@@ -10,19 +10,18 @@ public:
     FArchive();
     
     FArchive& operator<<(const EArchiveEntryType& EntryType);
-    //FArchive& operator<<(const EArchiveEntryTypeOption& EntryTypeOption);
     template<SupportStringSerialization T>
     FArchive& operator<<(const T& Value) {
-        if (ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() != EArchiveEntryType::AR_INVALID) {
-            if (ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() == EArchiveEntryType::AR_KEY) {
+        if (ArchiveEntryType != EArchiveEntryType::AR_INVALID) {
+            if (ArchiveEntryType == EArchiveEntryType::AR_KEY) {
                 ArchiveRootNode->GetActiveNode()->SetArchiveNodeKey(Value);
             }
-            else if(ArchiveRootNode->GetActiveNode()->GetNodeExpectingEntry() == EArchiveEntryType::AR_VALUE) {
+            else if(ArchiveEntryType == EArchiveEntryType::AR_VALUE) {
                 if (ArchiveRootNode->GetActiveNode()->GetNodeType() == ENodeType::NT_LEAF) {
                     Cast<FArchiveLeafNode>(ArchiveRootNode->GetActiveNode())->InsertDataInNode(Value);
                 }
             }
-            ArchiveRootNode->GetActiveNode()->SetNodeExpectingEntry(EArchiveEntryType::AR_INVALID);//Clear the archive entry type
+            ArchiveEntryType = EArchiveEntryType::AR_INVALID;//Clear the archive entry type
 
         }
         else {
@@ -31,7 +30,22 @@ public:
         return *this;
     }
 
-    //TODO In (>>) operator
+    FArchive& operator>>(const EArchiveEntryType& EntryType);
+    template<SupportStringSerialization T>
+    FArchive& operator>>(const T& Value) {
+        if (ArchiveEntryType != EArchiveEntryType::AR_INVALID) {
+            if (ArchiveEntryType == EArchiveEntryType::AR_KEY) {
+                
+            }
+            else if(ArchiveEntryType == EArchiveEntryType::AR_VALUE) {
+                
+            }
+            ArchiveEntryType = EArchiveEntryType::AR_INVALID;
+        }
+        return *this;
+    }
+
+    std::string ToString();
 private:
     bool IsBasicEntry(EArchiveEntryType EntryType) {
         return EntryType == EArchiveEntryType::AR_KEY || EntryType == EArchiveEntryType::AR_VALUE;
@@ -39,4 +53,7 @@ private:
 private:
     int ArchiveFlags;
     FArchiveRootNode* ArchiveRootNode;
+
+    EArchiveEntryType ArchiveEntryType;
+
 };

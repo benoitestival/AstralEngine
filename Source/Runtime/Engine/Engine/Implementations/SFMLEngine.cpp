@@ -9,12 +9,13 @@ void ASFMLEngine::Start() {
     Super::Start();
 
     m_window = new sf::RenderWindow(sf::VideoMode(200, 200), "Astral Engine");
+    
     GuardedLoop();
 }
 
 void ASFMLEngine::GuardedLoop() {
     while (m_window->isOpen()) {
-        Tick(CalculateDeltaSeconds());
+     Tick(CalculateDeltaSeconds());
     }
     End();
 }

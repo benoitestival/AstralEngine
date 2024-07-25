@@ -4,10 +4,10 @@
 
 
 
-FArchiveNode::FArchiveNode() : NodeKey(INVALID_STRING), ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), ParentNode(nullptr), NodeType(ENodeType::NT_NONE){
+FArchiveNode::FArchiveNode() : NodeKey(INVALID_STRING), ParentNode(nullptr), NodeType(ENodeType::NT_NONE){
 }
 
-FArchiveNode::FArchiveNode(FArchiveNode* Parent, ENodeType Type) : NodeKey(INVALID_STRING), ArchiveNodeEntryType(EArchiveEntryType::AR_INVALID), ParentNode(Parent), NodeType(Type){
+FArchiveNode::FArchiveNode(FArchiveNode* Parent, ENodeType Type) : NodeKey(INVALID_STRING), ParentNode(Parent), NodeType(Type){
 }
 
 FArchiveNode::~FArchiveNode() {
@@ -15,20 +15,25 @@ FArchiveNode::~FArchiveNode() {
 }
 
 FArchiveNode* FArchiveNode::GetRootNode() {
-    FArchiveNode* RootNode = ParentNode;
-    while (RootNode->ParentNode != nullptr) {
-        RootNode = RootNode->ParentNode;
+    FArchiveNode* RootNode = nullptr;
+    if (ParentNode != nullptr) {
+        RootNode = ParentNode;
+        while (RootNode->ParentNode != nullptr) {
+            RootNode = RootNode->ParentNode;
+        }
     }
+    else {
+        RootNode = this;
+    }
+   
     return RootNode;
 }
 
 void FArchiveNode::StartEditNode() {
     Cast<FArchiveRootNode>(GetRootNode())->SetActiveNode(this);
-    ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;
 }
 
 void FArchiveNode::FinishEditNode() {
-    ArchiveNodeEntryType = EArchiveEntryType::AR_INVALID;
     Cast<FArchiveRootNode>(GetRootNode())->SetActiveNode(ParentNode);
 }
 
@@ -44,13 +49,13 @@ void FArchiveNode::SetArchiveNodeKey(const std::string& NewNodeKey) {
     NodeKey = NewNodeKey;
 }
 
-EArchiveEntryType FArchiveNode::GetNodeExpectingEntry() const {
-    return ArchiveNodeEntryType;
-}
-
-void FArchiveNode::SetNodeExpectingEntry(EArchiveEntryType NewEntry) {
-    ArchiveNodeEntryType = NewEntry;
-}
+// EArchiveEntryType FArchiveNode::GetNodeExpectingEntry() const {
+//     return ArchiveNodeEntryType;
+// }
+//
+// void FArchiveNode::SetNodeExpectingEntry(EArchiveEntryType NewEntry) {
+//     ArchiveNodeEntryType = NewEntry;
+// }
 
 ENodeType FArchiveNode::GetNodeType() const {
     return NodeType;
@@ -135,7 +140,7 @@ FArchiveNode* FArchiveParentNode::SwitchSubNodeToType(FArchiveNode* Node, ENodeT
 FArchiveLeafNode::FArchiveLeafNode() {
 }
 
-FArchiveLeafNode::FArchiveLeafNode(FArchiveNode* Parent, ENodeType Type) {
+FArchiveLeafNode::FArchiveLeafNode(FArchiveNode* Parent, ENodeType Type) : FArchiveNode(Parent, Type), NodeData(INVALID_STRING){
 }
 
 FArchiveLeafNode::~FArchiveLeafNode() {

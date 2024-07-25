@@ -55,8 +55,10 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
 FArchive& operator<<(FArchive& Ar, FClass* Class) {
 
     Ar << EArchiveEntryType::AR_START_SUB_ARCHIVE;
+    
     Ar << EArchiveEntryType::AR_KEY << "ClassName";
     Ar << EArchiveEntryType::AR_VALUE << Class->GetClassName();
+    
     Ar << EArchiveEntryType::AR_END_SUB_ARCHIVE;
 
     return Ar; 

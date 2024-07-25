@@ -20,14 +20,14 @@ public:
     std::string GetNodeKey() const;
     void SetArchiveNodeKey(const std::string& NewNodeKey);
 
-    EArchiveEntryType GetNodeExpectingEntry() const;
-    void SetNodeExpectingEntry(EArchiveEntryType NewEntry);
+    // EArchiveEntryType GetNodeExpectingEntry() const;
+    // void SetNodeExpectingEntry(EArchiveEntryType NewEntry);
 
     ENodeType GetNodeType() const;
     FArchiveNode* GetParentNode();;
 private:
     std::string NodeKey;
-    EArchiveEntryType ArchiveNodeEntryType;
+    //EArchiveEntryType ArchiveNodeEntryType;
 
     FArchiveNode* ParentNode;
     ENodeType NodeType;

@@ -1,6 +1,7 @@
 #include "AstralEngineStatics.h"
 
 
+#include "../../Editor/Tests/TestEngine.h"
 #include "../Engine/CoreObjects/ObjectManager.h"
 #include "../Engine/CoreObjects/Entities/Entity.h"
 #include "../Engine/Engine/Implementations/SFMLEngine.h"
@@ -46,6 +47,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     //Engines
     REGISTER_ASTRAL_CLASS(AEngine)
     REGISTER_ASTRAL_CLASS(ASFMLEngine)
+    REGISTER_ASTRAL_CLASS(ATestEngine)
 
     //Objects
     REGISTER_ASTRAL_CLASS(AWorld)
@@ -89,6 +91,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     //Engines
     LINK_ASTRAL_CLASS_PARENTS(AEngine, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLEngine, AEngine)
+    LINK_ASTRAL_CLASS_PARENTS(ATestEngine, AEngine)
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
