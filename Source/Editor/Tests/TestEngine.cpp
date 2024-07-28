@@ -3,7 +3,7 @@
 void ATestEngine::Start() {
     AEngine::Start();
 
-    FArchive Ar;
+    FArchive Ar = FArchive(EArchiveType::ART_STRING);
     int test;
     FClass Class;
     ABaseObject* Test = new ABaseObject();

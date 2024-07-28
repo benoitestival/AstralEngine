@@ -3,6 +3,11 @@
 
 #define INVALID_STRING "INVALID"
 
+enum EArchiveType {
+    ART_BINARY = 0,
+    ART_STRING = 1,
+};
+
 enum class ENodeType {
     NT_NONE = 0,
     NT_ROOT = 1,
@@ -10,10 +15,23 @@ enum class ENodeType {
     NT_LEAF = 3,
 };
 
-enum class EArchiveEntryType {
-    AR_INVALID = 0,
-    AR_KEY = 1,
-    AR_VALUE = 2,
+enum class EArchiveAction {
+   AR_ENTER_SUB_ARCHIVE = 0,
+   AR_EXIT_SUB_ARCHIVE = 0,
+};
+
+enum class EArchiveWriteEntryType {
+    AR_W_INVALID = 0,
+    AR_W_KEY = 1,
+    AR_W_VALUE = 2,
+    AR_W_START_SUB_ARCHIVE = 3,
+    AR_W_END_SUB_ARCHIVE = 4,
+};
+
+enum class EArchiveReadEntryType {
+    AR_R_INVALID = 0,
+    AR_R_KEY = 1,
+    AR_R_VALUE = 2,
     AR_START_SUB_ARCHIVE = 3,
     AR_END_SUB_ARCHIVE = 4,
 };

@@ -1,59 +1,42 @@
 ﻿#pragma once
-#include "ArchiveNode.h"
-#include "../../Utils/EnumUtils.h"
 #include "../Utils/SerializationUtils.h"
+#include "StringArchive/StringArchive.h"
 
 #define ARRAY_SEPARATOR ","
 
 class FArchive {
 public:
     FArchive();
+    FArchive(EArchiveType Type);
+    ~FArchive();
+
+    template<class T>
+    void WriteData(const std::string& DataKey, const T& Data) {
+        if (ArchiveType == ART_STRING) {//We only need to write a key in string format
+            WriteKey(DataKey);
+        }
+        *this << Data;
+    };
     
-    FArchive& operator<<(const EArchiveEntryType& EntryType);
     template<SupportStringSerialization T>
     FArchive& operator<<(const T& Value) {
-        if (ArchiveEntryType != EArchiveEntryType::AR_INVALID) {
-            if (ArchiveEntryType == EArchiveEntryType::AR_KEY) {
-                ArchiveRootNode->GetActiveNode()->SetArchiveNodeKey(Value);
-            }
-            else if(ArchiveEntryType == EArchiveEntryType::AR_VALUE) {
-                if (ArchiveRootNode->GetActiveNode()->GetNodeType() == ENodeType::NT_LEAF) {
-                    Cast<FArchiveLeafNode>(ArchiveRootNode->GetActiveNode())->InsertDataInNode(Value);
-                }
-            }
-            ArchiveEntryType = EArchiveEntryType::AR_INVALID;//Clear the archive entry type
-
+        if (ArchiveType == ART_BINARY) {
+            
         }
         else {
-            //output error
+            StringArchive->WriteData(Value);
         }
         return *this;
     }
 
-    FArchive& operator>>(const EArchiveEntryType& EntryType);
-    template<SupportStringSerialization T>
-    FArchive& operator>>(const T& Value) {
-        if (ArchiveEntryType != EArchiveEntryType::AR_INVALID) {
-            if (ArchiveEntryType == EArchiveEntryType::AR_KEY) {
-                
-            }
-            else if(ArchiveEntryType == EArchiveEntryType::AR_VALUE) {
-                
-            }
-            ArchiveEntryType = EArchiveEntryType::AR_INVALID;
-        }
-        return *this;
-    }
-
-    std::string ToString();
+    void Option(EArchiveAction ArchiveAction);
+    
 private:
-    bool IsBasicEntry(EArchiveEntryType EntryType) {
-        return EntryType == EArchiveEntryType::AR_KEY || EntryType == EArchiveEntryType::AR_VALUE;
-    }
+    void WriteKey(const std::string& DataKey);
+
 private:
-    int ArchiveFlags;
-    FArchiveRootNode* ArchiveRootNode;
-
-    EArchiveEntryType ArchiveEntryType;
-
+    EArchiveType ArchiveType;
+    union {
+        FStringArchive* StringArchive;
+    };
 };

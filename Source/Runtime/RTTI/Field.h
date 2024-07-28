@@ -28,7 +28,7 @@ public:
     void AddParents(const TArray<FClass*>& ParentsClass);
 
     friend FArchive& operator<<(FArchive& Ar, FClass* Class);
-    friend FArchive& operator>>(FArchive& Ar, FClass& Class);
+    friend FArchive& operator>>(FArchive& Ar, FClass* Class);
 protected:
     TArray<FClass*> DirectParents;
 };
