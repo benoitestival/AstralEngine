@@ -1,7 +1,6 @@
 ﻿#include "StringArchiveNode.h"
 
-#include "../../Utils/TemplateUtils.h"
-
+#include "../../../Utils/TemplateUtils.h"
 
 
 FStringArchiveNode::FStringArchiveNode() : NodeKey(INVALID_STRING), ParentNode(nullptr), NodeType(ENodeType::NT_NONE){

@@ -36,7 +36,21 @@ void FArchive::Option(EArchiveAction ArchiveAction) {
 }
 
 void FArchive::WriteKey(const std::string& DataKey) {
-    StringArchive->WriteKey(DataKey);
+    if (ArchiveType == ART_BINARY) {
+        
+    }
+    else {
+        StringArchive->WriteKey(DataKey);
+    }
+}
+
+void FArchive::ReadKey(const std::string& DataKey) {
+    if (ArchiveType == ART_BINARY) {
+        
+    }
+    else {
+        StringArchive->ReadKey(DataKey);
+    }
 }
 
 
