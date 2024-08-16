@@ -23,5 +23,5 @@ private:
 public:
 
 protected:
-    std::unordered_map<EKey, TArray<AInputAction*>> RegistredActions;
+    TMap<EKey, TArray<AInputAction*>> RegistredActions;
 };

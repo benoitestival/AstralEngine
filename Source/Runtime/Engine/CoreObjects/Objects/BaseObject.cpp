@@ -34,11 +34,15 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
 void ABaseObject::Serialize(FArchive& Archive) {
     Archive.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
     
-    Archive.WriteData("Class", GetClass());
+    
     
     Archive.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
 }
 
 void ABaseObject::Deserialize(FArchive& Archive) {
+    Archive.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
     
+    
+    
+    Archive.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
 }

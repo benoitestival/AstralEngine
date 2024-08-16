@@ -69,6 +69,13 @@ public:
         Stream.Stream() << Data;
         NodeData = Stream.ToString();
     }
+
+    template<class T>
+    void ReadDataInNode(T& Data) {
+        // FStream Stream = FStream();
+        // Stream.Stream() << NodeData;
+        // Data = Stream.Stream();
+    }
 private:
     std::string NodeData;
 };

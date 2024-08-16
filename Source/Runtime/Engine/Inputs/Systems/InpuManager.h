@@ -19,6 +19,6 @@ public:
     EInputState GetPreviousInputState(EKey Key);
 protected:
 
-    std::unordered_map<EKey, TArray<AInputComponent*>> RegistredComponents;
-    std::unordered_map<EKey, EInputState> PreviousInputState;
+    TMap<EKey, TArray<AInputComponent*>> RegistredComponents;
+    TMap<EKey, EInputState> PreviousInputState;
 };

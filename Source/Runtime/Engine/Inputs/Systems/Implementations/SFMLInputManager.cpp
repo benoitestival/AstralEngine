@@ -56,7 +56,7 @@ void ASFMLInputManager::Init() {
         std::make_pair(sf::Keyboard::Key::Left, EKey::ARROWRIGHT),
     };
     for (auto& Pair : SFMLKeyCodeLinkToAstralKeyCodeRegistry) {
-        AstralKeyCodeLinkToSFMLKeyLinkRegistry.insert(std::make_pair(Pair.second, Pair.first));
+        AstralKeyCodeLinkToSFMLKeyLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
     }
 }
 
@@ -74,15 +74,15 @@ void ASFMLInputManager::HandleSFMLInputEvent(sf::Event& Event) {
 }
 
 EKey ASFMLInputManager::SFMLKeyCodeToAstralEngineKeyCode(sf::Keyboard::Key Key) const{
-    return SFMLKeyCodeLinkToAstralKeyCodeRegistry.at(Key);
+    return SFMLKeyCodeLinkToAstralKeyCodeRegistry.Find(Key);
 }
 
 sf::Keyboard::Key ASFMLInputManager::AstralEngineKeyCodeToSFMLKeyCode(EKey Key) const{
-    return AstralKeyCodeLinkToSFMLKeyLinkRegistry.at(Key);
+    return AstralKeyCodeLinkToSFMLKeyLinkRegistry.Find(Key);
 }
 
 bool ASFMLInputManager::SupportSFMLKeyboardInput(sf::Keyboard::Key Key) const {
-    return SFMLKeyCodeLinkToAstralKeyCodeRegistry.contains(Key);
+    return SFMLKeyCodeLinkToAstralKeyCodeRegistry.Contains(Key);
 }
 
 bool ASFMLInputManager::IsKeyboardInput(sf::Event& Event) const {

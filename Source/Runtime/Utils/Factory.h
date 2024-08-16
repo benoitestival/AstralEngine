@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <unordered_map>
 
+#include "Map.h"
 #include "../RTTI/Field.h"
 
 
@@ -33,26 +34,26 @@ public:
     
     void RegisterNew(const FClass* ObjectClass, Creator<BaseClass>* FactoryCreator){
         if (!IsRegistred(ObjectClass)) {
-            FactoryConstructors.insert(std::make_pair(ObjectClass->GetClassName(), FactoryCreator));
+            FactoryConstructors.Insert(std::make_pair(ObjectClass->GetClassName(), FactoryCreator));
         }
     };
 
     bool IsRegistred(const FClass* ObjectClass) {
-        return FactoryConstructors.contains(ObjectClass->GetClassName());  
+        return FactoryConstructors.Contains(ObjectClass->GetClassName());  
     };
     
     BaseClass* ConstructNew(const FClass* Class, ABaseObject* Outer = nullptr) {
         BaseClass* Object = nullptr;
         if (IsRegistred(Class)) {
-            Object = FactoryConstructors.at(Class->GetClassName())->Create(Outer);
+            Object = FactoryConstructors.Find(Class->GetClassName())->Create(Outer);
         }
         return Object;
     };
 
     void Clear() {
-        FactoryConstructors.clear();
+        FactoryConstructors.Clear();
     }
     
 public:
-    std::unordered_map<std::string, Creator<BaseClass>*> FactoryConstructors;
+    TMap<std::string, Creator<BaseClass>*> FactoryConstructors;
 };

@@ -22,6 +22,6 @@ public:
     virtual bool IsKeyPressed(EKey Key) const override;
 private:
 
-    std::unordered_map<sf::Keyboard::Key, EKey> SFMLKeyCodeLinkToAstralKeyCodeRegistry;
-    std::unordered_map<EKey, sf::Keyboard::Key> AstralKeyCodeLinkToSFMLKeyLinkRegistry;
+    TMap<sf::Keyboard::Key, EKey> SFMLKeyCodeLinkToAstralKeyCodeRegistry;
+    TMap<EKey, sf::Keyboard::Key> AstralKeyCodeLinkToSFMLKeyLinkRegistry;
 };

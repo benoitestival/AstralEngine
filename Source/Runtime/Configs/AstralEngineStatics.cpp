@@ -19,8 +19,8 @@
 
 
 Application* AstralEngineStatics::AstralEngineApp = nullptr;
-std::unordered_map<std::string, FClass*> AstralEngineStatics::ClassRegistry = {};
-std::unordered_map<std::string, Creator<ABaseObject>*> AstralEngineStatics::CreatorRegistry = {};
+TMap<std::string, FClass*> AstralEngineStatics::ClassRegistry = {};
+TMap<std::string, Creator<ABaseObject>*> AstralEngineStatics::CreatorRegistry = {};
 
 void AstralEngineStatics::InitAstralEngineStatics(Application* App) {
     AstralEngineApp = App;
@@ -29,8 +29,8 @@ void AstralEngineStatics::InitAstralEngineStatics(Application* App) {
 }
 
 void AstralEngineStatics::ClearAstralEngineStatics() {
-    ClassRegistry.clear();
-    CreatorRegistry.clear();
+    ClassRegistry.Clear();
+    CreatorRegistry.Clear();
 }
 
 void AstralEngineStatics::RegisterAstralClasses() {
@@ -121,22 +121,22 @@ void AstralEngineStatics::LinkAstralClassesParents() {
 }
 
 bool AstralEngineStatics::IsClassRegister(const std::string& ClassName) {
-    return ClassRegistry.contains(ClassName);
+    return ClassRegistry.Contains(ClassName);
 }
 
 bool AstralEngineStatics::IsCreatorRegister(const FClass* Class) {
-    return CreatorRegistry.contains(Class->GetClassName());
+    return CreatorRegistry.Contains(Class->GetClassName());
 }
 
 void AstralEngineStatics::RegisterClass(FClass* Class) {
     if (!IsClassRegister(Class->GetClassName())) {
-        ClassRegistry.insert(std::make_pair(Class->GetClassName(), Class));
+        ClassRegistry.Insert(std::make_pair(Class->GetClassName(), Class));
     }
 }
 
 void AstralEngineStatics::RegisterCreator(FClass* Class, Creator<ABaseObject>* Creator) {
     if (!IsCreatorRegister(Class)) {
-        CreatorRegistry.insert(std::make_pair(Class->GetClassName(), Creator));
+        CreatorRegistry.Insert(std::make_pair(Class->GetClassName(), Creator));
     }
 }
 
@@ -145,11 +145,11 @@ Application* AstralEngineStatics::GetApp() {
 }
 
 FClass* AstralEngineStatics::GetClass(const std::string& ClassName) {
-    return ClassRegistry.at(ClassName);
+    return ClassRegistry.Find(ClassName);
 }
 
 Creator<ABaseObject>* AstralEngineStatics::GetCreator(const FClass* Class) {
-    return CreatorRegistry.at(Class->GetClassName());
+    return CreatorRegistry.Find(Class->GetClassName());
 }
 
 TArray<FClass*> AstralEngineStatics::GetAllRegistredClasses() {
@@ -163,7 +163,7 @@ TArray<FClass*> AstralEngineStatics::GetAllRegistredClasses() {
 TArray<FClass*> AstralEngineStatics::GetAllFactoryClasses() {
     TArray<FClass*> Classes = {};
     for(auto KeyVal : ClassRegistry) {
-        if (CreatorRegistry.contains(KeyVal.second->GetClassName())) {
+        if (CreatorRegistry.Contains(KeyVal.second->GetClassName())) {
             Classes.Add(KeyVal.second);
         }
     }

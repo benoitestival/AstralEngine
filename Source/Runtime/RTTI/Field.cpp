@@ -55,14 +55,17 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
 FArchive& operator<<(FArchive& Ar, FClass* Class) {
 
     Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
-    Ar.WriteData("ClassName", Class->GetClassName());
+    Ar.WriteData("ClassName", Class->FieldID);
     Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
 
     return Ar; 
 }
 
 FArchive& operator>>(FArchive& Ar, FClass* Class) {
-
     
+    Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
+    Ar.ReadData("ClassName", Class->FieldID);
+    Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
+
     return Ar; 
 }

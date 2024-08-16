@@ -21,12 +21,12 @@ public:
     FInputActionExecute OnInputTrigger;
     FInputActionExecute OnInputStop;
 
-    std::unordered_map<EKey, TArray<AInputTrigger*>> GetTriggerConditions();
-    std::unordered_map<EKey, TArray<AInputModifier*>> GetInputModifiers();
+    TMap<EKey, TArray<AInputTrigger*>> GetTriggerConditions();
+    TMap<EKey, TArray<AInputModifier*>> GetInputModifiers();
     
 private:
-    std::unordered_map<EKey, TArray<AInputTrigger*>> InputTriggerConditions;
-    std::unordered_map<EKey, TArray<AInputModifier*>> InputModifiers;
+    TMap<EKey, TArray<AInputTrigger*>> InputTriggerConditions;
+    TMap<EKey, TArray<AInputModifier*>> InputModifiers;
     
     EInputValueType ActionValueType;
 };

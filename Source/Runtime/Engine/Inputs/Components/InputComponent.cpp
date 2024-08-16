@@ -7,40 +7,40 @@
 #include "../Systems/InpuManager.h"
 
 void AInputComponent::RegisterAction(EKey Key, AInputAction* Action) {
-    if (RegistredActions.contains(Key)) {
-        RegistredActions.at(Key).Add(Action);
+    if (RegistredActions.Contains(Key)) {
+        RegistredActions.Find(Key).Add(Action);
     }
     else {
         TArray<AInputAction*> Actions = {Action};
-        RegistredActions.insert(std::make_pair(Key, Actions));
+        RegistredActions.Insert(std::make_pair(Key, Actions));
     }
 }
 
 void AInputComponent::UnRegisterActionFromAllKeys(AInputAction* Action) {
     for (auto Key : GetAllMappedKeys()) {
-        if (RegistredActions.at(Key).Contains(Action)) {
-            RegistredActions.at(Key).Remove(Action);
+        if (RegistredActions.Find(Key).Contains(Action)) {
+            RegistredActions.Find(Key).Remove(Action);
         }
     }
 }
 
 void AInputComponent::UnRegisterActionForKey(AInputAction* Action, EKey Key) {
-    if (RegistredActions.contains(Key)) {
-        RegistredActions.at(Key).Remove(Action);
+    if (RegistredActions.Contains(Key)) {
+        RegistredActions.Find(Key).Remove(Action);
     }
 }
 
 bool AInputComponent::ShouldExecuteAction(EKey Key, EInputState KeyState) const {
     bool CanExecuteAction = true;
-    if (!RegistredActions.contains(Key)) {
+    if (!RegistredActions.Contains(Key)) {
         CanExecuteAction = false;
     }
     else {
-        TArray<AInputAction*> RegistredActionsForInput = RegistredActions.at(Key);
+        TArray<AInputAction*> RegistredActionsForInput = RegistredActions.Find(Key);
         bool CanTrigger = true;
         for (auto Action : RegistredActionsForInput) {
             if (CanTrigger) {
-                TArray<AInputTrigger*> TriggerCondtions = Action->GetTriggerConditions().at(Key);
+                TArray<AInputTrigger*> TriggerCondtions = Action->GetTriggerConditions().Find(Key);
                 for (auto TriggerCondition : TriggerCondtions) {
                     CanTrigger = TriggerCondition->CanTrigger(Key, KeyState);
                     if (!CanTrigger) {
@@ -54,10 +54,10 @@ bool AInputComponent::ShouldExecuteAction(EKey Key, EInputState KeyState) const 
 }
 
 void AInputComponent::ExecuteAction(EKey Key, EInputState KeyState) {
-    TArray<AInputAction*> RegistredActionsForInput = RegistredActions.at(Key);
+    TArray<AInputAction*> RegistredActionsForInput = RegistredActions.Find(Key);
     for (auto Action : RegistredActionsForInput) {
         FInputValue InputValue = FInputValue(Action->GetDesiredValueType(), KeyState);
-        TArray<AInputModifier*> InputModifers = Action->GetInputModifiers().at(Key);
+        TArray<AInputModifier*> InputModifers = Action->GetInputModifiers().Find(Key);
         for (auto InputModifer : InputModifers) {
             InputValue = InputModifer->ModifyValue(InputValue);
         }

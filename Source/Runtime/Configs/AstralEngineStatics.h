@@ -5,6 +5,7 @@
 #include "../RTTI/RTTI.h"
 #include "../Utils/Array.h"
 #include "../Utils/Factory.h"
+#include "../Utils/Map.h"
 
 #define REGISTER_ASTRAL_CLASS(Class)\
     if(!AstralEngineStatics::IsClassRegister(#Class)){\
@@ -53,6 +54,6 @@ public:
     static TArray<FClass*> GetAllFactoryClasses();
 private:
     static Application* AstralEngineApp ;
-    static std::unordered_map<std::string, FClass*> ClassRegistry; 
-    static std::unordered_map<std::string, Creator<ABaseObject>*> CreatorRegistry;
+    static TMap<std::string, FClass*> ClassRegistry; 
+    static TMap<std::string, Creator<ABaseObject>*> CreatorRegistry;
 };

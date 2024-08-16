@@ -2,6 +2,8 @@
 #include <string>
 
 #include "StringArchiveNode.h"
+#include <unordered_map>
+
 #include "../../../Utils/TemplateUtils.h"
 
 class FStringArchive {
@@ -19,7 +21,7 @@ public:
 
     template<class T>
     void ReadData(const T& Data) {
-        //TODO
+        Cast<FStringArchiveLeafNode>(ArchiveRootNode->GetActiveNode())->ReadDataInNode(Data);
     }
 
     void Option(EArchiveAction ArchiveAction);
@@ -29,3 +31,8 @@ private:
 
     FStringArchiveRootNode* ArchiveRootNode;
 };
+
+
+// class FStringArchiveNode {
+//     std::unordered_map<int, std::string> test = {{}};
+// };
