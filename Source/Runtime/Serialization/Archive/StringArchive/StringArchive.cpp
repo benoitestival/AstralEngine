@@ -1,13 +1,13 @@
 ﻿#include "StringArchive.h"
-
-void FStringArchive::WriteKey(const std::string& DataKey){
-    ArchiveRootNode->GetActiveNode()->SetArchiveNodeKey(DataKey);
-}
-
-void FStringArchive::ReadKey(const std::string& DataKey) {
-    //ArchiveRootNode->GetActiveNode()
-    
-}
+//
+// void FStringArchive::WriteKey(const std::string& DataKey){
+//     ArchiveRootNode->GetActiveNode()->SetArchiveNodeKey(DataKey);
+// }
+//
+// void FStringArchive::ReadKey(const std::string& DataKey) {
+//     //ArchiveRootNode->GetActiveNode()
+//     
+// }
 
 void FStringArchive::Option(EArchiveAction ArchiveAction) {
     //TODO Need Redo to work with Read functions

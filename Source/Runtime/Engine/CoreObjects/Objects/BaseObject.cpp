@@ -31,18 +31,16 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
     }
 }
 
-void ABaseObject::Serialize(FArchive& Archive) {
-    Archive.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
+void ABaseObject::SerializeEditor(FStringArchive& Archive) {
     
-    
-    
-    Archive.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
 }
 
-void ABaseObject::Deserialize(FArchive& Archive) {
-    Archive.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
+void ABaseObject::DeserializeEditor(FStringArchive& Archive) {
     
-    
-    
-    Archive.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
+}
+
+void ABaseObject::SerializeRuntime(FBinaryArchive& Archive) {
+}
+
+void ABaseObject::DeserializeRuntime(FBinaryArchive& Archive) {
 }

@@ -12,9 +12,12 @@ class FStringArchive {
 public:
 
     FStringArchive() = default;
+    
+    template<SupportStringSerialization T>
+    void WriteField(const std::string& DataKey, );
 
-    void WriteKey(const std::string& DataKey);
-    void ReadKey(const std::string& DataKey);
+    template<SupportStringSerialization T>
+    void ReadField(const std::string& DataKey, );
     
     // template<class T>
     // void WriteData(const T& Data) {
@@ -38,14 +41,14 @@ private:
 class FStringArchiveNode {
 public:
     
-    template<SupportStringSerialization T>
+    template<class T>
     void InsertDataInNode(const std::string& Key, T& Data) {
         FStream Stream = FStream();
         Stream.Stream() << Data;
         NodeDatas.Insert({Key, Stream.ToString()});
     }
 
-    template<SupportStringSerialization T>
+    template<class T>
     void ReadDataInNode(const std::string& Key, T& Data) {
         FStream Stream = FStream();
         Stream.Stream() << NodeDatas.Find(Key);

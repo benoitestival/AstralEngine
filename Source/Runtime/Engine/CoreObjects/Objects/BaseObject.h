@@ -8,6 +8,8 @@
 #include "../../../Utils/Array.h"
 #include "../../../RTTI/RTTI.h"
 
+class FBinaryArchive;
+
 enum ObjectFlags {
     F_NoFlags = 0x00000000,
 
@@ -42,8 +44,11 @@ public:
     //Can only work once, you cannot override an outer already set
     void SetOuter(ABaseObject* ObjectOuter);
 
-    virtual void Serialize(FArchive& Archive);
-    virtual void Deserialize(FArchive& Archive);
+    virtual void SerializeEditor(FStringArchive& Archive);
+    virtual void DeserializeEditor(FStringArchive& Archive);
+
+    virtual void SerializeRuntime(FBinaryArchive& Archive);
+    virtual void DeserializeRuntime(FBinaryArchive& Archive);
 protected:
     ABaseObject* Outer = nullptr;
 };
