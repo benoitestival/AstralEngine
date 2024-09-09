@@ -76,5 +76,4 @@ private:
 
 class SerializationUtils {
 public:
-    
 };

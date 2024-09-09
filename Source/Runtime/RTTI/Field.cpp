@@ -51,21 +51,30 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
         AddParent(Parent);
     }
 }
-
-FArchive& operator<<(FArchive& Ar, FClass* Class) {
-
-    Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
-    Ar.WriteData("ClassName", Class->FieldID);
-    Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
-
-    return Ar; 
+//
+// FArchive& operator<<(FArchive& Ar, FClass* Class) {
+//
+//     Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
+//     Ar.WriteData("ClassName", Class->FieldID);
+//     Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
+//
+//     return Ar; 
+// }
+//
+// FArchive& operator>>(FArchive& Ar, FClass* Class) {
+//     
+//     Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
+//     Ar.ReadData("ClassName", Class->FieldID);
+//     Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
+//
+//     return Ar; 
+// }
+FArchive& operator<<(FArchive& Ar, TSerializableField<FClass> Class) {
+    Ar.InsertDataInArchive("ClassName", Class.GetData()->FieldID);
+    return Ar;
 }
 
-FArchive& operator>>(FArchive& Ar, FClass* Class) {
-    
-    Ar.Option(EArchiveAction::AR_ENTER_SUB_ARCHIVE);
-    Ar.ReadData("ClassName", Class->FieldID);
-    Ar.Option(EArchiveAction::AR_EXIT_SUB_ARCHIVE);
-
-    return Ar; 
+FArchive& operator>>(FArchive& Ar, TSerializableField<FClass> Class) {
+    Ar.ReadDataInArchive("ClassName", Class.GetData()->FieldID);
+    return Ar;
 }

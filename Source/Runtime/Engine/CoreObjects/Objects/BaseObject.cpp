@@ -31,16 +31,23 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
     }
 }
 
-void ABaseObject::SerializeEditor(FStringArchive& Archive) {
-    
+void ABaseObject::Serialize(FArchive& Archive) {
+    Archive.InsertDataInArchive("Class", GetClass());
 }
 
-void ABaseObject::DeserializeEditor(FStringArchive& Archive) {
-    
+void ABaseObject::Deserialize(FArchive& Archive) {
 }
 
-void ABaseObject::SerializeRuntime(FBinaryArchive& Archive) {
-}
-
-void ABaseObject::DeserializeRuntime(FBinaryArchive& Archive) {
-}
+// void ABaseObject::SerializeEditor(FStringArchive& Archive) {
+//     
+// }
+//
+// void ABaseObject::DeserializeEditor(FStringArchive& Archive) {
+//     
+// }
+//
+// void ABaseObject::SerializeRuntime(FBinaryArchive& Archive) {
+// }
+//
+// void ABaseObject::DeserializeRuntime(FBinaryArchive& Archive) {
+// }
