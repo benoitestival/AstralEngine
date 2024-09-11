@@ -89,12 +89,18 @@ public:
         ToSTDUnorderedMap().clear();
     }
 
+    int Lenght() const {
+        return ToSTDUnorderedMap().size();
+    }
+
     std::unordered_map<K, T>& ToSTDUnorderedMap(){
         return InternMap;
     }
     const std::unordered_map<K, T>& ToSTDUnorderedMap() const{
         return InternMap;
     }
+
 private:
     std::unordered_map<K, T> InternMap;
 };
+

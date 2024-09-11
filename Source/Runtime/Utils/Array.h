@@ -67,7 +67,13 @@ public:
     
     ////////METHODS////////
     void Add(const T& Element) {
-        return ToSTDVector().push_back(Element);
+        ToSTDVector().push_back(Element);
+    }
+
+    void Insert(const T& Element, int Index) {
+        if (IsValidIndex(Index)) {
+            ToSTDVector().insert(begin() + Index, Element);
+        }
     }
 
     void Append(const TArray<T>& Array) {
@@ -109,17 +115,21 @@ public:
     }
     
     template<class CompareType>
-        bool Contains(CompareType element) const {
+    bool Contains(CompareType element) const {
         auto Iterator = std::find(begin(), end(), element);
         return Iterator != end();
     }
-
+    
     int Lenght() {
         return ToSTDVector().size();
     }
     
     int LastIndex() {
         return Lenght() - 1;
+    }
+
+    bool IsValidIndex(int Index) {
+        return Index <= LastIndex() && Index >= 0;
     }
     
     T& Last() {

@@ -18,7 +18,7 @@ bool ABaseObject::IsA(const FClass* Class) {
 
 bool ABaseObject::IsChildOf(const FClass* Class) {
     TArray<FClass*> Parents = GetClass()->GetAllParents();
-    return std::find(Parents.begin(), Parents.end(), Class) != Parents.end();
+    return Parents.Contains(Class);
 }
 
 void ABaseObject::Destroy() {
@@ -32,22 +32,7 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
 }
 
 void ABaseObject::Serialize(FArchive& Archive) {
-    Archive.InsertDataInArchive("Class", GetClass());
 }
 
 void ABaseObject::Deserialize(FArchive& Archive) {
 }
-
-// void ABaseObject::SerializeEditor(FStringArchive& Archive) {
-//     
-// }
-//
-// void ABaseObject::DeserializeEditor(FStringArchive& Archive) {
-//     
-// }
-//
-// void ABaseObject::SerializeRuntime(FBinaryArchive& Archive) {
-// }
-//
-// void ABaseObject::DeserializeRuntime(FBinaryArchive& Archive) {
-// }

@@ -17,6 +17,7 @@ void AEntity::BeginPlay() {
 void AEntity::Tick(float DeltaTime) {
     
 }
+
 //
 // void AEntity::Serialize(FArchive& Archive) {
 //     ABaseObject::Serialize(Archive);

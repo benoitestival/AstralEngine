@@ -3,6 +3,8 @@
 
 #define INVALID_STRING "INVALID"
 
+class FArchive;
+
 enum EArchiveType {
     ART_BINARY = 0,
     ART_STRING = 1,
@@ -57,6 +59,11 @@ template <typename T>
 concept SupportStringSerialization = requires(std::stringstream& Stream, T& value) {
     { Stream << value } -> std::convertible_to<std::ostream&>;
     { Stream >> value } -> std::convertible_to<std::istream&>;
+};
+
+template <typename T>
+concept SupportAstralObjectSerialization = requires(FArchive& Archive, T& value) {
+    {value.Serialize(Archive)};
 };
 
 struct FStream {

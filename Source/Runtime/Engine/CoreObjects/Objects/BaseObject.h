@@ -46,9 +46,7 @@ public:
 
     virtual void Serialize(FArchive& Archive);
     virtual void Deserialize(FArchive& Archive);
-    //
-    // virtual void SerializeRuntime(FBinaryArchive& Archive);
-    // virtual void DeserializeRuntime(FBinaryArchive& Archive);
+
 protected:
     ABaseObject* Outer = nullptr;
 };
