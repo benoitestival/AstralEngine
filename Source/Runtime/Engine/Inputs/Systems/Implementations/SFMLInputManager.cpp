@@ -1,5 +1,11 @@
 #include "SFMLInputManager.h"
 
+#include <SFML/Graphics/RenderWindow.hpp>
+
+#include "../../../../Window/Implementations/SFMLWindow.h"
+#include "../../../Engine/Engine.h"
+#include "../../../Statics/GameplayStatics.h"
+
 void ASFMLInputManager::Init() {
     Super::Init();
     SFMLKeyCodeLinkToAstralKeyCodeRegistry = {
@@ -58,6 +64,26 @@ void ASFMLInputManager::Init() {
     for (auto& Pair : SFMLKeyCodeLinkToAstralKeyCodeRegistry) {
         AstralKeyCodeLinkToSFMLKeyLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
     }
+}
+
+void ASFMLInputManager::HandleInputsEvents() {
+    AInputManager::HandleInputsEvents();
+
+    sf::Event Event;
+    sf::RenderWindow* SFMLWindow = Cast<ASFMLWindow>(GameplayStatics::GetEngine()->GetActiveWindow())->GetPrivateWindow();
+    while (SFMLWindow->pollEvent(Event)) {
+        if (Event.type == sf::Event::Closed) {
+            SFMLWindow->close();
+        }
+        
+        if (IsSFMLEventInputEvent(Event)) {
+            HandleSFMLInputEvent(Event);
+        }
+    }
+}
+
+bool ASFMLInputManager::IsSFMLEventInputEvent(const sf::Event& Event) const {
+    return Event.type == sf::Event::KeyPressed || Event.type == sf::Event::KeyReleased || Event.type == sf::Event::MouseMoved || Event.type == sf::Event::MouseButtonPressed ||Event.type == sf::Event::MouseButtonReleased || Event.type == sf::Event::MouseWheelMoved || Event.type == sf::Event::MouseWheelScrolled;
 }
 
 void ASFMLInputManager::HandleSFMLInputEvent(sf::Event& Event) {

@@ -78,8 +78,8 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-#define IS_POINTER(Variable)\
-    //std::is_pointer<Variable>
-
-#define IS_SUPPORTED_TO_STRING
+// #define IS_POINTER(Variable)\
+//     //std::is_pointer<Variable>
+//
+// #define IS_SUPPORTED_TO_STRING
 

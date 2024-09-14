@@ -37,6 +37,3 @@ template<class T, class S = ABaseObject>
 static T* Cast(S* BaseObject) {
     return (T*)BaseObject;
 }
-
-// template<class Type>
-// using WriteOsStream = decltype(std::declval<std::ostringstream>() << std::declval<Type>());

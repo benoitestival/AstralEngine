@@ -8,6 +8,7 @@
 #define MAP_VALUE "MAP_KEY_VALUE"
 
 #define ARRAY_KEY "ARRAY_KEY"
+
 class FArchive {
 public:
 
@@ -24,13 +25,13 @@ public:
     };
     
     template<class T>
-    void InsertDataInArchive(const std::string& Key, T& Data, int DataIndex = 0) {
-        InsertDataInArchive(TSerializableField<T>(Key, Data, DataIndex));
+    void InsertDataInArchive(const std::string& Key, T& Data) {
+        InsertDataInArchive(TSerializableField<T>(Key, Data));
     }
     template<class T>
-    void InsertDataInArchive(const std::string& Key, T* Data, int DataIndex = 0) {
+    void InsertDataInArchive(const std::string& Key, T* Data) {
         if (Data != nullptr) {
-            InsertDataInArchive(TSerializableField<T>(Key, Data, DataIndex));
+            InsertDataInArchive(TSerializableField<T>(Key, Data));
         }
     }
 
@@ -41,14 +42,14 @@ public:
 
     
     template<class T>
-    void ReadDataInArchive(const std::string& Key, T& Data, int DataIndex = 0) {
-        ReadDataInArchive(TSerializableField<T>(Key, Data, DataIndex));
+    void ReadDataInArchive(const std::string& Key, T& Data) {
+        ReadDataInArchive(TSerializableField<T>(Key, Data));
     }
     
     template<class T>
-    void ReadDataInArchive(const std::string& Key, T* Data, int DataIndex = 0) {
+    void ReadDataInArchive(const std::string& Key, T* Data) {
         if (Data != nullptr) {
-             ReadDataInArchive(TSerializableField<T>(Key, Data, DataIndex));
+             ReadDataInArchive(TSerializableField<T>(Key, Data));
         }
     }
 

@@ -13,6 +13,8 @@ public:
 
     virtual void Init();
 
+    virtual void HandleInputsEvents();
+    
     void HandleKeyInput(EKey Key, EInputState InputState);
     virtual bool IsKeyPressed(EKey Key) const;
 

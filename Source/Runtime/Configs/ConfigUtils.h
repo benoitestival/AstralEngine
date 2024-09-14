@@ -7,4 +7,6 @@ public:
     static FClass* GetEngineClass();
     static FClass* GetInputManagerClass();
     static FClass* GetRenderManagerClass();
+
+    static FClass* GetWindowClass();
 };

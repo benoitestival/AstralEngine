@@ -1,8 +1,9 @@
 ﻿#include "ASFMLRenderManager.h"
 
-#include "../../../Engine/Engine/Implementations/SFMLEngine.h"
+#include "../../../Engine/Engine/Engine.h"
 #include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../../Utils/TemplateUtils.h"
+#include "../../../Window/Implementations/SFMLWindow.h"
 #include "../../Components/SFML/SFMLSpriteComponent.h"
 
 void ASFMLRenderManager::Draw() {
@@ -40,5 +41,5 @@ bool ASFMLRenderManager::IsSpriteInCameraView(ASFMLSpriteComponent* SpriteCompon
 }
 
 sf::RenderWindow* ASFMLRenderManager::GetRenderWindow() {
-    return Cast<ASFMLEngine>(GameplayStatics::GetEngine())->GetWindow();
+    return Cast<ASFMLWindow>(GameplayStatics::GetEngine()->GetActiveWindow())->GetPrivateWindow();
 }

@@ -9,6 +9,9 @@ void AInputManager::Init() {
     }
 }
 
+void AInputManager::HandleInputsEvents() {
+}
+
 void AInputManager::HandleKeyInput(EKey Key, EInputState InputState) {
     for(auto InputComponent : RegistredComponents.Find(Key)) {
         if (InputComponent != nullptr) {

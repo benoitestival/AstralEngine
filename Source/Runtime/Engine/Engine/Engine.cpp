@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 #include "../../Configs/ConfigUtils.h"
+#include "../../Window/Window.h"
 #include "../CoreObjects/ObjectManager.h"
 #include "../Time/TimerManager.h"
 
@@ -11,6 +12,8 @@ void AEngine::Start() {
     
     TimerManager = AObjectManager::Get()->InstanciateNewObject<ATimerManager>(ATimerManager::StaticClass());
     EngineClock = FAstralClock();
+
+    ActiveWindow = AObjectManager::Get()->InstanciateNewObject<AWindow>(ConfigUtils::GetWindowClass());
 }
 
 void AEngine::Tick(float DeltaTime) {
@@ -36,6 +39,10 @@ ARenderManager* AEngine::GetRenderManager() {
 
 ATimerManager* AEngine::GetTimerManager() {
     return TimerManager;
+}
+
+AWindow* AEngine::GetActiveWindow() {
+    return ActiveWindow;
 }
 
 AWorld* AEngine::GetActiveWorld() {

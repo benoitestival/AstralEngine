@@ -9,7 +9,10 @@ public:
 
 public:
     virtual void Init() override;
+
+    virtual void HandleInputsEvents() override;
     
+    bool IsSFMLEventInputEvent(const sf::Event& Event) const;
     void HandleSFMLInputEvent(sf::Event& Event);
     EKey SFMLKeyCodeToAstralEngineKeyCode(sf::Keyboard::Key Key) const;
     sf::Keyboard::Key AstralEngineKeyCodeToSFMLKeyCode(EKey Key) const;

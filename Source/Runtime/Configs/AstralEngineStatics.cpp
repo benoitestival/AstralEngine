@@ -4,7 +4,7 @@
 #include "../../Editor/Tests/TestEngine.h"
 #include "../Engine/CoreObjects/ObjectManager.h"
 #include "../Engine/CoreObjects/Entities/Entity.h"
-#include "../Engine/Engine/Implementations/SFMLEngine.h"
+#include "../Engine/Engine/Implementations/AstralEngine.h"
 #include "../Engine/Inputs/Components/InputComponent.h"
 #include "../Engine/Inputs/Objects/Modifiers/InputModifier.h"
 #include "../Engine/Inputs/Objects/Triggers/InputTrigger.h"
@@ -16,6 +16,9 @@
 #include "../Render/Systems/RenderManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 #include "../Serialization/Parsers/ParserBase.h"
+#include "../Window/Window.h"
+#include "../Window/Implementations/OpenGLWindow.h"
+#include "../Window/Implementations/SFMLWindow.h"
 
 
 Application* AstralEngineStatics::AstralEngineApp = nullptr;
@@ -46,9 +49,14 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
     //Engines
     REGISTER_ASTRAL_CLASS(AEngine)
-    REGISTER_ASTRAL_CLASS(ASFMLEngine)
+    REGISTER_ASTRAL_CLASS(AstralEngine)
     REGISTER_ASTRAL_CLASS(ATestEngine)
 
+    //Windows
+    REGISTER_ASTRAL_CLASS(AWindow)
+    REGISTER_ASTRAL_CLASS(ASFMLWindow)
+    REGISTER_ASTRAL_CLASS(AOpenGLWindow)
+    
     //Objects
     REGISTER_ASTRAL_CLASS(AWorld)
     ///////////////////////
@@ -90,8 +98,13 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     
     //Engines
     LINK_ASTRAL_CLASS_PARENTS(AEngine, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLEngine, AEngine)
+    LINK_ASTRAL_CLASS_PARENTS(AstralEngine, AEngine)
     LINK_ASTRAL_CLASS_PARENTS(ATestEngine, AEngine)
+
+    //Windows
+    LINK_ASTRAL_CLASS_PARENTS(AWindow, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(ASFMLWindow, AWindow)
+    LINK_ASTRAL_CLASS_PARENTS(AOpenGLWindow, AWindow)
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
