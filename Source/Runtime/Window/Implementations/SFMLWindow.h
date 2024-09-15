@@ -9,7 +9,7 @@ public:
 
     virtual void Construct() override;
     virtual void Tick(float DeltaTime) override;
-    virtual void Destroy() override;
+    virtual void Close() override;
     
     sf::RenderWindow* GetPrivateWindow() const;
 private:

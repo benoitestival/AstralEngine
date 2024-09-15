@@ -7,13 +7,13 @@
 
 
 void AEngine::Start() {
+    ActiveWindow = AObjectManager::Get()->InstanciateNewObject<AWindow>(ConfigUtils::GetWindowClass());
+
     InputManager = AObjectManager::Get()->InstanciateNewObject<AInputManager>(ConfigUtils::GetInputManagerClass());
     RenderManager = AObjectManager::Get()->InstanciateNewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass());
     
     TimerManager = AObjectManager::Get()->InstanciateNewObject<ATimerManager>(ATimerManager::StaticClass());
     EngineClock = FAstralClock();
-
-    ActiveWindow = AObjectManager::Get()->InstanciateNewObject<AWindow>(ConfigUtils::GetWindowClass());
 }
 
 void AEngine::Tick(float DeltaTime) {

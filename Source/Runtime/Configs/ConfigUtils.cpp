@@ -2,8 +2,11 @@
 
 #include "../../Editor/Tests/TestEngine.h"
 #include "../Engine/Engine/Implementations/AstralEngine.h"
+#include "../Engine/Inputs/Systems/Implementations/OpenGLInputManager.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
+#include "../Render/Systems/Implementations/OpenGLRenderManager.h"
+#include "../Window/Implementations/OpenGLWindow.h"
 #include "../Window/Implementations/SFMLWindow.h"
 
 
@@ -12,13 +15,13 @@ FClass* ConfigUtils::GetEngineClass() {
 }
 
 FClass* ConfigUtils::GetInputManagerClass() {
-    return ASFMLInputManager::StaticClass();
+    return AOpenGLInputManager::StaticClass();
 }
 
 FClass* ConfigUtils::GetRenderManagerClass() {
-    return ASFMLRenderManager::StaticClass();
+    return AOpenGLRenderManager::StaticClass();
 }
 
 FClass* ConfigUtils::GetWindowClass() {
-    return ASFMLWindow::StaticClass();
+    return AOpenGLWindow::StaticClass();
 }

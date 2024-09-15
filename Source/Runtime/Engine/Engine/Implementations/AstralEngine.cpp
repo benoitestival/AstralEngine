@@ -12,6 +12,9 @@ void AstralEngine::Start() {
     AEngine::Start();
 
     GetActiveWindow()->Construct();
+    
+    GetInputManager()->Init();
+    //TODO init otther core system
 }
 
 void AstralEngine::GuardedLoop() {
@@ -33,7 +36,7 @@ void AstralEngine::Tick(float DeltaTime) {
 
 void AstralEngine::End() {
 
-    GetActiveWindow()->Destroy();
+    GetActiveWindow()->Close();
     
     AEngine::End();
 }
