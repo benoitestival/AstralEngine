@@ -3,6 +3,7 @@
 
 
 enum class EKey{
+    INVALID = -1,
     A = 0,
     B = 1,
     C = 2,
@@ -54,6 +55,10 @@ enum class EKey{
     ARROWDOWN = 48,
     ARROWRIGHT = 49,
     ARROWLEFT = 50,
+    
+    MOUSEBUTTONLEFT = 51,
+    MOUSEBUTTONRIGHT = 52,
+    MOUSEBUTTONMIDDLE = 53,
 };
 
 

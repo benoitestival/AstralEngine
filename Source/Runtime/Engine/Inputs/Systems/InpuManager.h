@@ -1,4 +1,5 @@
 #pragma once
+#include "../../../Maths/Maths.h"
 #include "../../CoreObjects/Objects/BaseObject.h"
 #include "../Utils/InputUtils.h"
 
@@ -19,8 +20,12 @@ public:
     virtual bool IsKeyPressed(EKey Key) const;
 
     EInputState GetPreviousInputState(EKey Key);
+    
+    FVector2D GetCursorPosition() const;
 protected:
-
+    FVector2D CursorPosition;
+    
     TMap<EKey, TArray<AInputComponent*>> RegistredComponents;
     TMap<EKey, EInputState> PreviousInputState;
+    
 };

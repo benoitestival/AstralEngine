@@ -6,10 +6,14 @@
 #include "../../../Engine/Engine.h"
 #include "../../../Statics/GameplayStatics.h"
 
+EInputState FOpenGLInputEvent::InputState() const {
+    return ActionType == GLFW_RELEASE ? EInputState::Released : EInputState::Pressed;
+}
+
 void AOpenGLInputManager::Init() {
     AInputManager::Init();
 
-    OpenGLKeyCodeLinkToAstralKeyCodeRegistry = {
+    OpenGLKeyboardCodeLinkToAstralKeyboardCodeRegistry = {
         {GLFW_KEY_A, EKey::A},
         {GLFW_KEY_B, EKey::B},
         {GLFW_KEY_C, EKey::C},
@@ -64,27 +68,38 @@ void AOpenGLInputManager::Init() {
         {GLFW_KEY_UP, EKey::ARROWUP},
         {GLFW_KEY_DOWN, EKey::ARROWDOWN},
         {GLFW_KEY_RIGHT, EKey::ARROWLEFT},
-        {GLFW_KEY_LEFT, EKey::ARROWRIGHT},
+        {GLFW_KEY_LEFT, EKey::ARROWRIGHT}
     };
     
-    for (auto& Pair : OpenGLKeyCodeLinkToAstralKeyCodeRegistry) {
-        AstralKeyCodeLinkToOpenGLKeyLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
+    for (auto& Pair : OpenGLKeyboardCodeLinkToAstralKeyboardCodeRegistry) {
+        AstralKeyboardCodeLinkToOpenGLKeyboardLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
+    }
+
+    OpenGLMouseKeyCodeLinkToAstralMouseKeyCodeRegistry = {
+        {GLFW_MOUSE_BUTTON_LEFT, EKey::MOUSEBUTTONLEFT},
+        {GLFW_MOUSE_BUTTON_RIGHT, EKey::MOUSEBUTTONRIGHT},
+        {GLFW_MOUSE_BUTTON_MIDDLE, EKey::MOUSEBUTTONMIDDLE}
+    };
+
+    for (auto& Pair : OpenGLMouseKeyCodeLinkToAstralMouseKeyCodeRegistry) {
+        AstralMouseKeyCodeLinkToOpenGLMouseKeyLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
     }
     
     GLFWwindow* PrivateWindow = GetActualWindow()->GetPrivateWindow();
 
     //Setup all callbacks for glfw inputs
     glfwSetKeyCallback(PrivateWindow, [](GLFWwindow* Window, int Key, int ScanCode, int ActionType, int Mods) {
-        //TODO
+        AOpenGLInputManager* InputManager = Cast<AOpenGLInputManager>(static_cast<AEngine*>(glfwGetWindowUserPointer(Window))->GetInputManager());
+        InputManager->HandleOpenGLInputEvent({Key, ActionType, EOpenGLInputType::EIT_KEYBOARD});
     });
     glfwSetMouseButtonCallback(PrivateWindow, [](GLFWwindow* Window, int MouseButton, int ActionType, int Mods) {
-        //TODO
-
+        AOpenGLInputManager* InputManager = Cast<AOpenGLInputManager>(static_cast<AEngine*>(glfwGetWindowUserPointer(Window))->GetInputManager());
+        InputManager->HandleOpenGLInputEvent({MouseButton, ActionType, EOpenGLInputType::EIT_MOUSE_KEY});
     });
     
     glfwSetCursorPosCallback(PrivateWindow, [](GLFWwindow* Window, double PosX, double PosY) {
-        //TODO
-
+        AOpenGLInputManager* InputManager = Cast<AOpenGLInputManager>(static_cast<AEngine*>(glfwGetWindowUserPointer(Window))->GetInputManager());
+        InputManager->UpdateCursorPosition((float)PosX, (float)PosY);
     });
     glfwSetScrollCallback(PrivateWindow, [](GLFWwindow* Window, double XOffset, double YOffset) {
         //TODO
@@ -95,6 +110,49 @@ void AOpenGLInputManager::Init() {
 void AOpenGLInputManager::HandleInputsEvents() {
     AInputManager::HandleInputsEvents();
     glfwPollEvents();
+}
+
+void AOpenGLInputManager::HandleOpenGLInputEvent(const FOpenGLInputEvent& Event) {
+    if (IsKeyInput(Event)) {
+        EKey AstralEngineKey = EKey::INVALID;
+        if (Event.InputType == EOpenGLInputType::EIT_KEYBOARD) {
+            AstralEngineKey = OpenGLKeyboardCodeToAstralEngineKeyboardCode(Event.KeyCode);
+            HandleKeyInput(AstralEngineKey, Event.InputState());
+        }
+        else if (Event.InputType == EOpenGLInputType::EIT_MOUSE_KEY) {
+            AstralEngineKey = OpenGLMouseKeyCodeToAstralEngineMouseKeyCode(Event.KeyCode);
+            HandleKeyInput(AstralEngineKey, Event.InputState());
+        }
+    }
+}
+
+void AOpenGLInputManager::UpdateCursorPosition(float PosX, float PosY) {
+    CursorPosition = {PosX, PosY};
+}
+
+EKey AOpenGLInputManager::OpenGLKeyboardCodeToAstralEngineKeyboardCode(int Key) const {
+    return OpenGLKeyboardCodeLinkToAstralKeyboardCodeRegistry.Find(Key);
+}
+
+int AOpenGLInputManager::AstralEngineKeyboardCodeToOpenGLKeyboardCode(EKey Key) const {
+    return AstralKeyboardCodeLinkToOpenGLKeyboardLinkRegistry.Find(Key);
+}
+
+EKey AOpenGLInputManager::OpenGLMouseKeyCodeToAstralEngineMouseKeyCode(int Key) const {
+    return OpenGLMouseKeyCodeLinkToAstralMouseKeyCodeRegistry.Find(Key);
+}
+
+int AOpenGLInputManager::AstralEngineMouseKeyCodeToOpenGLMouseKeyCode(EKey Key) const {
+    return AstralMouseKeyCodeLinkToOpenGLMouseKeyLinkRegistry.Find(Key);
+}
+
+
+bool AOpenGLInputManager::IsKeyInput(const FOpenGLInputEvent& Event) const {
+    return true;
+}
+
+bool AOpenGLInputManager::IsMotionInput(const FOpenGLInputEvent& Event) const {
+    return false;
 }
 
 AOpenGLWindow* AOpenGLInputManager::GetActualWindow() {

@@ -40,3 +40,7 @@ EInputState AInputManager::GetPreviousInputState(EKey Key) {
     }
     return InputState;
 }
+
+FVector2D AInputManager::GetCursorPosition() const {
+    return CursorPosition;
+}

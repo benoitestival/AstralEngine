@@ -1,6 +1,8 @@
 
 #include "OpenGLWindow.h"
 
+#include "../../Engine/Statics/GameplayStatics.h"
+
 void AOpenGLWindow::Construct() {
     AWindow::Construct();
 
@@ -12,7 +14,8 @@ void AOpenGLWindow::Construct() {
         Window = glfwCreateWindow(800, 800, "Window", nullptr, nullptr);
         if (Window != nullptr) {
             glfwMakeContextCurrent(Window);
-
+            glfwSetWindowUserPointer(Window, GameplayStatics::GetEngine());
+            
             //TODO Handle all the callbacks below
             glfwSetCursorEnterCallback(Window, [](GLFWwindow* PrivateWindow, int Entered) {
                 //TODO
