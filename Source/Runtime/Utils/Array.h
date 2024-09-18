@@ -115,9 +115,21 @@ public:
     }
     
     template<class CompareType>
-    bool Contains(CompareType element) const {
-        auto Iterator = std::find(begin(), end(), element);
+    bool Contains(const CompareType& Element) const {
+        auto Iterator = std::find(begin(), end(), Element);
         return Iterator != end();
+    }
+
+    template<class CompareType>
+    bool Contains(const TArray<CompareType>& Elements) const {
+        bool ContainElement = false;
+        for (auto Element : Elements) {
+            if (Contains(Element)) {
+                ContainElement = true;
+                break;
+            }
+        }
+        return ContainElement;
     }
     
     int Lenght() {

@@ -29,6 +29,7 @@ enum ObjectFlags {
  * Base class for all game anb memory managed objects
  */
 
+
 class ABaseObject : RTTI_CLASS {
 public:
     ABaseObject();
@@ -50,3 +51,4 @@ public:
 protected:
     ABaseObject* Outer = nullptr;
 };
+

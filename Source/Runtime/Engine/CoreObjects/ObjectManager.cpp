@@ -1,5 +1,10 @@
 ﻿#include "ObjectManager.h"
 
+#include "../../Render/Systems/RenderManager.h"
+#include "../Engine/Engine.h"
+#include "../Inputs/Systems/InpuManager.h"
+#include "../Time/TimerManager.h"
+
 
 AObjectManager* AObjectManager::ObjectManager = nullptr;
 
@@ -29,10 +34,34 @@ bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
     return SuccessfullyDestroy;
 }
 
+void AObjectManager::ClearLivingObjects() {
+    for (int INDEX = ObjectRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
+        delete ObjectRegistry[INDEX];
+        ObjectRegistry[INDEX] = nullptr;
+    }
+    ObjectRegistry.Clear();
+}
+
+void AObjectManager::ClearManagers() {
+    for (int INDEX = ManagerRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
+        delete ManagerRegistry[INDEX];
+        ManagerRegistry[INDEX] = nullptr;
+    }
+    ManagerRegistry.Clear();
+}
+
 void AObjectManager::Clear() {
     delete InternFactory;
     InternFactory = nullptr;
 
     ObjectRegistry.Clear();
+}
+
+bool AObjectManager::IsManagerSubClass(FClass* Class) const{
+    return Class->GetAllParents().Contains(AManager::StaticClass());
+}
+
+bool AObjectManager::IsEngineSubClass(FClass* Class) const{
+    return Class->GetAllParents().Contains(AEngine::StaticClass());
 }
 

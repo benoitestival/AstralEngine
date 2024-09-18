@@ -17,9 +17,9 @@ public:
     bool ShouldExecuteAction(EKey Key, EInputState KeyState) const;
     void ExecuteAction(EKey Key, EInputState KeyState);
 
+    TArray<EKey> GetAllMappedKeys();
 private:
     AInputManager* GetInputManager();
-    TArray<EKey> GetAllMappedKeys();
 public:
 
 protected:

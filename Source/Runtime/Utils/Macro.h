@@ -1,6 +1,17 @@
 #pragma once
 #include <type_traits>
 
+#ifdef NDEBUG
+    #define CONFIG_DEBUG 1
+#else
+    #define CONFIG_DEBUG 0
+#endif
+
+#define MANUAL_DEBUG 0
+
+#define IS_DEBUG (CONFIG_DEBUG || MANUAL_DEBUG)
+
+#define EXIT_CODE 1
 /**
  * Concatenation Macro
  */

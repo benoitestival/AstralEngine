@@ -1,7 +1,7 @@
 #include "AstralEngineStatics.h"
 
 
-#include "../../Editor/Tests/TestEngine.h"
+#include "../../Editor/Tests/DebugMain.h"
 #include "../Engine/CoreObjects/ObjectManager.h"
 #include "../Engine/CoreObjects/Entities/Entity.h"
 #include "../Engine/Engine/Implementations/AstralEngine.h"
@@ -42,6 +42,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ABaseObject)
 
     //Managers
+    REGISTER_ASTRAL_CLASS(AManager)
     REGISTER_ASTRAL_SINGLETON_CLASS(AObjectManager)
     REGISTER_ASTRAL_CLASS(AInputManager)
     REGISTER_ASTRAL_CLASS(ASFMLInputManager)
@@ -51,10 +52,12 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AOpenGLRenderManager)
     REGISTER_ASTRAL_CLASS(ATimerManager)
 
+    //Tests
+    REGISTER_ASTRAL_CLASS(ADebugMain)
+    
     //Engines
     REGISTER_ASTRAL_CLASS(AEngine)
     REGISTER_ASTRAL_CLASS(AstralEngine)
-    REGISTER_ASTRAL_CLASS(ATestEngine)
 
     //Windows
     REGISTER_ASTRAL_CLASS(AWindow)
@@ -93,19 +96,19 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
 void AstralEngineStatics::LinkAstralClassesParents() {
     //Managers
+    LINK_ASTRAL_CLASS_PARENTS(AManager, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(AObjectManager, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(AInputManager, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(AInputManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLInputManager, AInputManager)
-    LINK_ASTRAL_CLASS_PARENTS(ARenderManager, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(ARenderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLRenderManager, ARenderManager)
-    LINK_ASTRAL_CLASS_PARENTS(ATimerManager, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(ATimerManager, AManager)
     
     //Engines
     LINK_ASTRAL_CLASS_PARENTS(AEngine, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(AstralEngine, AEngine)
-    LINK_ASTRAL_CLASS_PARENTS(ATestEngine, AEngine)
 
     //Windows
     LINK_ASTRAL_CLASS_PARENTS(AWindow, ABaseObject)
@@ -114,6 +117,8 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
+    ///////////////////////
+    LINK_ASTRAL_CLASS_PARENTS(ADebugMain, ABaseObject)
     ///////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AParserBase, ABaseObject)
     //LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)

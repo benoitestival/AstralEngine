@@ -1,6 +1,5 @@
 #include "ConfigUtils.h"
 
-#include "../../Editor/Tests/TestEngine.h"
 #include "../Engine/Engine/Implementations/AstralEngine.h"
 #include "../Engine/Inputs/Systems/Implementations/OpenGLInputManager.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"

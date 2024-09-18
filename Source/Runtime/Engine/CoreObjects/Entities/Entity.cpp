@@ -4,10 +4,11 @@
 #include "../../Inputs/Components/InputComponent.h"
 #include "../../Statics/GameplayStatics.h"
 #include "../../Time/TimerManager.h"
+#include "../Utils/ObjectCoreUtility.h"
 
 
 AEntity::AEntity() {
-    EntityInputComponent = AObjectManager::Get()->InstanciateNewObject<AInputComponent>(AInputComponent::StaticClass());
+    EntityInputComponent = NewObject<AInputComponent>(AInputComponent::StaticClass(), this);
 }
 
 void AEntity::BeginPlay() {

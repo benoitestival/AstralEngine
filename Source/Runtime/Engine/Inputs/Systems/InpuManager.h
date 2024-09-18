@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Maths/Maths.h"
+#include "../../CoreObjects/Managers/Manager.h"
 #include "../../CoreObjects/Objects/BaseObject.h"
 #include "../Utils/InputUtils.h"
 
@@ -8,12 +9,13 @@ class AInputAction;
 
 
 
-class AInputManager : public ABaseObject{
+class AInputManager : public AManager {
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(AInputManager, ABaseObject)
+    DECLARE_ASTRAL_ENGINE_CLASS(AInputManager, AManager)
 
-    virtual void Init();
-
+    virtual void Init() override;
+    void RegisterInputComponent(AInputComponent* InputComponent);
+    
     virtual void HandleInputsEvents();
     
     void HandleKeyInput(EKey Key, EInputState InputState);

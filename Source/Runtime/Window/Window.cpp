@@ -1,10 +1,6 @@
 #include "Window.h"
 
-AWindow::AWindow() {
-}
 
-AWindow::~AWindow() {
-}
 
 void AWindow::Construct() {
 }

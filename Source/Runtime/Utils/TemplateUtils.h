@@ -35,5 +35,8 @@ static constexpr bool IsPrimaryType() {
 
 template<class T, class S = ABaseObject>
 static T* Cast(S* BaseObject) {
-    return (T*)BaseObject;
+    if (BaseObject != nullptr) {
+        return (T*)BaseObject;
+    }
+    return nullptr;
 }

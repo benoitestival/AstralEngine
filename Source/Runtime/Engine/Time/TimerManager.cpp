@@ -2,9 +2,7 @@
 
 ATimerManager::ATimerManager() {
 }
-void ATimerManager::Initialize() {
-    Super::Initialize();
-}
+
 
 void ATimerManager::Tick(float DeltaTime) {
     for (auto& Timer : RegistredTimers) {

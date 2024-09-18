@@ -1,18 +1,22 @@
 #include "Engine.h"
 
+#include "../../../Application.h"
 #include "../../Configs/ConfigUtils.h"
+#include "../../Render/Systems/RenderManager.h"
 #include "../../Window/Window.h"
 #include "../CoreObjects/ObjectManager.h"
+#include "../CoreObjects/Utils/ObjectCoreUtility.h"
+#include "../Inputs/Systems/InpuManager.h"
 #include "../Time/TimerManager.h"
 
 
 void AEngine::Start() {
-    ActiveWindow = AObjectManager::Get()->InstanciateNewObject<AWindow>(ConfigUtils::GetWindowClass());
-
-    InputManager = AObjectManager::Get()->InstanciateNewObject<AInputManager>(ConfigUtils::GetInputManagerClass());
-    RenderManager = AObjectManager::Get()->InstanciateNewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass());
+    ActiveWindow = NewObject<AWindow>(ConfigUtils::GetWindowClass());
     
-    TimerManager = AObjectManager::Get()->InstanciateNewObject<ATimerManager>(ATimerManager::StaticClass());
+    EngineManagers.Add(NewObject<AInputManager>(ConfigUtils::GetInputManagerClass()));
+    EngineManagers.Add(NewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass()));
+    EngineManagers.Add(NewObject<ATimerManager>(ATimerManager::StaticClass()));
+    
     EngineClock = FAstralClock();
 }
 
@@ -21,7 +25,10 @@ void AEngine::Tick(float DeltaTime) {
 
 
 void AEngine::End() {
+    AObjectManager::Get()->ClearManagers();
     OnEngineStop.BroadCast();
+    
+    Application::Terminate();
 }
 
 float AEngine::CalculateDeltaSeconds() {
@@ -30,15 +37,15 @@ float AEngine::CalculateDeltaSeconds() {
 }
 
 AInputManager* AEngine::GetInputManager() {
-    return InputManager;
+    return GetManager<AInputManager>();
 }
 
 ARenderManager* AEngine::GetRenderManager() {
-    return RenderManager;
+    return GetManager<ARenderManager>();
 }
 
 ATimerManager* AEngine::GetTimerManager() {
-    return TimerManager;
+    return GetManager<ATimerManager>();
 }
 
 AWindow* AEngine::GetActiveWindow() {

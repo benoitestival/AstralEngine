@@ -9,6 +9,12 @@ void AInputManager::Init() {
     }
 }
 
+void AInputManager::RegisterInputComponent(AInputComponent* InputComponent) {
+    for (auto& Key: InputComponent->GetAllMappedKeys()) {
+        RegistredComponents.Find(Key).Add(InputComponent);
+    }
+}
+
 void AInputManager::HandleInputsEvents() {
 }
 
