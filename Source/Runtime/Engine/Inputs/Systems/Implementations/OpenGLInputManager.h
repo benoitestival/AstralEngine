@@ -10,12 +10,17 @@ enum EOpenGLInputType {
     EIT_MOUSE_MOTION = 2,
 };
 
-struct FOpenGLInputEvent {
+struct FOpenGLKeyInputEvent {
     int KeyCode;
     int ActionType;
     EOpenGLInputType InputType;
 
     EInputState InputState() const;
+};
+
+struct FOpenGLMouseMotionInputEvent {
+    FVector2D NewCoord;
+    FVector2D OldCoord;
 };
 
 class AOpenGLInputManager : public AInputManager {
@@ -24,25 +29,34 @@ public:
 
     virtual void Init() override;
 
-    virtual void HandleInputsEvents() override;
+    virtual void HandleInputsEvents(float DeltaTime) override;
 
-    void HandleOpenGLInputEvent(const FOpenGLInputEvent& Event);
-    void UpdateCursorPosition(float PosX, float PosY);
-
+    void HandleOpenGLKeyInputEvent(const FOpenGLKeyInputEvent& Event);
+    void HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionInputEvent& Event);
+    virtual FVector2D GetCursorPosition() const override;
+    virtual void SetCursorPosition(const FVector2D& Pos) override;
+    
     EKey OpenGLKeyboardCodeToAstralEngineKeyboardCode(int Key) const;
     int AstralEngineKeyboardCodeToOpenGLKeyboardCode(EKey Key) const;
 
     EKey OpenGLMouseKeyCodeToAstralEngineMouseKeyCode(int Key) const;
     int AstralEngineMouseKeyCodeToOpenGLMouseKeyCode(EKey Key) const;
 
-    bool IsKeyInput(const FOpenGLInputEvent& Event) const;
-    bool IsMotionInput(const FOpenGLInputEvent& Event) const;
+    bool IsListeningForMouseMotionEvent();
+private:
+    bool IsMouseMoving() const;
+    AOpenGLWindow* GetActualWindow() const;
+
+private:
+
+    TMap<EKey, EInputState> ActiveInputs;
+
+    ///////MOUSE MOTION///////
+    FVector2D MotionDirection;
+    FVector2D PreviousCursorPosition;
+    bool ListenMouseMotionCallBack = false;
+    /////////////////////////
     
-private:
-    AOpenGLWindow* GetActualWindow();
-
-private:
-
     TMap<int, EKey> OpenGLKeyboardCodeLinkToAstralKeyboardCodeRegistry;
     TMap<EKey, int> AstralKeyboardCodeLinkToOpenGLKeyboardLinkRegistry;
 

@@ -15,3 +15,11 @@ DECLARE_CONCRETE_MATH_TYPE(FIntVector2D, TVector2D<int>)
 //Matrix
 DECLARE_CONCRETE_MATH_TYPE(FMatrix3X3, TMatrix<float COMMA 3 COMMA 3>)
 DECLARE_CONCRETE_MATH_TYPE(FMatrix4X4, TMatrix<float COMMA 4 COMMA 4>)
+
+
+class AMathsUtils {
+public:
+    static bool IsNearlyEqual(const FVector2D& Vec1, const FVector2D& Vec2, float Tolerance = 0.00001f);
+    static bool IsNearlyEqual(float Number1, float Number2, float Tolerance = 0.00001f);
+};
+

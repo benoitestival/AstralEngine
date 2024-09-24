@@ -23,3 +23,11 @@ ATimerManager* GameplayStatics::GetTimerManager() {
 float GameplayStatics::GetDeltaTime() {
     return GameplayStatics::GetEngine()->GetDeltaTime();
 }
+
+void GameplayStatics::SetShowMouseCursor(bool CursorVisibility) {
+    GetEngine()->SetShowMouseCursor(CursorVisibility);
+}
+
+bool GameplayStatics::ShowMouseCursor() {
+    return GetEngine()->GetShowMouseCursor();
+}

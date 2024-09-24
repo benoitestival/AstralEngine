@@ -15,23 +15,24 @@ void AInputManager::RegisterInputComponent(AInputComponent* InputComponent) {
     }
 }
 
-void AInputManager::HandleInputsEvents() {
+void AInputManager::HandleInputsEvents(float DeltaTime) {
+    //tick function for inputs
 }
 
-void AInputManager::HandleKeyInput(EKey Key, EInputState InputState) {
+void AInputManager::HandleKeyInput(EKey Key, FInputParams InputParams) {
     for(auto InputComponent : RegistredComponents.Find(Key)) {
         if (InputComponent != nullptr) {
-            if (InputComponent->ShouldExecuteAction(Key, InputState)) {
-                InputComponent->ExecuteAction(Key, InputState);
+            if (InputComponent->ShouldExecuteAction(Key, InputParams)) {
+                InputComponent->ExecuteAction(Key, InputParams);
             }
         }
     }
     //Key Handle finish
     if (PreviousInputState.Contains(Key)) {
-        PreviousInputState.Find(Key) = InputState;
+        PreviousInputState.Find(Key) = InputParams.InputState;
     }
     else {
-        PreviousInputState.Insert(std::make_pair(Key, InputState));
+        PreviousInputState.Insert(std::make_pair(Key, InputParams.InputState));
     }
 }
 
@@ -48,5 +49,8 @@ EInputState AInputManager::GetPreviousInputState(EKey Key) {
 }
 
 FVector2D AInputManager::GetCursorPosition() const {
-    return CursorPosition;
+    return {0.0f};
+}
+
+void AInputManager::SetCursorPosition(const FVector2D& Pos) {
 }

@@ -1,14 +1,30 @@
+// ReSharper disable All
 #include "DebugMain.h"
 
 #include <iostream>
 
-int ADebugMain::DebugMain() {
+#include "../../Runtime/Engine/CoreObjects/Utils/ObjectCoreUtility.h"
+#include "../../Runtime/Engine/Engine/Engine.h"
+#include "../../Runtime/Engine/Inputs/Components/InputComponent.h"
+#include "../../Runtime/Engine/Inputs/Objects/InputAction.h"
+#include "../../Runtime/Engine/Inputs/Systems/InpuManager.h"
+#include "../../Runtime/Engine/Statics/GameplayStatics.h"
 
+int ADebugMain::DebugMain() {
+    
     std::cout << "Hello World" << std::endl; 
 
+    AInputAction* InputAction = NewObject<AInputAction>(AInputAction::StaticClass());
+    InputAction->OnInputTrigger.Bind([](FInputValue InputValue) {
+        std::cout << "Input- Frame: " << GameplayStatics::GetEngine()->FrameCount << ", DeltaTime : " << GameplayStatics::GetDeltaTime() << std::endl;
+    });
     
-    int test;
-    std::cin >> test;
-        
-    return EXIT_CODE;
+    AInputComponent* InputComponent = NewObject<AInputComponent>(AInputComponent::StaticClass());
+    InputComponent->RegisterAction(EKey::A, InputAction);
+
+    GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
+
+    //Depending on if you want to block the engine or allow it to continue after the main enable your return code
+    return CONTINUE_CODE;
+    //return EXIT_CODE;
 }

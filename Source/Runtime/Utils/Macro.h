@@ -7,11 +7,12 @@
     #define CONFIG_DEBUG 0
 #endif
 
-#define MANUAL_DEBUG 0
+#define MANUAL_DEBUG 1
 
 #define IS_DEBUG (CONFIG_DEBUG || MANUAL_DEBUG)
 
 #define EXIT_CODE 1
+#define CONTINUE_CODE 0
 /**
  * Concatenation Macro
  */

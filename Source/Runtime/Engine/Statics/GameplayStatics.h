@@ -12,4 +12,7 @@ public:
     static ARenderManager* GetRenderManager();
     static ATimerManager* GetTimerManager();
     static float GetDeltaTime();
+
+    static void SetShowMouseCursor(bool CursorVisibility);
+    static bool ShowMouseCursor();
 };

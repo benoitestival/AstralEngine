@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../../Maths/Maths.h"
 #include "../../../Utils/Array.h"
 
 
@@ -59,12 +60,17 @@ enum class EKey{
     MOUSEBUTTONLEFT = 51,
     MOUSEBUTTONRIGHT = 52,
     MOUSEBUTTONMIDDLE = 53,
+
+    MOUSEAXISX = 54,
+    MOUSEAXISY = 55,
+    MOUSEAXISXY = 56,
 };
 
 
 enum EInputState {
     Pressed = 0,
     Released = 1,
+    Motion = 2,
 };
 
 
@@ -72,25 +78,43 @@ enum EInputState {
 enum EInputValueType {
     EInputBool = 0,
     EInputAxis1D = 0,
+    EInputAxis2D = 0,
 };
+
+struct FInputParams {
+
+    FInputParams();
+    FInputParams(EInputState State);
+    FInputParams(EInputState State, bool Value);
+    FInputParams(EInputState State, float Value);
+    FInputParams(EInputState State, const FVector2D& Value);
+    
+    EInputState InputState;
+    FVector2D InputValue;
+
+    //bool IsInputActive() const;
+};
+
 struct FInputValue {
 public:
 
     FInputValue();
-    FInputValue(EInputValueType DesiredType, EInputState InputState);
+    FInputValue(EInputValueType DesiredType, FInputParams InputParams);
     
     EInputValueType ActualType;
     union {
         bool InputBool;
         float InputFloat;
+        FVector2D InputVector2D;
     };
    
 };
 
-
 class InputUtils {
 public:
     static TArray<EKey> GetKeys();
+    static bool IsInputActive(EInputState InputState);
+    static bool IsInputInactive(EInputState InputState);
 private:
     static TArray<EKey> Keys;
 };

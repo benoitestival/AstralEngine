@@ -30,7 +30,7 @@ void AInputComponent::UnRegisterActionForKey(AInputAction* Action, EKey Key) {
     }
 }
 
-bool AInputComponent::ShouldExecuteAction(EKey Key, EInputState KeyState) const {
+bool AInputComponent::ShouldExecuteAction(EKey Key, FInputParams InputParams) const {
     bool CanExecuteAction = true;
     if (!RegistredActions.Contains(Key)) {
         CanExecuteAction = false;
@@ -39,11 +39,12 @@ bool AInputComponent::ShouldExecuteAction(EKey Key, EInputState KeyState) const 
         TArray<AInputAction*> RegistredActionsForInput = RegistredActions.Find(Key);
         bool CanTrigger = true;
         for (auto Action : RegistredActionsForInput) {
-            if (CanTrigger) {
+            if (CanTrigger && Action->GetTriggerConditions().Contains(Key)) {
                 TArray<AInputTrigger*> TriggerCondtions = Action->GetTriggerConditions().Find(Key);
                 for (auto TriggerCondition : TriggerCondtions) {
-                    CanTrigger = TriggerCondition->CanTrigger(Key, KeyState);
+                    CanTrigger = TriggerCondition->CanTrigger(Key, InputParams.InputState);
                     if (!CanTrigger) {
+                        CanExecuteAction = false;
                         break;
                     }
                 }
@@ -53,25 +54,28 @@ bool AInputComponent::ShouldExecuteAction(EKey Key, EInputState KeyState) const 
     return CanExecuteAction;
 }
 
-void AInputComponent::ExecuteAction(EKey Key, EInputState KeyState) {
+void AInputComponent::ExecuteAction(EKey Key, FInputParams InputParams) {
     TArray<AInputAction*> RegistredActionsForInput = RegistredActions.Find(Key);
     for (auto Action : RegistredActionsForInput) {
-        FInputValue InputValue = FInputValue(Action->GetDesiredValueType(), KeyState);
-        TArray<AInputModifier*> InputModifers = Action->GetInputModifiers().Find(Key);
-        for (auto InputModifer : InputModifers) {
-            InputValue = InputModifer->ModifyValue(InputValue);
+        FInputValue InputValue = FInputValue(Action->GetDesiredValueType(), InputParams);
+
+        if (Action->GetInputModifiers().Contains(Key)) {
+            TArray<AInputModifier*> InputModifers = Action->GetInputModifiers().Find(Key);
+            for (auto InputModifer : InputModifers) {
+                InputValue = InputModifer->ModifyValue(InputValue);
+            }
         }
 
         EInputState PreviousInputState = GetInputManager()->GetPreviousInputState(Key);
-        if (KeyState == EInputState::Pressed && PreviousInputState == EInputState::Released) {
+        if (InputUtils::IsInputActive(InputParams.InputState) && InputUtils::IsInputInactive(PreviousInputState)) {
             Action->OnInputStart.BroadCast(InputValue);
         }
 
-        if (KeyState == EInputState::Pressed) {
+        if (InputUtils::IsInputActive(InputParams.InputState)) {
             Action->OnInputTrigger.BroadCast(InputValue);
         }
 
-        if (KeyState == EInputState::Released && PreviousInputState == EInputState::Pressed) {
+        if (InputUtils::IsInputInactive(InputParams.InputState) && InputUtils::IsInputActive(PreviousInputState)) {
             Action->OnInputStop.BroadCast(InputValue);
         }
     }

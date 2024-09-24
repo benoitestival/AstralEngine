@@ -2,6 +2,7 @@
 
 
 #include "../../Editor/Tests/DebugMain.h"
+#include "../../Editor/Tests/DebugTick.h"
 #include "../Engine/CoreObjects/ObjectManager.h"
 #include "../Engine/CoreObjects/Entities/Entity.h"
 #include "../Engine/Engine/Implementations/AstralEngine.h"
@@ -54,6 +55,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
     //Tests
     REGISTER_ASTRAL_CLASS(ADebugMain)
+    REGISTER_ASTRAL_CLASS(ADebugTick)
     
     //Engines
     REGISTER_ASTRAL_CLASS(AEngine)
@@ -119,6 +121,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
     ///////////////////////
     LINK_ASTRAL_CLASS_PARENTS(ADebugMain, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(ADebugTick, ABaseObject)
     ///////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AParserBase, ABaseObject)
     //LINK_ASTRAL_CLASS_PARENTS(ABaseStringParser, AParserBase)

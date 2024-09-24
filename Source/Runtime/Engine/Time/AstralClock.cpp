@@ -12,7 +12,7 @@ void FAstralClock::Restart() {
 
 float FAstralClock::GetElapsedTime() {
     std::chrono::steady_clock::time_point ClockNow = std::chrono::steady_clock::now();
-    float ElapsedTime = std::chrono::duration_cast<std::chrono::seconds>(ClockNow - ClockLastPoint).count();
+    std::chrono::duration<float> ElapsedTime = ClockNow - ClockLastPoint;
     ClockLastPoint = ClockNow;
-    return ElapsedTime;
+    return ElapsedTime.count();
 }

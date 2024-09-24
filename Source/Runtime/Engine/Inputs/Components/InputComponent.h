@@ -14,8 +14,8 @@ public:
     void UnRegisterActionFromAllKeys(AInputAction* Action);
     void UnRegisterActionForKey(AInputAction* Action, EKey Key);
     
-    bool ShouldExecuteAction(EKey Key, EInputState KeyState) const;
-    void ExecuteAction(EKey Key, EInputState KeyState);
+    bool ShouldExecuteAction(EKey Key, FInputParams InputParams) const;
+    void ExecuteAction(EKey Key, FInputParams InputParams);
 
     TArray<EKey> GetAllMappedKeys();
 private:

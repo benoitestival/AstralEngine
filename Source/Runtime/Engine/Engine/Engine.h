@@ -43,6 +43,12 @@ public:
     AWorld* GetActiveWorld();
 
     float GetDeltaTime() const;
+#if IS_DEBUG
+    int FrameCount;
+#endif
+
+    void SetShowMouseCursor(bool CursorVisibility);
+    bool GetShowMouseCursor() const; 
 protected:
     FAstralClock EngineClock;
     float EngineDeltaTime = 0.0f;
@@ -51,4 +57,6 @@ protected:
     TArray<AManager*> EngineManagers;
     
     AWorld* ActiveWorld = nullptr;
+
+    bool ShowMouseCursor = false;
 };

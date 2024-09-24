@@ -10,7 +10,7 @@ public:
 public:
     virtual void Init() override;
 
-    virtual void HandleInputsEvents() override;
+    virtual void HandleInputsEvents(float DeltaTime) override;
     
     bool IsSFMLEventInputEvent(const sf::Event& Event) const;
     void HandleSFMLInputEvent(sf::Event& Event);

@@ -1,7 +1,6 @@
 #pragma once
 #include "../../../Maths/Maths.h"
 #include "../../CoreObjects/Managers/Manager.h"
-#include "../../CoreObjects/Objects/BaseObject.h"
 #include "../Utils/InputUtils.h"
 
 class AInputComponent;
@@ -16,18 +15,23 @@ public:
     virtual void Init() override;
     void RegisterInputComponent(AInputComponent* InputComponent);
     
-    virtual void HandleInputsEvents();
-    
-    void HandleKeyInput(EKey Key, EInputState InputState);
+    virtual void HandleInputsEvents(float DeltaTime);
+
+public:
+    void HandleKeyInput(EKey Key, FInputParams InputState);
     virtual bool IsKeyPressed(EKey Key) const;
+
+    
 
     EInputState GetPreviousInputState(EKey Key);
     
-    FVector2D GetCursorPosition() const;
+    virtual FVector2D GetCursorPosition() const;
+    virtual void SetCursorPosition(const FVector2D& Pos);
+
 protected:
-    FVector2D CursorPosition;
     
     TMap<EKey, TArray<AInputComponent*>> RegistredComponents;
+private:
     TMap<EKey, EInputState> PreviousInputState;
     
 };

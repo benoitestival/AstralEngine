@@ -1,6 +1,9 @@
 #include "AstralEngine.h"
 
+#include <iostream>
+
 #include "../../../../Editor/Tests/DebugMain.h"
+#include "../../../../Editor/Tests/DebugTick.h"
 #include "../../../Window/Window.h"
 #include "../../Inputs/Systems/InpuManager.h"
 #include "../../Time/TimerManager.h"
@@ -14,14 +17,16 @@ void AstralEngine::Start() {
     AEngine::Start();
 
     GetActiveWindow()->Construct();
-
+    SetShowMouseCursor(false);//By default the cursor is hidden, its depending of the scene or the controller to change it
+    
     for (auto Manager : EngineManagers) {
         Manager->Init();
     }
     
     bool START_ENGINE_LOOP = true;
 #if IS_DEBUG
-    ADebugMain* DebugMain = NewObject<ADebugMain>(ADebugMain::StaticClass());
+    DebugMain = NewObject<ADebugMain>(ADebugMain::StaticClass());
+    DebugTick = NewObject<ADebugTick>(ADebugTick::StaticClass());
     if (DebugMain->DebugMain() == EXIT_CODE) {
         START_ENGINE_LOOP = false;
     }
@@ -44,8 +49,11 @@ void AstralEngine::GuardedLoop() {
 
 void AstralEngine::Tick(float DeltaTime) {
     AEngine::Tick(DeltaTime);
-
-    GetInputManager()->HandleInputsEvents();
+#if IS_DEBUG
+    DebugTick->DebugTick(DeltaTime);
+#endif
+    
+    GetInputManager()->HandleInputsEvents(DeltaTime);
     GetTimerManager()->Tick(DeltaTime);
 
     GetRenderManager()->Draw();

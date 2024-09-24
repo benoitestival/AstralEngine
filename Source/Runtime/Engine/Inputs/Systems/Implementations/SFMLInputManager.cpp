@@ -9,69 +9,69 @@
 void ASFMLInputManager::Init() {
     Super::Init();
     SFMLKeyCodeLinkToAstralKeyCodeRegistry = {
-        std::make_pair(sf::Keyboard::Key::A, EKey::A),
-        std::make_pair(sf::Keyboard::Key::B, EKey::B),
-        std::make_pair(sf::Keyboard::Key::C, EKey::C),
-        std::make_pair(sf::Keyboard::Key::D, EKey::D),
-        std::make_pair(sf::Keyboard::Key::E, EKey::E),
-        std::make_pair(sf::Keyboard::Key::F, EKey::F),
-        std::make_pair(sf::Keyboard::Key::G, EKey::G),
-        std::make_pair(sf::Keyboard::Key::H, EKey::H),
-        std::make_pair(sf::Keyboard::Key::I, EKey::I),
-        std::make_pair(sf::Keyboard::Key::J, EKey::J),
-        std::make_pair(sf::Keyboard::Key::K, EKey::K),
-        std::make_pair(sf::Keyboard::Key::L, EKey::L),
-        std::make_pair(sf::Keyboard::Key::M, EKey::M),
-        std::make_pair(sf::Keyboard::Key::N, EKey::N),
-        std::make_pair(sf::Keyboard::Key::O, EKey::O),
-        std::make_pair(sf::Keyboard::Key::P, EKey::P),
-        std::make_pair(sf::Keyboard::Key::Q, EKey::Q),
-        std::make_pair(sf::Keyboard::Key::R, EKey::R),
-        std::make_pair(sf::Keyboard::Key::S, EKey::S),
-        std::make_pair(sf::Keyboard::Key::T, EKey::T),
-        std::make_pair(sf::Keyboard::Key::U, EKey::U),
-        std::make_pair(sf::Keyboard::Key::V, EKey::V),
-        std::make_pair(sf::Keyboard::Key::W, EKey::W),
-        std::make_pair(sf::Keyboard::Key::X, EKey::X),
-        std::make_pair(sf::Keyboard::Key::Y, EKey::Y),
-        std::make_pair(sf::Keyboard::Key::Z, EKey::Z),
+        {sf::Keyboard::Key::A, EKey::A},
+        {sf::Keyboard::Key::B, EKey::B},
+        {sf::Keyboard::Key::C, EKey::C},
+        {sf::Keyboard::Key::D, EKey::D},
+        {sf::Keyboard::Key::E, EKey::E},
+        {sf::Keyboard::Key::F, EKey::F},
+        {sf::Keyboard::Key::G, EKey::G},
+        {sf::Keyboard::Key::H, EKey::H},
+        {sf::Keyboard::Key::I, EKey::I},
+        {sf::Keyboard::Key::J, EKey::J},
+        {sf::Keyboard::Key::K, EKey::K},
+        {sf::Keyboard::Key::L, EKey::L},
+        {sf::Keyboard::Key::M, EKey::M},
+        {sf::Keyboard::Key::N, EKey::N},
+        {sf::Keyboard::Key::O, EKey::O},
+        {sf::Keyboard::Key::P, EKey::P},
+        {sf::Keyboard::Key::Q, EKey::Q},
+        {sf::Keyboard::Key::R, EKey::R},
+        {sf::Keyboard::Key::S, EKey::S},
+        {sf::Keyboard::Key::T, EKey::T},
+        {sf::Keyboard::Key::U, EKey::U},
+        {sf::Keyboard::Key::V, EKey::V},
+        {sf::Keyboard::Key::W, EKey::W},
+        {sf::Keyboard::Key::X, EKey::X},
+        {sf::Keyboard::Key::Y, EKey::Y},
+        {sf::Keyboard::Key::Z, EKey::Z},
         
-        std::make_pair(sf::Keyboard::Key::Space, EKey::SPACE),
-        std::make_pair(sf::Keyboard::Key::Escape, EKey::ESCAPE),
-        std::make_pair(sf::Keyboard::Key::LControl, EKey::LCTRL),
-        std::make_pair(sf::Keyboard::Key::RControl, EKey::RCTRL),
-        std::make_pair(sf::Keyboard::Key::LShift, EKey::LSHIFT),
-        std::make_pair(sf::Keyboard::Key::RShift, EKey::RSHIFT),
-        std::make_pair(sf::Keyboard::Key::LAlt, EKey::LALT),
-        std::make_pair(sf::Keyboard::Key::RAlt, EKey::RALT),
+        {sf::Keyboard::Key::Space, EKey::SPACE},
+        {sf::Keyboard::Key::Escape, EKey::ESCAPE},
+        {sf::Keyboard::Key::LControl, EKey::LCTRL},
+        {sf::Keyboard::Key::RControl, EKey::RCTRL},
+        {sf::Keyboard::Key::LShift, EKey::LSHIFT},
+        {sf::Keyboard::Key::RShift, EKey::RSHIFT},
+        {sf::Keyboard::Key::LAlt, EKey::LALT},
+        {sf::Keyboard::Key::RAlt, EKey::RALT},
         
-        std::make_pair(sf::Keyboard::Key::Num0, EKey::NUMBER0),
-        std::make_pair(sf::Keyboard::Key::Num1, EKey::NUMBER1),
-        std::make_pair(sf::Keyboard::Key::Num2, EKey::NUMBER2),
-        std::make_pair(sf::Keyboard::Key::Num3, EKey::NUMBER3),
-        std::make_pair(sf::Keyboard::Key::Num4, EKey::NUMBER4),
-        std::make_pair(sf::Keyboard::Key::Num5, EKey::NUMBER5),
-        std::make_pair(sf::Keyboard::Key::Num6, EKey::NUMBER6),
-        std::make_pair(sf::Keyboard::Key::Num7, EKey::NUMBER7),
-        std::make_pair(sf::Keyboard::Key::Num8, EKey::NUMBER8),
-        std::make_pair(sf::Keyboard::Key::Num9, EKey::NUMBER9),
+        {sf::Keyboard::Key::Num0, EKey::NUMBER0},
+        {sf::Keyboard::Key::Num1, EKey::NUMBER1},
+        {sf::Keyboard::Key::Num2, EKey::NUMBER2},
+        {sf::Keyboard::Key::Num3, EKey::NUMBER3},
+        {sf::Keyboard::Key::Num4, EKey::NUMBER4},
+        {sf::Keyboard::Key::Num5, EKey::NUMBER5},
+        {sf::Keyboard::Key::Num6, EKey::NUMBER6},
+        {sf::Keyboard::Key::Num7, EKey::NUMBER7},
+        {sf::Keyboard::Key::Num8, EKey::NUMBER8},
+        {sf::Keyboard::Key::Num9, EKey::NUMBER9},
         
-        std::make_pair(sf::Keyboard::Key::Tab, EKey::TAB),
-        std::make_pair(sf::Keyboard::Key::Enter, EKey::ENTER),
-        std::make_pair(sf::Keyboard::Key::Backspace, EKey::BACKSPACE),
+        {sf::Keyboard::Key::Tab, EKey::TAB},
+        {sf::Keyboard::Key::Enter, EKey::ENTER},
+        {sf::Keyboard::Key::Backspace, EKey::BACKSPACE},
         
-        std::make_pair(sf::Keyboard::Key::Up, EKey::ARROWUP),
-        std::make_pair(sf::Keyboard::Key::Down, EKey::ARROWDOWN),
-        std::make_pair(sf::Keyboard::Key::Right, EKey::ARROWLEFT),
-        std::make_pair(sf::Keyboard::Key::Left, EKey::ARROWRIGHT),
+        {sf::Keyboard::Key::Up, EKey::ARROWUP},
+        {sf::Keyboard::Key::Down, EKey::ARROWDOWN},
+        {sf::Keyboard::Key::Right, EKey::ARROWLEFT},
+        {sf::Keyboard::Key::Left, EKey::ARROWRIGHT},
     };
     for (auto& Pair : SFMLKeyCodeLinkToAstralKeyCodeRegistry) {
-        AstralKeyCodeLinkToSFMLKeyLinkRegistry.Insert(std::make_pair(Pair.second, Pair.first));
+        AstralKeyCodeLinkToSFMLKeyLinkRegistry.Insert({Pair.second, Pair.first});
     }
 }
 
-void ASFMLInputManager::HandleInputsEvents() {
-    AInputManager::HandleInputsEvents();
+void ASFMLInputManager::HandleInputsEvents(float DeltaTime) {
+    AInputManager::HandleInputsEvents(DeltaTime);
 
     sf::Event Event;
     sf::RenderWindow* SFMLWindow = Cast<ASFMLWindow>(GameplayStatics::GetEngine()->GetActiveWindow())->GetPrivateWindow();
@@ -95,11 +95,11 @@ void ASFMLInputManager::HandleSFMLInputEvent(sf::Event& Event) {
         sf::Keyboard::Key SFMLKey = Event.key.code;
         if (SupportSFMLKeyboardInput(SFMLKey)) {
             EKey AstralEngineKey = SFMLKeyCodeToAstralEngineKeyCode(SFMLKey);
-            HandleKeyInput(AstralEngineKey, Event.type == sf::Event::KeyPressed ? EInputState::Pressed : EInputState::Released);
+            HandleKeyInput(AstralEngineKey, FInputParams(Event.type == sf::Event::KeyPressed ? EInputState::Pressed : EInputState::Released));
         }
     }
     else if(IsMouseInput(Event)) {
-        
+        //TODO
     }
 }
 

@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <iostream>
+
 #include "../../../Application.h"
 #include "../../Configs/ConfigUtils.h"
 #include "../../Render/Systems/RenderManager.h"
@@ -21,6 +23,10 @@ void AEngine::Start() {
 }
 
 void AEngine::Tick(float DeltaTime) {
+#if IS_DEBUG
+    FrameCount++;
+    //std::cout << FrameCount << std::endl;
+#endif
 }
 
 
@@ -58,4 +64,13 @@ AWorld* AEngine::GetActiveWorld() {
 
 float AEngine::GetDeltaTime() const {
     return EngineDeltaTime;
+}
+
+void AEngine::SetShowMouseCursor(bool CursorVisibility) {
+    ShowMouseCursor = CursorVisibility;
+    GetActiveWindow()->SetShowMouseCursor(ShowMouseCursor);
+}
+
+bool AEngine::GetShowMouseCursor() const {
+    return ShowMouseCursor;
 }

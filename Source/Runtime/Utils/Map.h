@@ -81,6 +81,19 @@ public:
         ToSTDUnorderedMap().erase(Key);
     }
 
+    
+    void RemoveValue(const T& Value) {
+        TArray<K> KeysToRemove = TArray<K>();
+        for (auto& Pair : *this) {
+            if (Pair.second == Value) {
+                KeysToRemove.Add(Pair.first);
+            }
+        }
+        for (auto& KeyToRemove : KeysToRemove) {
+            Remove(KeyToRemove);
+        }
+    }
+
     bool Contains(const K& Key) const {
         return ToSTDUnorderedMap().contains(Key);
     }

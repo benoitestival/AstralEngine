@@ -39,7 +39,6 @@ void AOpenGLWindow::Construct() {
                 //TODO
 
             });
-
         }
         else {
             //TODO assert Engine failed to launch window
@@ -48,7 +47,7 @@ void AOpenGLWindow::Construct() {
     else {
         //TODO assert failed to launch opengl
     }
-    
+
 }
 
 void AOpenGLWindow::Close() {
@@ -56,10 +55,29 @@ void AOpenGLWindow::Close() {
     glfwTerminate();
 }
 
+void AOpenGLWindow::SetShowMouseCursor(bool CursorVisibility) {
+    AWindow::SetShowMouseCursor(CursorVisibility);
+    
+    if (CursorVisibility) {
+        glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+    }
+    else {
+        glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    
+}
+
+FVector2D AOpenGLWindow::GetWindowSize() const {
+    int WindowWidth = 0;
+    int WindowHeight = 0;
+    glfwGetWindowSize(GetPrivateWindow(), &WindowWidth, &WindowHeight);
+    return {(float)WindowWidth, (float)WindowWidth};
+}
+
 bool AOpenGLWindow::IsOpen() const {
     return !glfwWindowShouldClose(Window);
 }
 
-GLFWwindow* AOpenGLWindow::GetPrivateWindow() {
+GLFWwindow* AOpenGLWindow::GetPrivateWindow() const {
     return Window;
 }

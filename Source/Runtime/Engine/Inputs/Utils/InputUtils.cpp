@@ -51,23 +51,73 @@ TArray<EKey> InputUtils::Keys = {
    EKey::ARROWDOWN,
    EKey::ARROWRIGHT,
    EKey::ARROWLEFT,
+
+   EKey::MOUSEBUTTONLEFT,
+   EKey::MOUSEBUTTONRIGHT,
+   EKey::MOUSEBUTTONMIDDLE,
+
+   EKey::MOUSEAXISX,
+   EKey::MOUSEAXISY,
+   EKey::MOUSEAXISXY,
 };
+
+FInputParams::FInputParams() {
+   InputState = EInputState::Released;
+   InputValue = {0.0f};
+}
+
+FInputParams::FInputParams(EInputState State) {
+   InputState = State;
+   InputValue = {0.0f};
+}
+
+FInputParams::FInputParams(EInputState State, bool Value) {
+   InputState = State;
+   if (Value) {
+      InputValue = {1.0f};
+   }
+   else {
+      InputValue = {0.0f};
+
+   }
+}
+
+FInputParams::FInputParams(EInputState State, float Value) {
+   InputState = State;
+   InputValue = {Value, 0.0f};
+}
+
+FInputParams::FInputParams(EInputState State, const FVector2D& Value) {
+   InputState = State;
+   InputValue = Value;
+}
 
 FInputValue::FInputValue() {
    ActualType = EInputValueType::EInputBool;
    InputBool = false;
 }
 
-FInputValue::FInputValue(EInputValueType DesiredType, EInputState InputState) {
+FInputValue::FInputValue(EInputValueType DesiredType, FInputParams InputParams) {
    ActualType = DesiredType;
    if (DesiredType == EInputValueType::EInputBool) {
-      InputBool = InputState == EInputState::Pressed ? true : false;
+      InputBool = InputUtils::IsInputActive(InputParams.InputState) ? true : false;
    }
    else if(DesiredType == EInputValueType::EInputAxis1D) {
-      InputFloat = InputState == EInputState::Pressed ? 1.0f : 0.0f;
+      InputFloat = InputParams.InputValue.X;
+   }
+   else if(DesiredType == EInputValueType::EInputAxis2D) {
+      InputVector2D = InputParams.InputValue;
    }
 }
 
 TArray<EKey> InputUtils::GetKeys() {
    return Keys;
+}
+
+bool InputUtils::IsInputActive(EInputState InputState) {
+   return InputState == EInputState::Pressed || InputState == EInputState::Motion;
+}
+
+bool InputUtils::IsInputInactive(EInputState InputState) {
+   return InputState == EInputState::Released;
 }
