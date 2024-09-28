@@ -50,6 +50,7 @@ void AstralEngine::GuardedLoop() {
 void AstralEngine::Tick(float DeltaTime) {
     AEngine::Tick(DeltaTime);
 #if IS_DEBUG
+    //std::cout << "DeltaTime: " << DeltaTime << std::endl;
     DebugTick->DebugTick(DeltaTime);
 #endif
     

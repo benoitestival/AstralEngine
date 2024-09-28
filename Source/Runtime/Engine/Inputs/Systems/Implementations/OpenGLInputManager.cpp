@@ -104,6 +104,7 @@ void AOpenGLInputManager::Init() {
     //Setup callback and settings for mouse motion 
     glfwSetCursorPosCallback(PrivateWindow, [](GLFWwindow* Window, double PosX, double PosY) {
         AOpenGLInputManager* InputManager = Cast<AOpenGLInputManager>(static_cast<AEngine*>(glfwGetWindowUserPointer(Window))->GetInputManager());
+        //std::cout << InputManager->ListenMouseMotionCallBack << std::endl;
         if (InputManager->IsListeningForMouseMotionEvent()) {
             InputManager->HandleOpenGLMouseMotionEvent({{(float)PosX, (float)PosY}});
         }
@@ -160,17 +161,18 @@ void AOpenGLInputManager::HandleOpenGLKeyInputEvent(const FOpenGLKeyInputEvent& 
 }
 
 void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionInputEvent& Event) {
-
+    
     GameplayStatics::GetTimerManager()->UnregisterTimer(MouseMovementDetectionTimer);
     MouseMoving = true;
     
     FVector2D MouseMotionDirection = {0.0f};
     MouseMotionDirection.X = Event.NewCoord.X - PreviousCursorPosition.X;
     MouseMotionDirection.Y = PreviousCursorPosition.Y - Event.NewCoord.Y;//reverse because opengl Y is inverted
-    
+
     MouseMotionDirection.SafeNormalize();
 
     MotionDirection = MouseMotionDirection;
+    MotionDirection.Log();
     
     if (!GameplayStatics::ShowMouseCursor()) {
         ListenMouseMotionCallBack = false;
@@ -178,7 +180,7 @@ void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionI
         ListenMouseMotionCallBack = true;
     }
     
-    PreviousCursorPosition = Event.NewCoord;
+    PreviousCursorPosition = GetCursorPosition();
     MouseMovementDetectionTimer = GameplayStatics::GetTimerManager()->RegisterTimer(FTimerDelegate::FromLambda([this]() {
         MouseMoving = false;
     }), MouseDetectionTime);
