@@ -1,5 +1,6 @@
 #pragma once
 #include <complex>
+#include <iostream>
 
 
 template<typename T>
@@ -58,6 +59,10 @@ struct TVector2D {
             Normalize();
         }
     };
+
+    void Remap(T MinXY, T MaxXY) {
+        //TODO
+    }
     
     float Lenght() {
         return std::sqrt(std::pow(X, 2) + std::pow(Y, 2));
@@ -69,6 +74,10 @@ struct TVector2D {
     static float Dot(const TVector2D& A, const TVector2D& B) {
         return A.Dot(B);
     };
+
+    void Log() const{
+        std::cout << "X: " << X << "; Y: " << Y << std::endl;
+    }
 
     
 public:

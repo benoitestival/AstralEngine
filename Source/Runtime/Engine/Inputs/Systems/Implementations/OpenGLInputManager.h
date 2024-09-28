@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include "../InpuManager.h"
+#include "../../../Time/TimerHandle.h"
 
 class AOpenGLWindow;
 
@@ -20,7 +21,6 @@ struct FOpenGLKeyInputEvent {
 
 struct FOpenGLMouseMotionInputEvent {
     FVector2D NewCoord;
-    FVector2D OldCoord;
 };
 
 class AOpenGLInputManager : public AInputManager {
@@ -54,7 +54,12 @@ private:
     ///////MOUSE MOTION///////
     FVector2D MotionDirection;
     FVector2D PreviousCursorPosition;
-    bool ListenMouseMotionCallBack = false;
+
+    FTimerHandle MouseMovementDetectionTimer;
+    float MouseDetectionTime = 0.2f;
+    bool MouseMoving = false;
+    
+    bool ListenMouseMotionCallBack = true;
     /////////////////////////
     
     TMap<int, EKey> OpenGLKeyboardCodeLinkToAstralKeyboardCodeRegistry;

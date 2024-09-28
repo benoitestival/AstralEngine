@@ -14,15 +14,19 @@ int ADebugMain::DebugMain() {
     
     std::cout << "Hello World" << std::endl; 
 
-    AInputAction* InputAction = NewObject<AInputAction>(AInputAction::StaticClass());
-    InputAction->OnInputTrigger.Bind([](FInputValue InputValue) {
-        std::cout << "Input- Frame: " << GameplayStatics::GetEngine()->FrameCount << ", DeltaTime : " << GameplayStatics::GetDeltaTime() << std::endl;
-    });
-    
-    AInputComponent* InputComponent = NewObject<AInputComponent>(AInputComponent::StaticClass());
-    InputComponent->RegisterAction(EKey::A, InputAction);
-
-    GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
+    //////////////////////INPUT TEST////////////////////////
+    // AInputAction* InputAction = NewObject<AInputAction>(AInputAction::StaticClass());
+    // InputAction->SetDesiredValueType(EInputValueType::EInputAxis2D);
+    // InputAction->OnInputTrigger.Bind([](FInputValue InputValue) {
+    //     //std::cout << "Frame: " << GameplayStatics::GetEngine()->FrameCount << ", DeltaTime : " << GameplayStatics::GetDeltaTime() << "\n";
+    //     //InputValue.InputVector2D.Log();
+    //     //std::cout << "///////////////////////////////" << "\n";
+    // });
+    //
+    // AInputComponent* InputComponent = NewObject<AInputComponent>(AInputComponent::StaticClass());
+    // InputComponent->RegisterAction(EKey::MOUSEAXISXY, InputAction);
+    //
+    // GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
 
     //Depending on if you want to block the engine or allow it to continue after the main enable your return code
     return CONTINUE_CODE;

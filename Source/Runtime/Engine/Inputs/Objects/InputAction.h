@@ -14,6 +14,7 @@ public:
     DECLARE_ASTRAL_ENGINE_CLASS(AInputAction, ABaseObject)
 
     EInputValueType GetDesiredValueType();
+    void SetDesiredValueType(EInputValueType Type);
 public:
     
     DECLARE_DELEGATE(FInputActionExecute, FInputValue)

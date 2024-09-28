@@ -59,7 +59,7 @@ void AOpenGLWindow::SetShowMouseCursor(bool CursorVisibility) {
     AWindow::SetShowMouseCursor(CursorVisibility);
     
     if (CursorVisibility) {
-        glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+        glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     else {
         glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

@@ -7,6 +7,8 @@
 #include "../../../../Window/Implementations/OpenGLWindow.h"
 #include "../../../Engine/Engine.h"
 #include "../../../Statics/GameplayStatics.h"
+#include "../../../Time/TimerHandle.h"
+#include "../../../Time/TimerManager.h"
 
 EInputState FOpenGLKeyInputEvent::InputState() const {
     return ActionType == GLFW_RELEASE ? EInputState::Released : EInputState::Pressed;
@@ -103,7 +105,7 @@ void AOpenGLInputManager::Init() {
     glfwSetCursorPosCallback(PrivateWindow, [](GLFWwindow* Window, double PosX, double PosY) {
         AOpenGLInputManager* InputManager = Cast<AOpenGLInputManager>(static_cast<AEngine*>(glfwGetWindowUserPointer(Window))->GetInputManager());
         if (InputManager->IsListeningForMouseMotionEvent()) {
-            InputManager->HandleOpenGLMouseMotionEvent({{(float)PosX, (float)PosY}, InputManager->GetCursorPosition()});
+            InputManager->HandleOpenGLMouseMotionEvent({{(float)PosX, (float)PosY}});
         }
     });
     if (glfwRawMouseMotionSupported()){
@@ -114,6 +116,7 @@ void AOpenGLInputManager::Init() {
     glfwSetScrollCallback(PrivateWindow, [](GLFWwindow* Window, double XOffset, double YOffset) {
         //TODO
     });
+
     
 }
 
@@ -134,8 +137,6 @@ void AOpenGLInputManager::HandleInputsEvents(float DeltaTime) {
     if (!IsMouseMoving()) {
         MotionDirection = {0.0f};//the mouse is not moving so we reset the motion
     }
-    PreviousCursorPosition = GetCursorPosition();
-    //////////////////////////////////
 }
 
 void AOpenGLInputManager::HandleOpenGLKeyInputEvent(const FOpenGLKeyInputEvent& Event) {
@@ -160,10 +161,13 @@ void AOpenGLInputManager::HandleOpenGLKeyInputEvent(const FOpenGLKeyInputEvent& 
 
 void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionInputEvent& Event) {
 
+    GameplayStatics::GetTimerManager()->UnregisterTimer(MouseMovementDetectionTimer);
+    MouseMoving = true;
+    
     FVector2D MouseMotionDirection = {0.0f};
-    MouseMotionDirection.X = Event.NewCoord.X - Event.OldCoord.X;
-    MouseMotionDirection.Y = Event.OldCoord.Y - Event.NewCoord.Y;//reverse because opengl Y is inverted
-
+    MouseMotionDirection.X = Event.NewCoord.X - PreviousCursorPosition.X;
+    MouseMotionDirection.Y = PreviousCursorPosition.Y - Event.NewCoord.Y;//reverse because opengl Y is inverted
+    
     MouseMotionDirection.SafeNormalize();
 
     MotionDirection = MouseMotionDirection;
@@ -173,6 +177,11 @@ void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionI
         SetCursorPosition(GetActualWindow()->GetWindowSize() * 0.5f);//if the cursor is hidden we put in back in the middle
         ListenMouseMotionCallBack = true;
     }
+    
+    PreviousCursorPosition = Event.NewCoord;
+    MouseMovementDetectionTimer = GameplayStatics::GetTimerManager()->RegisterTimer(FTimerDelegate::FromLambda([this]() {
+        MouseMoving = false;
+    }), MouseDetectionTime);
 }
 
 FVector2D AOpenGLInputManager::GetCursorPosition() const {
@@ -208,7 +217,7 @@ bool AOpenGLInputManager::IsListeningForMouseMotionEvent() {
 }
 
 bool AOpenGLInputManager::IsMouseMoving() const {
-    return AMathsUtils::IsNearlyEqual(GetCursorPosition(), PreviousCursorPosition);
+    return MouseMoving;
 }
 
 AOpenGLWindow* AOpenGLInputManager::GetActualWindow() const{

@@ -4,6 +4,10 @@ EInputValueType AInputAction::GetDesiredValueType() {
     return ActionValueType;
 }
 
+void AInputAction::SetDesiredValueType(EInputValueType Type) {
+    ActionValueType = Type;
+}
+
 TMap<EKey, TArray<AInputTrigger*>> AInputAction::GetTriggerConditions() {
     return InputTriggerConditions;
 }
