@@ -9,6 +9,7 @@ public:
     TArray() {
         InternVector = {};
     }
+    TArray(int Size) : InternVector(Size){};
     TArray(const std::vector<T>& Vector) : InternVector(Vector) {};
     TArray(const std::initializer_list<T>& List) : InternVector(List) {};
 
@@ -131,6 +132,8 @@ public:
         }
         return ContainElement;
     }
+
+    
     
     int Lenght() {
         return ToSTDVector().size();
@@ -146,6 +149,10 @@ public:
     
     T& Last() {
         return *this[LastIndex()];
+    }
+
+    T* Data() {
+        return ToSTDVector().data();
     }
 
     //ONLY FOR OUTSIDE OF TARRAY

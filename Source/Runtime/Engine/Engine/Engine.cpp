@@ -31,7 +31,9 @@ void AEngine::Tick(float DeltaTime) {
 
 
 void AEngine::End() {
+    AObjectManager::Get()->ClearLivingObjects();
     AObjectManager::Get()->ClearManagers();
+    
     OnEngineStop.BroadCast();
     
     Application::Terminate();

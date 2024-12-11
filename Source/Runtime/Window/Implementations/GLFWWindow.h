@@ -3,9 +3,9 @@
 
 #include "../Window.h"
 
-class AOpenGLWindow : public AWindow{
+class AGLFWWindow : public AWindow{
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(AOpenGLWindow, AWindow)
+    DECLARE_ASTRAL_ENGINE_CLASS(AGLFWWindow, AWindow)
 
     virtual void Construct() override;
     virtual void Close() override;

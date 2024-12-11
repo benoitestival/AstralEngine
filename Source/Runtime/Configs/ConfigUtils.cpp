@@ -1,11 +1,11 @@
 #include "ConfigUtils.h"
 
 #include "../Engine/Engine/Implementations/AstralEngine.h"
-#include "../Engine/Inputs/Systems/Implementations/OpenGLInputManager.h"
+#include "../Engine/Inputs/Systems/Implementations/GLFWInputManager.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 #include "../Render/Systems/Implementations/OpenGLRenderManager.h"
-#include "../Window/Implementations/OpenGLWindow.h"
+#include "../Window/Implementations/GLFWWindow.h"
 #include "../Window/Implementations/SFMLWindow.h"
 
 
@@ -22,5 +22,5 @@ FClass* ConfigUtils::GetRenderManagerClass() {
 }
 
 FClass* ConfigUtils::GetWindowClass() {
-    return AOpenGLWindow::StaticClass();
+    return AGLFWWindow::StaticClass();
 }

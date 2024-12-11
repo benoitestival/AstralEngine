@@ -2,3 +2,6 @@
 
 void AManager::Init() {
 }
+
+void AManager::DeInit() {
+}
