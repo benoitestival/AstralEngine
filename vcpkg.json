@@ -4,10 +4,14 @@
     "version-string": "0.1.0",
     "dependencies": [
 
+	
 	"opengl",
     	"glfw3",
     	"glew",
     	"glm",
+
+	"vulkan",
+	"vulkan-memory-allocator",
 
         "sfml",
 
