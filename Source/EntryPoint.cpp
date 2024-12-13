@@ -1,8 +1,5 @@
 #include <iostream>
-
 #include "Application.h"
-#include "Runtime/Engine/CoreObjects/Objects/BaseObject.h"
-#include "Runtime/RTTI/Field.h"
 
 int main(int argc, char* argv[]){
     Application* App = new Application();
@@ -12,5 +9,5 @@ int main(int argc, char* argv[]){
     delete App;
     App = nullptr;
     
-    return 0;
+    return EXIT_SUCCESS;
  }

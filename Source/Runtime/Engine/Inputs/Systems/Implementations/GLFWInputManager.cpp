@@ -1,10 +1,10 @@
 // ReSharper disable All
-#include "OpenGLInputManager.h"
+#include "GLFWInputManager.h"
 
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-#include "../../../../Window/Implementations/OpenGLWindow.h"
+#include "../../../../Window/Implementations/GLFWWindow.h"
 #include "../../../Engine/Engine.h"
 #include "../../../Statics/GameplayStatics.h"
 #include "../../../Time/TimerHandle.h"
@@ -222,6 +222,6 @@ bool AOpenGLInputManager::IsMouseMoving() const {
     return MouseMoving;
 }
 
-AOpenGLWindow* AOpenGLInputManager::GetActualWindow() const{
-    return Cast<AOpenGLWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
+AGLFWWindow* AOpenGLInputManager::GetActualWindow() const{
+    return Cast<AGLFWWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
 }

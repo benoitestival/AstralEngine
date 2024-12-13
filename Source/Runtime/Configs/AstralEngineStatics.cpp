@@ -9,7 +9,7 @@
 #include "../Engine/Inputs/Components/InputComponent.h"
 #include "../Engine/Inputs/Objects/Modifiers/InputModifier.h"
 #include "../Engine/Inputs/Objects/Triggers/InputTrigger.h"
-#include "../Engine/Inputs/Systems/Implementations/OpenGLInputManager.h"
+#include "../Engine/Inputs/Systems/Implementations/GLFWInputManager.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Engine/Time/TimerManager.h"
 #include "../Engine/World/World.h"
@@ -18,9 +18,10 @@
 #include "../Render/Systems/RenderManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 #include "../Render/Systems/Implementations/OpenGLRenderManager.h"
+#include "../Render/Systems/Implementations/Vulkan/VulkanRenderManager.h"
 #include "../Serialization/Parsers/ParserBase.h"
 #include "../Window/Window.h"
-#include "../Window/Implementations/OpenGLWindow.h"
+#include "../Window/Implementations/GLFWWindow.h"
 #include "../Window/Implementations/SFMLWindow.h"
 
 
@@ -51,6 +52,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ARenderManager)
     REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
     REGISTER_ASTRAL_CLASS(AOpenGLRenderManager)
+    REGISTER_ASTRAL_CLASS(AVulkanRenderManager)
     REGISTER_ASTRAL_CLASS(ATimerManager)
 
     //Tests
@@ -64,7 +66,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     //Windows
     REGISTER_ASTRAL_CLASS(AWindow)
     REGISTER_ASTRAL_CLASS(ASFMLWindow)
-    REGISTER_ASTRAL_CLASS(AOpenGLWindow)
+    REGISTER_ASTRAL_CLASS(AGLFWWindow)
     
     //Objects
     REGISTER_ASTRAL_CLASS(AWorld)
@@ -106,6 +108,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ARenderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLRenderManager, ARenderManager)
+    LINK_ASTRAL_CLASS_PARENTS(AVulkanRenderManager, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(ATimerManager, AManager)
     
     //Engines
@@ -115,7 +118,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     //Windows
     LINK_ASTRAL_CLASS_PARENTS(AWindow, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLWindow, AWindow)
-    LINK_ASTRAL_CLASS_PARENTS(AOpenGLWindow, AWindow)
+    LINK_ASTRAL_CLASS_PARENTS(AGLFWWindow, AWindow)
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)

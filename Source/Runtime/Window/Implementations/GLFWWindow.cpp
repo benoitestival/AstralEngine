@@ -1,9 +1,9 @@
 
-#include "OpenGLWindow.h"
+#include "GLFWWindow.h"
 
 #include "../../Engine/Statics/GameplayStatics.h"
 
-void AOpenGLWindow::Construct() {
+void AGLFWWindow::Construct() {
     AWindow::Construct();
 
     if (glfwInit()) {
@@ -50,12 +50,12 @@ void AOpenGLWindow::Construct() {
 
 }
 
-void AOpenGLWindow::Close() {
+void AGLFWWindow::Close() {
     AWindow::Close();
     glfwTerminate();
 }
 
-void AOpenGLWindow::SetShowMouseCursor(bool CursorVisibility) {
+void AGLFWWindow::SetShowMouseCursor(bool CursorVisibility) {
     AWindow::SetShowMouseCursor(CursorVisibility);
     
     if (CursorVisibility) {
@@ -67,17 +67,17 @@ void AOpenGLWindow::SetShowMouseCursor(bool CursorVisibility) {
     
 }
 
-FVector2D AOpenGLWindow::GetWindowSize() const {
+FVector2D AGLFWWindow::GetWindowSize() const {
     int WindowWidth = 0;
     int WindowHeight = 0;
     glfwGetWindowSize(GetPrivateWindow(), &WindowWidth, &WindowHeight);
     return {(float)WindowWidth, (float)WindowWidth};
 }
 
-bool AOpenGLWindow::IsOpen() const {
+bool AGLFWWindow::IsOpen() const {
     return !glfwWindowShouldClose(Window);
 }
 
-GLFWwindow* AOpenGLWindow::GetPrivateWindow() const {
+GLFWwindow* AGLFWWindow::GetPrivateWindow() const {
     return Window;
 }

@@ -3,7 +3,7 @@
 #include "../InpuManager.h"
 #include "../../../Time/TimerHandle.h"
 
-class AOpenGLWindow;
+class AGLFWWindow;
 
 enum EOpenGLInputType {
     EIT_KEYBOARD = 0,
@@ -45,7 +45,7 @@ public:
     bool IsListeningForMouseMotionEvent();
 private:
     bool IsMouseMoving() const;
-    AOpenGLWindow* GetActualWindow() const;
+    AGLFWWindow* GetActualWindow() const;
 
 private:
 

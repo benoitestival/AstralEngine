@@ -7,5 +7,5 @@ public:
     DECLARE_ASTRAL_ENGINE_CLASS(AManager, ABaseObject)
 
     virtual void Init();
-    
+    virtual void DeInit();
 };
