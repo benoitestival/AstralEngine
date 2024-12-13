@@ -6,8 +6,12 @@
 void AVulkanRenderManager::Init() {
     ARenderManager::Init();
 
-    if (CreateInstance()) {
-        SelectPhysicalDevice();
+    if (CreateInstance() == VK_SUCCESS) {
+        if (SelectPhysicalDevice() == VK_SUCCESS) {
+            CreateLogicalDevice();
+            
+            vkGetDeviceQueue(LogicalDevice, GetDeviceSupportedQueueFamilies(PhysicalDevice).GraphicsFamilyIndice, 0, &GraphicsQueue);
+        }
     }
     else {
         //TODO throw an exception
@@ -17,11 +21,11 @@ void AVulkanRenderManager::Init() {
 
 void AVulkanRenderManager::DeInit() {
     vkDestroyInstance(VulkanInstance, nullptr);
-    
+    vkDestroyDevice(LogicalDevice, nullptr);
     ARenderManager::DeInit();
 }
 
-bool AVulkanRenderManager::CreateInstance() {
+VkResult AVulkanRenderManager::CreateInstance() {
     VkApplicationInfo VkAppInfo = {};
     VkAppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     VkAppInfo.pApplicationName = "Astral Engine";
@@ -37,20 +41,17 @@ bool AVulkanRenderManager::CreateInstance() {
     uint32_t GlfwExtensionCount;
     const char** GlfwExtensionsName;
     GlfwExtensionsName = glfwGetRequiredInstanceExtensions(&GlfwExtensionCount);
-
-    //TODO Add a check to see all the supported Extensions
-    //https://vulkan-tutorial.com/en/Drawing_a_triangle/Setup/Instance
     
     VkCreateInfo.enabledExtensionCount = GlfwExtensionCount;
     VkCreateInfo.ppEnabledExtensionNames = GlfwExtensionsName;
 
     VkCreateInfo.enabledLayerCount = 0;
 
-    VkResult Result = vkCreateInstance(&VkCreateInfo, nullptr, &VulkanInstance);
-    return Result == VK_SUCCESS;
+    return vkCreateInstance(&VkCreateInfo, nullptr, &VulkanInstance);
 }
 
-void AVulkanRenderManager::SelectPhysicalDevice() {
+VkResult AVulkanRenderManager::SelectPhysicalDevice() {
+    VkResult Result = VK_ERROR_INITIALIZATION_FAILED;
     uint32_t DeviceCount = 0;
     vkEnumeratePhysicalDevices(VulkanInstance, &DeviceCount, nullptr);//Only checking for GPU devices
     if (DeviceCount > 0) {
@@ -66,15 +67,10 @@ void AVulkanRenderManager::SelectPhysicalDevice() {
         }
         
         if (PhysicalDevice != VK_NULL_HANDLE) {
-            
-        }
-        else {
-            //TODO throw an exception
+            Result = VK_SUCCESS;
         }
     }
-    else {
-        //TODO throw an exception
-    }
+    return Result;
 }
 
 bool AVulkanRenderManager::IsDeviceSuitable(VkPhysicalDevice Device) {
@@ -104,6 +100,32 @@ int AVulkanRenderManager::GetDeviceSuitabilityScore(VkPhysicalDevice Device) {
     
     return DeviceScore;
 }
+
+
+VkResult AVulkanRenderManager::CreateLogicalDevice() {
+    VkDeviceQueueCreateInfo QueueCreateInfo = {};
+    QueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    QueueCreateInfo.queueFamilyIndex = GetDeviceSupportedQueueFamilies(PhysicalDevice).GraphicsFamilyIndice;
+    QueueCreateInfo.queueCount = 1;    
+
+    float QueuePriority = 1.0f;
+    QueueCreateInfo.pQueuePriorities = &QueuePriority;
+
+    VkPhysicalDeviceFeatures DeviceFeatures = {};
+
+    VkDeviceCreateInfo CreateInfo = {};
+    CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    CreateInfo.pQueueCreateInfos = &QueueCreateInfo;
+    CreateInfo.queueCreateInfoCount = 1;
+
+    CreateInfo.pEnabledFeatures = &DeviceFeatures;
+
+    CreateInfo.enabledExtensionCount = 0;
+    CreateInfo.enabledLayerCount = 0;
+
+    return vkCreateDevice(PhysicalDevice, &CreateInfo, nullptr, &LogicalDevice);
+}
+
 
 FQueueFamilyIndices AVulkanRenderManager::GetDeviceSupportedQueueFamilies(VkPhysicalDevice Device) {
     FQueueFamilyIndices FamilyIndices;

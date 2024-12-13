@@ -21,13 +21,26 @@ public:
     void Init() override;
     void DeInit() override;
 private:
-    bool CreateInstance();
-    
-    void SelectPhysicalDevice();
+    //Instance Methods
+    VkResult CreateInstance();
+
+    //Physical Device Methods
+    VkResult SelectPhysicalDevice();
     bool IsDeviceSuitable(VkPhysicalDevice Device);
     int GetDeviceSuitabilityScore(VkPhysicalDevice Device);
+
+    //Logical Device Methods
+    VkResult CreateLogicalDevice();
+
+    //Common Device Methods
     FQueueFamilyIndices GetDeviceSupportedQueueFamilies(VkPhysicalDevice Device);
 private:
+    //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
+    //Physical GPU used by Vulkan
     VkPhysicalDevice PhysicalDevice = VK_NULL_HANDLE;
+    //Logical device used by Vulkan
+    VkDevice LogicalDevice = VK_NULL_HANDLE;
+    
+    VkQueue GraphicsQueue = VK_NULL_HANDLE;
 };
