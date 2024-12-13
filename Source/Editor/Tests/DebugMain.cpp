@@ -13,7 +13,10 @@
 int ADebugMain::DebugMain() {
     
     std::cout << "Hello World" << std::endl; 
-
+    // FMatrix4X4 Matrix;
+    // FVector2D Vec;
+    // Vec * Matrix;
+    // Matrix * Vec;
     //////////////////////INPUT TEST////////////////////////
     // AInputAction* InputAction = NewObject<AInputAction>(AInputAction::StaticClass());
     // InputAction->SetDesiredValueType(EInputValueType::EInputAxis2D);

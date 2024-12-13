@@ -1,6 +1,8 @@
 #pragma once
-#include "Matrix.h"
-#include "Vector2D.h"
+#include "BaseTypes/Matrix.h"
+#include "BaseTypes/Rotator.h"
+#include "BaseTypes/Vector2D.h"
+#include "BaseTypes/Vector3D.h"
 
 #define COMMA ,
 
@@ -11,6 +13,13 @@
 //Vector 2D
 DECLARE_CONCRETE_MATH_TYPE(FVector2D, TVector2D<float>)
 DECLARE_CONCRETE_MATH_TYPE(FIntVector2D, TVector2D<int>)
+
+//Vector 3D
+DECLARE_CONCRETE_MATH_TYPE(FVector, TVector3D<float>)
+DECLARE_CONCRETE_MATH_TYPE(FIntVector, TVector3D<int>)
+
+//Rotator
+DECLARE_CONCRETE_MATH_TYPE(FRotator, TRotator<float>)
 
 //Matrix
 DECLARE_CONCRETE_MATH_TYPE(FMatrix3X3, TMatrix<float COMMA 3 COMMA 3>)
