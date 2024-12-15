@@ -13,6 +13,7 @@ void AVulkanRenderManager::Init() {
     if (CreateInstance() == VK_SUCCESS) {
         CreateVulkanSurface();
         CreateVulkanDevice();
+        CreateVulkanSwapChain();
     }
     else {
         //TODO throw an exception
@@ -21,6 +22,7 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanVulkanSwapChain();
     CleanVulkanDevice();
     CleanVulkanSurface();
     vkDestroyInstance(VulkanInstance, nullptr);
@@ -33,6 +35,10 @@ VkInstance AVulkanRenderManager::GetVkInstance() {
 
 FVulkanDevice* AVulkanRenderManager::GetVkDevice() {
     return VulkanDevice;
+}
+
+FVulkanSwapChain* AVulkanRenderManager::GetVkSwapChain() const {
+    return VulkanSwapChain;
 }
 
 FVulkanSurface* AVulkanRenderManager::GetVkSurface() const {
@@ -84,4 +90,15 @@ void AVulkanRenderManager::CleanVulkanSurface() {
     VulkanSurface->Clean();
     delete VulkanSurface;
     VulkanSurface = nullptr;
+}
+
+VkResult AVulkanRenderManager::CreateVulkanSwapChain() {
+    VulkanSwapChain = new FVulkanSwapChain();
+    return VulkanSwapChain->Init();
+}
+
+void AVulkanRenderManager::CleanVulkanSwapChain() {
+    VulkanSwapChain->Clean();
+    delete VulkanSwapChain;
+    VulkanSwapChain = nullptr;
 }

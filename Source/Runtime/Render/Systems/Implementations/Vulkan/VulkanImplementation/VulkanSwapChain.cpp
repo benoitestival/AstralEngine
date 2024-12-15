@@ -1,9 +1,17 @@
 #include "VulkanSwapChain.h"
 
+#include <algorithm>
+#include <GLFW/glfw3.h>
+
+#include "VulkanDevice.h"
+#include "VulkanSurface.h"
+#include "../VulkanRenderManager.h"
+#include "../../../../../Engine/Engine/Engine.h"
 #include "../../../../../Engine/Statics/GameplayStatics.h"
 #include "../../../../../Utils/TemplateUtils.h"
+#include "../../../../../Window/Implementations/GLFWWindow.h"
 
-FVulkanSwapChain::FVulkanSwapChain() {
+FVulkanSwapChain::FVulkanSwapChain(): SwapChainImageFormat(), SwapChainExtent() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
 }
 
@@ -11,11 +19,125 @@ FVulkanSwapChain::~FVulkanSwapChain() {
 }
 
 VkResult FVulkanSwapChain::Init() {
+    FSwapChainSupportDetails SwapChainSupportDetails = GetVkDevice()->QuerySwapChainSupportDetails();
+
+    VkSurfaceFormatKHR SurfaceFormat = ChooseSwapSurfaceFormat(SwapChainSupportDetails.Formats);
+    VkPresentModeKHR PresentMode = ChooseSwapPresentMode(SwapChainSupportDetails.PresentModes);
+    VkExtent2D Extent = ChooseSwapExtent(SwapChainSupportDetails.Capabilities);
+
+    //Number of image contain in the SwapChain
+    uint32_t ImageCount = SwapChainSupportDetails.Capabilities.minImageCount + 1;//+1 for requesting one more image, with that we dont always have o wait the driver
+    if (ImageCount > SwapChainSupportDetails.Capabilities.maxImageCount && SwapChainSupportDetails.Capabilities.maxImageCount > 0) {
+        //Just in case where the min is superior to the max image count allowed
+        ImageCount = SwapChainSupportDetails.Capabilities.maxImageCount;
+    }
+
+    VkSwapchainCreateInfoKHR SwapChainCreateInfo{};
+    SwapChainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+    SwapChainCreateInfo.surface = GetVkSurface()->GetPrivateSurface();
+
+    SwapChainCreateInfo.minImageCount = ImageCount;
+    SwapChainCreateInfo.imageFormat = SurfaceFormat.format;
+    SwapChainCreateInfo.imageColorSpace = SurfaceFormat.colorSpace;
+    SwapChainCreateInfo.imageExtent = Extent;
+    SwapChainCreateInfo.imageArrayLayers = 1;
+    SwapChainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+    FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetSupportedQueueFamilies();
+    if (SupportedQueueFamilyIndices.GraphicsFamilyIndice != SupportedQueueFamilyIndices.PresentingFamilyIndice) {
+        SwapChainCreateInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+        SwapChainCreateInfo.queueFamilyIndexCount = 2;
+        SwapChainCreateInfo.pQueueFamilyIndices = SupportedQueueFamilyIndices.ToUnsignedArray().Data();
+    } else {
+        SwapChainCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        SwapChainCreateInfo.queueFamilyIndexCount = 0; // Optional
+        SwapChainCreateInfo.pQueueFamilyIndices = nullptr; // Optional
+    }
+
+    SwapChainCreateInfo.preTransform = SwapChainSupportDetails.Capabilities.currentTransform;
+    SwapChainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+
+    SwapChainCreateInfo.presentMode = PresentMode;
+    SwapChainCreateInfo.clipped = VK_TRUE;
+
+    SwapChainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
+
+    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, nullptr);
+    SwapChainImages.Resize(ImageCount);
+    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, SwapChainImages.Data());
+
+    SwapChainImageFormat = SurfaceFormat.format;
+    SwapChainExtent = Extent;
+    
+    return vkCreateSwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), &SwapChainCreateInfo, nullptr, &SwapChain);
 }
 
 void FVulkanSwapChain::Clean() {
+    vkDestroySwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, nullptr);
+}
+
+VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
+    VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
+    for (auto& Format : AvailableFormats) {
+        if (Format.format == VK_FORMAT_B8G8R8A8_SRGB && Format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+            ChoosenSurfaceFormat = Format;
+        }
+    }
+    return ChoosenSurfaceFormat;
+}
+
+VkPresentModeKHR FVulkanSwapChain::ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes) {
+    
+    ////////////////////// VK_PRESENT_MODE_IMMEDIATE_KHR:///////////////////////////
+    // Immediate Rendering.
+    
+    ///////////////////////// VK_PRESENT_MODE_FIFO_KHR://///////////////////////////
+    // Wainting for room in the queue of the swap chain (similar to V-sync)
+    
+    //////////////////// VK_PRESENT_MODE_FIFO_RELAXED_KHR://////////////////////////
+    // Immediate Rendering if the application is late to try removing the overtime
+    
+    ////////////////////// VK_PRESENT_MODE_MAILBOX_KHR://///////////////////////////
+    //If there is no room in the queue of the swap chain replace the frame in the queue by the new one that is ready (similar to triple buffering) 
+
+    VkPresentModeKHR ChoosenPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+    for (auto& PresentMode : AvailablePresentModes) {
+        if (PresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+            ChoosenPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+        }
+    }
+    return ChoosenPresentMode;
+}
+
+VkExtent2D FVulkanSwapChain::ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& Capabilities) {
+    VkExtent2D SwapExtent = Capabilities.currentExtent;
+    
+    //If the capability width is equal to the maximal value of an unsigned int then it mean that the window managers
+    //let us handle the Extent of the swap chain by picking up the resolution ourself
+    if (Capabilities.currentExtent.width == std::numeric_limits<uint32_t>::max()) {
+        int WIDTH = -1;
+        int HEIGHT = -1;
+        glfwGetFramebufferSize(GetActiveWindow()->GetPrivateWindow(), &WIDTH, &HEIGHT);
+        VkExtent2D ActualExtent = {(uint32_t)(WIDTH),(uint32_t)(HEIGHT)};
+        ActualExtent.width = std::clamp(ActualExtent.width, Capabilities.minImageExtent.width, Capabilities.maxImageExtent.width);
+        ActualExtent.height = std::clamp(ActualExtent.height, Capabilities.minImageExtent.height, Capabilities.maxImageExtent.height);
+        SwapExtent = ActualExtent;
+    }
+    return SwapExtent;
+}
+
+AGLFWWindow* FVulkanSwapChain::GetActiveWindow() const {
+    return Cast<AGLFWWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
 }
 
 AVulkanRenderManager* FVulkanSwapChain::GetRenderManager() const {
     return RenderManager;
+}
+
+FVulkanDevice* FVulkanSwapChain::GetVkDevice() const {
+    return GetRenderManager()->GetVkDevice();
+}
+
+FVulkanSurface* FVulkanSwapChain::GetVkSurface() const {
+    return GetRenderManager()->GetVkSurface();
 }

@@ -56,8 +56,50 @@ VkResult FVulkanDevice::SelectPhysicalDevice() {
     return Result;
 }
 
+VkResult FVulkanDevice::CreateLogicalDevice() {
+    FQueueFamilyIndices QueueFamiliesSupported = GetDeviceSupportedQueueFamilies(PhysicalDevice);
+    TArray<VkDeviceQueueCreateInfo> QueueCreateInfos = {};
+    float QueuePriority = 1.0f;
+
+    for (auto QueueFamilyIndice : QueueFamiliesSupported.ToArray()) {
+        VkDeviceQueueCreateInfo QueueCreateInfo = {};
+        QueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        QueueCreateInfo.queueFamilyIndex = QueueFamilyIndice;
+        QueueCreateInfo.queueCount = 1;
+
+        QueueCreateInfo.pQueuePriorities = &QueuePriority;
+        QueueCreateInfos.Add(QueueCreateInfo);
+    }
+
+    VkPhysicalDeviceFeatures DeviceFeatures = {};
+
+    VkDeviceCreateInfo CreateInfo = {};
+    CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    CreateInfo.pQueueCreateInfos = QueueCreateInfos.Data();
+    CreateInfo.queueCreateInfoCount = QueueCreateInfos.Lenght();
+
+    CreateInfo.pEnabledFeatures = &DeviceFeatures;
+
+    CreateInfo.enabledExtensionCount = GetRequiredDeviceExtensions().Lenght();
+    CreateInfo.ppEnabledExtensionNames = GetRequiredDeviceExtensions().Data();
+    
+    CreateInfo.enabledLayerCount = 0;
+
+    return vkCreateDevice(PhysicalDevice, &CreateInfo, nullptr, &LogicalDevice);
+}
+
 bool FVulkanDevice::IsDeviceSuitable(VkPhysicalDevice Device) {
-    return GetDeviceSupportedQueueFamilies(Device).IsValid();
+
+    bool RequiredQueueFamiliesAreValid = GetDeviceSupportedQueueFamilies(Device).IsValid();
+
+    bool SupportRequiredExtensions = CheckDeviceSupportRequiredExtensions(Device);
+
+    bool SwapChainAdequate = false;
+    if (SupportRequiredExtensions) {
+        FSwapChainSupportDetails SwapChainSupport = QuerySwapChainSupportForDevice(Device);
+        SwapChainAdequate = SwapChainSupport.Formats.Lenght() != 0 && SwapChainSupport.PresentModes.Lenght() != 0;
+    }
+    return RequiredQueueFamiliesAreValid && SupportRequiredExtensions && SwapChainAdequate;
 }
 
 int FVulkanDevice::GetDeviceSuitabilityScore(VkPhysicalDevice Device) {
@@ -84,35 +126,66 @@ int FVulkanDevice::GetDeviceSuitabilityScore(VkPhysicalDevice Device) {
     return DeviceScore;
 }
 
+bool FVulkanDevice::CheckDeviceSupportRequiredExtensions(VkPhysicalDevice Device) {
+    uint32_t ExtensionCount;
+    vkEnumerateDeviceExtensionProperties(Device, nullptr, &ExtensionCount, nullptr);
 
-VkResult FVulkanDevice::CreateLogicalDevice() {
-    FQueueFamilyIndices QueueFamiliesSupported = GetDeviceSupportedQueueFamilies(PhysicalDevice);
-    TArray<VkDeviceQueueCreateInfo> QueueCreateInfos = {};
-    float QueuePriority = 1.0f;
+    std::vector<VkExtensionProperties> AvailableExtensions(ExtensionCount);
+    vkEnumerateDeviceExtensionProperties(Device, nullptr, &ExtensionCount, AvailableExtensions.data());
 
-    for (auto QueueFamilyIndice : QueueFamiliesSupported.ToArray()) {
-        VkDeviceQueueCreateInfo QueueCreateInfo = {};
-        QueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        QueueCreateInfo.queueFamilyIndex = QueueFamilyIndice;
-        QueueCreateInfo.queueCount = 1;
-
-        QueueCreateInfo.pQueuePriorities = &QueuePriority;
-        QueueCreateInfos.Add(QueueCreateInfo);
+    TArray<std::string> RequiredExtensions = GetRequiredDeviceExtensionsAsString();
+    for (const auto& Extension : AvailableExtensions) {
+        RequiredExtensions.Remove(Extension.extensionName);
     }
 
-    VkPhysicalDeviceFeatures DeviceFeatures = {};
+    return RequiredExtensions.Lenght() == 0;
+}
 
-    VkDeviceCreateInfo CreateInfo = {};
-    CreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    CreateInfo.pQueueCreateInfos = QueueCreateInfos.Data();
-    CreateInfo.queueCreateInfoCount = QueueCreateInfos.Lenght();
+TArray<const char*> FVulkanDevice::GetRequiredDeviceExtensions() {
+    return {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    };
+}
 
-    CreateInfo.pEnabledFeatures = &DeviceFeatures;
+TArray<std::string> FVulkanDevice::GetRequiredDeviceExtensionsAsString() {
+    TArray<std::string> ExtensionsName = {};
+    for (auto& Elem : GetRequiredDeviceExtensions()) {
+        ExtensionsName.Add(Elem);
+    }
+    return ExtensionsName;
+}
 
-    CreateInfo.enabledExtensionCount = 0;
-    CreateInfo.enabledLayerCount = 0;
+FSwapChainSupportDetails FVulkanDevice::QuerySwapChainSupportForDevice(VkPhysicalDevice Device) {
+    FSwapChainSupportDetails SwapChainSupportDetails = {};
 
-    return vkCreateDevice(PhysicalDevice, &CreateInfo, nullptr, &LogicalDevice);
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(Device, GetVkSurface()->GetPrivateSurface(), &SwapChainSupportDetails.Capabilities);
+    
+    uint32_t FormatCount;
+    vkGetPhysicalDeviceSurfaceFormatsKHR(Device, GetVkSurface()->GetPrivateSurface(), &FormatCount, nullptr);
+    if (FormatCount != 0) {
+        SwapChainSupportDetails.Formats.Resize(FormatCount);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(Device, GetVkSurface()->GetPrivateSurface(), &FormatCount, SwapChainSupportDetails.Formats.Data());
+    }
+
+    uint32_t PresentModeCount;
+    vkGetPhysicalDeviceSurfacePresentModesKHR(Device, GetVkSurface()->GetPrivateSurface(), &PresentModeCount, nullptr);
+
+    if (PresentModeCount != 0) {
+        SwapChainSupportDetails.PresentModes.Resize(PresentModeCount);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(Device, GetVkSurface()->GetPrivateSurface(), &PresentModeCount, SwapChainSupportDetails.PresentModes.Data());
+    }
+    
+    return SwapChainSupportDetails;
+}
+
+
+
+FSwapChainSupportDetails FVulkanDevice::QuerySwapChainSupportDetails() {
+    return QuerySwapChainSupportForDevice(PhysicalDevice);
+}
+
+FQueueFamilyIndices FVulkanDevice::GetSupportedQueueFamilies() {
+    return GetDeviceSupportedQueueFamilies(PhysicalDevice);
 }
 
 FQueueFamilyIndices FVulkanDevice::GetDeviceSupportedQueueFamilies(VkPhysicalDevice Device) {
@@ -132,7 +205,7 @@ FQueueFamilyIndices FVulkanDevice::GetDeviceSupportedQueueFamilies(VkPhysicalDev
 
             //Check for the presenting family
             VkBool32 PresentingSupport = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, QUEUE_FAMILY_INDEX, GetRenderManager()->GetVkSurface()->GetPrivateSurface(), &PresentingSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, QUEUE_FAMILY_INDEX, GetVkSurface()->GetPrivateSurface(), &PresentingSupport);
             if (PresentingSupport) {
                 FamilyIndices.PresentingFamilyIndice = QUEUE_FAMILY_INDEX;
             }
@@ -144,4 +217,8 @@ FQueueFamilyIndices FVulkanDevice::GetDeviceSupportedQueueFamilies(VkPhysicalDev
 
 AVulkanRenderManager* FVulkanDevice::GetRenderManager() const {
     return RenderManager;
+}
+
+FVulkanSurface* FVulkanDevice::GetVkSurface() const {
+    return GetRenderManager()->GetVkSurface();
 }

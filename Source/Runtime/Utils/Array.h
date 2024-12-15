@@ -111,6 +111,10 @@ public:
         return SuccessfullyRemove;
     }
 
+    void Resize(int Count) {
+        ToSTDVector().resize(Count);
+    }
+    
     void Clear() {
         ToSTDVector().clear();
     }

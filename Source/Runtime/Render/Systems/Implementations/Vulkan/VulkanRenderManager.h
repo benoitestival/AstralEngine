@@ -3,6 +3,7 @@
 #include "../../RenderManager.h"
 
 
+class FVulkanSwapChain;
 class FVulkanDevice;
 class FVulkanSurface;
 
@@ -18,6 +19,7 @@ public:
 
     VkInstance GetVkInstance();
     FVulkanDevice* GetVkDevice();
+    FVulkanSwapChain* GetVkSwapChain() const;
     FVulkanSurface* GetVkSurface() const;
 private:
     //Instance Methods
@@ -30,6 +32,10 @@ private:
     //Vulkan Surface methods
     VkResult CreateVulkanSurface();
     void CleanVulkanSurface();
+
+    //Vulkan SwapChain methods
+    VkResult CreateVulkanSwapChain();
+    void CleanVulkanSwapChain();
 private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
@@ -37,4 +43,5 @@ private:
     
     FVulkanDevice* VulkanDevice = nullptr;
     FVulkanSurface* VulkanSurface = nullptr;
+    FVulkanSwapChain* VulkanSwapChain = nullptr;
 };

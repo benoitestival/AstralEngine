@@ -4,7 +4,6 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include "../RenderManager.h"
-#include "../../../Maths/Transform.h"
 #include "../../../Utils/Array.h"
 
 
