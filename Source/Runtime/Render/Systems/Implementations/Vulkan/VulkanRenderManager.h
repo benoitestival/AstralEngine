@@ -36,6 +36,8 @@ private:
     //Vulkan SwapChain methods
     VkResult CreateVulkanSwapChain();
     void CleanVulkanSwapChain();
+    VkResult CreateVulkanSwapChainImageViews();
+    void CleanVulkanSwapChainImageViews();
 private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;

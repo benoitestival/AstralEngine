@@ -5,13 +5,14 @@
     "dependencies": [
 
 	
-	"opengl",
+	    "opengl",
     	"glfw3",
     	"glew",
     	"glm",
 
-	"vulkan",
-	"vulkan-memory-allocator",
+	    "vulkan",
+	    "vulkan-memory-allocator",
+        "spirv-reflect",
 
         "sfml",
 

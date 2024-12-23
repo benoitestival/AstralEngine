@@ -76,6 +76,43 @@ void FVulkanSwapChain::Clean() {
     vkDestroySwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, nullptr);
 }
 
+VkResult FVulkanSwapChain::InitImageViews() {
+    VkResult FinalResult = VK_SUCCESS;
+    SwapChainImageViews.Resize(SwapChainImages.Lenght());
+    for (int SWAP_CHAIN_IMAGE_INDEX = 0; SWAP_CHAIN_IMAGE_INDEX < SwapChainImages.Lenght(); SWAP_CHAIN_IMAGE_INDEX++) {
+        VkImageViewCreateInfo ImageViewCreateInfo{};
+        ImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        ImageViewCreateInfo.image = SwapChainImages[SWAP_CHAIN_IMAGE_INDEX];
+
+        ImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        ImageViewCreateInfo.format = SwapChainImageFormat;
+
+        ImageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ImageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ImageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        ImageViewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+        ImageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        ImageViewCreateInfo.subresourceRange.baseMipLevel = 0;
+        ImageViewCreateInfo.subresourceRange.levelCount = 1;
+        ImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
+        ImageViewCreateInfo.subresourceRange.layerCount = 1;
+
+        VkResult Result = vkCreateImageView(GetVkDevice()->GetPrivateLogicalDevice(), &ImageViewCreateInfo, nullptr, &SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]);
+        if (Result != VK_SUCCESS) {
+            FinalResult = Result;
+            break;
+        }
+    }
+    return FinalResult;
+}
+
+void FVulkanSwapChain::CleanImageViews() {
+    for (auto& SwapChainImageView : SwapChainImageViews) {
+        vkDestroyImageView(GetVkDevice()->GetPrivateLogicalDevice(), SwapChainImageView, nullptr);
+    }
+}
+
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
     VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
     for (auto& Format : AvailableFormats) {

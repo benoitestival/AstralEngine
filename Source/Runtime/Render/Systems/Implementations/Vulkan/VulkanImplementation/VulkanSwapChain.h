@@ -24,6 +24,8 @@ public:
     VkResult Init();
     void Clean();
 
+    VkResult InitImageViews();
+    void CleanImageViews();
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);
@@ -39,6 +41,7 @@ private:
     VkSwapchainKHR SwapChain = VK_NULL_HANDLE;
 
     TArray<VkImage> SwapChainImages;
+    TArray<VkImageView> SwapChainImageViews;
     VkFormat SwapChainImageFormat;
     VkExtent2D SwapChainExtent;
 };

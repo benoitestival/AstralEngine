@@ -14,6 +14,7 @@ void AVulkanRenderManager::Init() {
         CreateVulkanSurface();
         CreateVulkanDevice();
         CreateVulkanSwapChain();
+        CreateVulkanSwapChainImageViews();
     }
     else {
         //TODO throw an exception
@@ -22,6 +23,7 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanVulkanSwapChainImageViews();
     CleanVulkanSwapChain();
     CleanVulkanDevice();
     CleanVulkanSurface();
@@ -101,4 +103,12 @@ void AVulkanRenderManager::CleanVulkanSwapChain() {
     VulkanSwapChain->Clean();
     delete VulkanSwapChain;
     VulkanSwapChain = nullptr;
+}
+
+VkResult AVulkanRenderManager::CreateVulkanSwapChainImageViews() {
+    return VulkanSwapChain->InitImageViews();
+}
+
+void AVulkanRenderManager::CleanVulkanSwapChainImageViews() {
+    VulkanSwapChain->CleanImageViews();
 }
