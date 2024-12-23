@@ -1,4 +1,5 @@
 #pragma once
+#include "../../Utils/Path/Path.h"
 
 class ATimerManager;
 class ARenderManager;
@@ -15,4 +16,6 @@ public:
 
     static void SetShowMouseCursor(bool CursorVisibility);
     static bool ShowMouseCursor();
+
+    static FPath GetEnginePath();
 };

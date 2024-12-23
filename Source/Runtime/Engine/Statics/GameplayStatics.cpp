@@ -31,3 +31,7 @@ void GameplayStatics::SetShowMouseCursor(bool CursorVisibility) {
 bool GameplayStatics::ShowMouseCursor() {
     return GetEngine()->GetShowMouseCursor();
 }
+
+FPath GameplayStatics::GetEnginePath() {
+    return FPathUtils::GetEnginePath();
+}
