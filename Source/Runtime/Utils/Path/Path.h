@@ -10,7 +10,8 @@ public:
 
     bool IsRelative() const;
     bool IsAbsolute() const; 
-    
+
+    std::string ToString() const;
 private:
     std::filesystem::path ToStdPath() const;
     std::string PathString;

@@ -15,6 +15,7 @@
 #include "../Engine/World/World.h"
 #include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
+#include "../Render/ShaderSystem/Shader.h"
 #include "../Render/Systems/RenderManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 #include "../Render/Systems/Implementations/OpenGLRenderManager.h"
@@ -67,6 +68,10 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AWindow)
     REGISTER_ASTRAL_CLASS(ASFMLWindow)
     REGISTER_ASTRAL_CLASS(AGLFWWindow)
+
+    //Render
+    REGISTER_ASTRAL_CLASS(AShader)
+
     
     //Objects
     REGISTER_ASTRAL_CLASS(AWorld)
@@ -119,6 +124,9 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AWindow, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLWindow, AWindow)
     LINK_ASTRAL_CLASS_PARENTS(AGLFWWindow, AWindow)
+
+    //Render
+    LINK_ASTRAL_CLASS_PARENTS(AShader, ABaseObject)
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)
