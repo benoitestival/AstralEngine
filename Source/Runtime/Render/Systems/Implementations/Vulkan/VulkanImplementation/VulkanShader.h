@@ -15,6 +15,8 @@ public:
     
     VkResult Init();
     void Clean();
+
+    VkShaderModule GetPrivateShader();
 private:
 
     AVulkanRenderManager* GetRenderManager() const;
@@ -23,6 +25,6 @@ private:
     AVulkanRenderManager* RenderManager = nullptr;
 private:
     FPath ShaderDiskPath;
-    AShader* InterShader = nullptr;
+    AShader* InternShader = nullptr;
     VkShaderModule ShaderModule = VK_NULL_HANDLE;
 };

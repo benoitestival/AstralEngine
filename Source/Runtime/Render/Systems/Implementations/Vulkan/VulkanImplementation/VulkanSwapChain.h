@@ -26,6 +26,9 @@ public:
 
     VkResult InitImageViews();
     void CleanImageViews();
+
+    VkFormat GetFormat();
+    VkExtent2D GetExtent();
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);

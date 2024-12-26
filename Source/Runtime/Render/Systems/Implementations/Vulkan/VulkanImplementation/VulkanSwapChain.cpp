@@ -113,6 +113,14 @@ void FVulkanSwapChain::CleanImageViews() {
     }
 }
 
+VkFormat FVulkanSwapChain::GetFormat() {
+    return SwapChainImageFormat;
+}
+
+VkExtent2D FVulkanSwapChain::GetExtent() {
+    return SwapChainExtent;
+}
+
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
     VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
     for (auto& Format : AvailableFormats) {

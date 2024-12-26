@@ -18,14 +18,14 @@ FVulkanShader::~FVulkanShader() {
 
 VkResult FVulkanShader::Init() {
     VkResult Result = VK_ERROR_INITIALIZATION_FAILED;
-    InterShader = NewObject<AShader>(AShader::StaticClass());
-    if (InterShader != nullptr) {
-        InterShader->LoadShader(ShaderDiskPath);
+    InternShader = NewObject<AShader>(AShader::StaticClass());
+    if (InternShader != nullptr) {
+        InternShader->LoadShader(ShaderDiskPath);
 
         VkShaderModuleCreateInfo ShaderModuleCreateInfo{};
         ShaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-        ShaderModuleCreateInfo.codeSize = InterShader->ContentSize();
-        ShaderModuleCreateInfo.pCode = reinterpret_cast<const uint32_t*>(InterShader->GetShaderContent().Data());
+        ShaderModuleCreateInfo.codeSize = InternShader->ContentSize();
+        ShaderModuleCreateInfo.pCode = reinterpret_cast<const uint32_t*>(InternShader->GetShaderContent().Data());
 
         Result = vkCreateShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), &ShaderModuleCreateInfo, nullptr, &ShaderModule);
     }
@@ -33,6 +33,12 @@ VkResult FVulkanShader::Init() {
 }
 
 void FVulkanShader::Clean() {
+    vkDestroyShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), ShaderModule, nullptr);
+    InternShader->Destroy();
+}
+
+VkShaderModule FVulkanShader::GetPrivateShader() {
+    return ShaderModule;
 }
 
 AVulkanRenderManager* FVulkanShader::GetRenderManager() const {
