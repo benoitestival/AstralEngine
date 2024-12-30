@@ -1,20 +1,23 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
-#include "../../../../../Utils/Path/Path.h"
+
+#include "../Shader.h"
+
 
 class FVulkanDevice;
 class AVulkanRenderManager;
 class AShader;
 
-class FVulkanShader {
+class AVulkanShader : public AShader {
 public:
 
-    FVulkanShader();
-    FVulkanShader(const FPath& ShaderPath);
-    ~FVulkanShader();
+    DECLARE_ASTRAL_ENGINE_CLASS(AVulkanShader, AShader)
+    
+    AVulkanShader();
+    ~AVulkanShader() override;
     
     VkResult Init();
-    void Clean();
+    virtual void CleanShader() override;
 
     VkShaderModule GetPrivateShader();
 private:
@@ -24,7 +27,6 @@ private:
 private:
     AVulkanRenderManager* RenderManager = nullptr;
 private:
-    FPath ShaderDiskPath;
-    AShader* InternShader = nullptr;
+    //AShader* InternShader = nullptr;
     VkShaderModule ShaderModule = VK_NULL_HANDLE;
 };

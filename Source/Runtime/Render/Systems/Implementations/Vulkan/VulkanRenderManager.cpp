@@ -4,8 +4,17 @@
 #include <GLFW/glfw3.h>
 
 #include "VulkanImplementation/VulkanDevice.h"
+#include "VulkanImplementation/VulkanGraphicsPipeline.h"
+#include "VulkanImplementation/VulkanRenderPass.h"
 #include "VulkanImplementation/VulkanSurface.h"
 
+
+AVulkanRenderManager::AVulkanRenderManager() {
+    
+}
+
+AVulkanRenderManager::~AVulkanRenderManager() {
+}
 
 void AVulkanRenderManager::Init() {
     ARenderManager::Init();
@@ -15,6 +24,8 @@ void AVulkanRenderManager::Init() {
         CreateVulkanDevice();
         CreateVulkanSwapChain();
         CreateVulkanSwapChainImageViews();
+        CreateVulkanRenderPass();
+        CreateVulkanGraphicsPipeline();
     }
     else {
         //TODO throw an exception
@@ -23,6 +34,8 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanVulkanGraphicsPipeline();
+    CleanVulkanRenderPass();
     CleanVulkanSwapChainImageViews();
     CleanVulkanSwapChain();
     CleanVulkanDevice();
@@ -45,6 +58,14 @@ FVulkanSwapChain* AVulkanRenderManager::GetVkSwapChain() const {
 
 FVulkanSurface* AVulkanRenderManager::GetVkSurface() const {
     return VulkanSurface;
+}
+
+FVulkanRenderPass* AVulkanRenderManager::GetVkRenderPass() const {
+    return VulkanRenderPass;
+}
+
+FVulkanGraphicsPipeline* AVulkanRenderManager::GetVkGraphicsPipeline() const {
+    return VulkanGraphicsPipeline;
 }
 
 VkResult AVulkanRenderManager::CreateInstance() {
@@ -111,4 +132,26 @@ VkResult AVulkanRenderManager::CreateVulkanSwapChainImageViews() {
 
 void AVulkanRenderManager::CleanVulkanSwapChainImageViews() {
     VulkanSwapChain->CleanImageViews();
+}
+
+VkResult AVulkanRenderManager::CreateVulkanRenderPass() {
+    VulkanRenderPass = new FVulkanRenderPass();
+    return VulkanRenderPass->Init();
+}
+
+void AVulkanRenderManager::CleanVulkanRenderPass() {
+    VulkanRenderPass->Clean();
+    delete VulkanRenderPass;
+    VulkanRenderPass = nullptr;
+}
+
+VkResult AVulkanRenderManager::CreateVulkanGraphicsPipeline() {
+    VulkanGraphicsPipeline = new FVulkanGraphicsPipeline();
+    return VulkanGraphicsPipeline->Init();
+}
+
+void AVulkanRenderManager::CleanVulkanGraphicsPipeline() {
+    VulkanGraphicsPipeline->Clean();
+    delete VulkanGraphicsPipeline;
+    VulkanGraphicsPipeline = nullptr;
 }

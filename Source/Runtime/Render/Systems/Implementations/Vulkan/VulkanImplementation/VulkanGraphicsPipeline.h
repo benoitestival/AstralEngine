@@ -1,26 +1,26 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 
+#include "../../../../../Utils/Array.h"
 #include "../../../../../Utils/Path/Path.h"
 
+class FVulkanPipelineLayout;
 class FVulkanSwapChain;
-class FVulkanShader;
+class AVulkanShader;
 class AVulkanRenderManager;
 class FVulkanDevice;
 
-class FVulkanPipeline {
+class FVulkanGraphicsPipeline {
 public:
-    FVulkanPipeline();
-    ~FVulkanPipeline();
+    FVulkanGraphicsPipeline();
+    ~FVulkanGraphicsPipeline();
     
     VkResult Init();
     void Clean();
 
 private:
-    FVulkanShader* CreateShader(const FPath& ShaderPath);
-    void DestroyShader(FVulkanShader* Shader);
-
-    VkPipelineShaderStageCreateInfo CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, FVulkanShader* Shader);
+    TArray<VkPipelineShaderStageCreateInfo> CreateShaderStagesInfos();
+    VkPipelineShaderStageCreateInfo CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, AVulkanShader* Shader);
     VkPipelineDynamicStateCreateInfo CreatePipelineDynamicStateInfos();
     VkPipelineVertexInputStateCreateInfo  CreatePipelineVertexInputInfos();
     VkPipelineInputAssemblyStateCreateInfo CreatePipelineInputAssemblyInfos();
@@ -34,4 +34,7 @@ private:
     FVulkanSwapChain* GetVkSwapChain();
 private:
     AVulkanRenderManager* RenderManager = nullptr;
+
+private:
+    FVulkanPipelineLayout* VulkanPipelineLayout = nullptr;
 };

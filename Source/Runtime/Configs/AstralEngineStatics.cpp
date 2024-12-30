@@ -16,6 +16,8 @@
 #include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
 #include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
 #include "../Render/ShaderSystem/Shader.h"
+#include "../Render/ShaderSystem/ShaderManager.h"
+#include "../Render/ShaderSystem/Vulkan/VulkanShader.h"
 #include "../Render/Systems/RenderManager.h"
 #include "../Render/Systems/Implementations/ASFMLRenderManager.h"
 #include "../Render/Systems/Implementations/OpenGLRenderManager.h"
@@ -50,6 +52,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AInputManager)
     REGISTER_ASTRAL_CLASS(ASFMLInputManager)
     REGISTER_ASTRAL_CLASS(AOpenGLInputManager)
+    REGISTER_ASTRAL_CLASS(AShaderManager)
     REGISTER_ASTRAL_CLASS(ARenderManager)
     REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
     REGISTER_ASTRAL_CLASS(AOpenGLRenderManager)
@@ -71,7 +74,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
     //Render
     REGISTER_ASTRAL_CLASS(AShader)
-
+    REGISTER_ASTRAL_CLASS(AVulkanShader)
     
     //Objects
     REGISTER_ASTRAL_CLASS(AWorld)
@@ -110,6 +113,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AInputManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLInputManager, AInputManager)
+    LINK_ASTRAL_CLASS_PARENTS(AShaderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ARenderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLRenderManager, ARenderManager)
@@ -127,6 +131,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
 
     //Render
     LINK_ASTRAL_CLASS_PARENTS(AShader, ABaseObject)
+    LINK_ASTRAL_CLASS_PARENTS(AVulkanShader, AShader)
     
     //Objects
     LINK_ASTRAL_CLASS_PARENTS(AWorld, ABaseObject)

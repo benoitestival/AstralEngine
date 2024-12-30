@@ -50,6 +50,10 @@ void FVulkanRenderPass::Clean() {
     vkDestroyRenderPass(GetVkDevice()->GetPrivateLogicalDevice(), RenderPass, nullptr);
 }
 
+VkRenderPass FVulkanRenderPass::GetPrivateRenderPass() const {
+    return RenderPass;
+}
+
 AVulkanRenderManager* FVulkanRenderPass::GetRenderManager() const {
     return RenderManager;
 }

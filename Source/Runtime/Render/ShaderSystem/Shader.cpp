@@ -10,7 +10,8 @@ AShader::~AShader() {
 }
 
 void AShader::LoadShader(const FPath& ShaderPath) {
-    std::ifstream ShaderFile = std::ifstream(ShaderPath.ToString(), std::ios::ate | std::ios::binary);
+    ShaderDiskPath = ShaderPath;
+    std::ifstream ShaderFile = std::ifstream(ShaderDiskPath.ToString(), std::ios::ate | std::ios::binary);
 
     if (ShaderFile.is_open()) {
         int ShaderFileSize = ShaderFile.tellg();
@@ -20,7 +21,12 @@ void AShader::LoadShader(const FPath& ShaderPath) {
         ShaderFile.read(ShaderContent.Data(), ShaderFileSize);
 
         ShaderFile.close();
+
     }
+}
+
+void AShader::CleanShader() {
+    ShaderContent.Clear();
 }
 
 TArray<char>& AShader::GetShaderContent() {

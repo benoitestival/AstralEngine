@@ -3,6 +3,8 @@
 #include "../../RenderManager.h"
 
 
+class FVulkanGraphicsPipeline;
+class FVulkanRenderPass;
 class FVulkanSwapChain;
 class FVulkanDevice;
 class FVulkanSurface;
@@ -12,7 +14,8 @@ class FVulkanSurface;
 class AVulkanRenderManager : public ARenderManager {
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(AVulkanRenderManager, ARenderManager)
-    AVulkanRenderManager() = default;
+    AVulkanRenderManager();
+    ~AVulkanRenderManager() override;
     
     void Init() override;
     void DeInit() override;
@@ -21,6 +24,8 @@ public:
     FVulkanDevice* GetVkDevice();
     FVulkanSwapChain* GetVkSwapChain() const;
     FVulkanSurface* GetVkSurface() const;
+    FVulkanRenderPass* GetVkRenderPass() const;
+    FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
 private:
     //Instance Methods
     VkResult CreateInstance();
@@ -38,12 +43,21 @@ private:
     void CleanVulkanSwapChain();
     VkResult CreateVulkanSwapChainImageViews();
     void CleanVulkanSwapChainImageViews();
+
+    //Vulkan RenderPass methods
+    VkResult CreateVulkanRenderPass();
+    void CleanVulkanRenderPass();
+
+    //Vulkan GraphicsPipeline methods
+    VkResult CreateVulkanGraphicsPipeline();
+    void CleanVulkanGraphicsPipeline();
 private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
-    //Physical GPU used by Vulkan
     
     FVulkanDevice* VulkanDevice = nullptr;
     FVulkanSurface* VulkanSurface = nullptr;
     FVulkanSwapChain* VulkanSwapChain = nullptr;
+    FVulkanRenderPass* VulkanRenderPass = nullptr;
+    FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
 };

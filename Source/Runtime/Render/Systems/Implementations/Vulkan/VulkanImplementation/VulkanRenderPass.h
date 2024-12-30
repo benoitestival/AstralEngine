@@ -12,6 +12,8 @@ public:
     
     VkResult Init();
     void Clean();
+
+    VkRenderPass GetPrivateRenderPass() const;
 private:
     AVulkanRenderManager* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
@@ -19,7 +21,6 @@ private:
 private:
 
     AVulkanRenderManager* RenderManager = nullptr;
-
-
+    
     VkRenderPass RenderPass = VK_NULL_HANDLE;
 };

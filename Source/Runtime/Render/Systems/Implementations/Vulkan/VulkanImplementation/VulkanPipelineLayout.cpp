@@ -26,6 +26,10 @@ void FVulkanPipelineLayout::Clean() {
     vkDestroyPipelineLayout(GetVkDevice()->GetPrivateLogicalDevice(), PipelineLayout, nullptr);
 }
 
+VkPipelineLayout FVulkanPipelineLayout::GetPrivatePipelineLayout() const {
+    return PipelineLayout;
+}
+
 AVulkanRenderManager* FVulkanPipelineLayout::GetRenderManager() const {
     return RenderManager;
 }

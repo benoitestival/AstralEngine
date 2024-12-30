@@ -12,6 +12,7 @@ public:
     VkResult Init();
     void Clean();
 
+    VkPipelineLayout GetPrivatePipelineLayout() const;
 private:
     AVulkanRenderManager* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;

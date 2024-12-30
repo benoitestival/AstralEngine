@@ -1,58 +1,47 @@
-#include "VulkanPipeline.h"
+#include "VulkanGraphicsPipeline.h"
 
-#include "VulkanShader.h"
 #include "VulkanSwapChain.h"
 #include "../VulkanRenderManager.h"
 #include "../../../../../Engine/Statics/GameplayStatics.h"
 #include "../../../../../Utils/TemplateUtils.h"
+#include "../../../../ShaderSystem/ShaderManager.h"
+#include "../../../../ShaderSystem/Vulkan/VulkanShader.h"
 
-FVulkanPipeline::FVulkanPipeline() {
+FVulkanGraphicsPipeline::FVulkanGraphicsPipeline() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
 }
 
-FVulkanPipeline::~FVulkanPipeline() {
+FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
 }
 
-VkResult FVulkanPipeline::Init() {
-
-    //TODO fix the path to really load shaders
-    FVulkanShader* VertexShader = CreateShader(FPath(GameplayStatics::GetEnginePath()));
-    FVulkanShader* PixelShader = CreateShader(FPath(GameplayStatics::GetEnginePath()));
-
-    VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
-    VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);
-
-    TArray<VkPipelineShaderStageCreateInfo> ShaderStages = {VertShaderStageInfo, FragShaderStageInfo};
-
+VkResult FVulkanGraphicsPipeline::Init() {
+    
     VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo{};
     GraphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     GraphicsPipelineCreateInfo.stageCount = 2;
-    GraphicsPipelineCreateInfo.pStages = ShaderStages.Data();
+    GraphicsPipelineCreateInfo.pStages = CreateShaderStagesInfos().Data();
 
-    
-    
-    DestroyShader(VertexShader);
-    DestroyShader(PixelShader);
     
     return VK_SUCCESS;
 }
 
-void FVulkanPipeline::Clean() {
+void FVulkanGraphicsPipeline::Clean() {
+    GetRenderManager()->GetShaderManager()->ClearShaders();
 }
 
-FVulkanShader* FVulkanPipeline::CreateShader(const FPath& ShaderPath) {
-    FVulkanShader* Shader = new FVulkanShader(ShaderPath);
-    Shader->Init();
-    return Shader;
+
+TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
+    //TODO fix the path to really load shaders
+    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(FPath(GameplayStatics::GetEnginePath()));
+    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(FPath(GameplayStatics::GetEnginePath()));
+
+    VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
+    VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);
+
+    return {VertShaderStageInfo, FragShaderStageInfo};
 }
 
-void FVulkanPipeline::DestroyShader(FVulkanShader* Shader) {
-    Shader->Clean();
-    delete Shader;
-    Shader = nullptr;
-}
-
-VkPipelineShaderStageCreateInfo FVulkanPipeline::CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, FVulkanShader* Shader) {
+VkPipelineShaderStageCreateInfo FVulkanGraphicsPipeline::CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, AVulkanShader* Shader) {
     VkPipelineShaderStageCreateInfo ShaderStageInfos{};
     ShaderStageInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     ShaderStageInfos.stage = Stage;
@@ -62,7 +51,7 @@ VkPipelineShaderStageCreateInfo FVulkanPipeline::CreatePipelineShaderStageInfos(
     return ShaderStageInfos;
 }
 
-VkPipelineDynamicStateCreateInfo FVulkanPipeline::CreatePipelineDynamicStateInfos() {
+VkPipelineDynamicStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineDynamicStateInfos() {
     TArray<VkDynamicState> DynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
     VkPipelineDynamicStateCreateInfo DynamicStateInfos = {};
     DynamicStateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -71,7 +60,7 @@ VkPipelineDynamicStateCreateInfo FVulkanPipeline::CreatePipelineDynamicStateInfo
     return DynamicStateInfos;
 }
 
-VkPipelineVertexInputStateCreateInfo FVulkanPipeline::CreatePipelineVertexInputInfos() {
+VkPipelineVertexInputStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineVertexInputInfos() {
     VkPipelineVertexInputStateCreateInfo VertexInputInfo = {};
     VertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     VertexInputInfo.vertexBindingDescriptionCount = 0;
@@ -81,7 +70,7 @@ VkPipelineVertexInputStateCreateInfo FVulkanPipeline::CreatePipelineVertexInputI
     return VertexInputInfo;
 }
 
-VkPipelineInputAssemblyStateCreateInfo FVulkanPipeline::CreatePipelineInputAssemblyInfos() {
+VkPipelineInputAssemblyStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineInputAssemblyInfos() {
     VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfos = {};
     InputAssemblyInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     InputAssemblyInfos.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -89,7 +78,7 @@ VkPipelineInputAssemblyStateCreateInfo FVulkanPipeline::CreatePipelineInputAssem
     return InputAssemblyInfos;
 }
 
-VkPipelineViewportStateCreateInfo FVulkanPipeline::CreatePipelineViewportStateInfos(bool UseDynamicState) {
+VkPipelineViewportStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineViewportStateInfos(bool UseDynamicState) {
     VkPipelineViewportStateCreateInfo ViewportStateInfos = {};
     if (UseDynamicState) {
         ViewportStateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -118,7 +107,7 @@ VkPipelineViewportStateCreateInfo FVulkanPipeline::CreatePipelineViewportStateIn
     return ViewportStateInfos;
 }
 
-VkPipelineRasterizationStateCreateInfo FVulkanPipeline::CreatePipelineRasterizationStateInfos() {
+VkPipelineRasterizationStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineRasterizationStateInfos() {
     VkPipelineRasterizationStateCreateInfo RasterizerCreateInfos = {};
     RasterizerCreateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     RasterizerCreateInfos.depthClampEnable = VK_FALSE;
@@ -139,7 +128,7 @@ VkPipelineRasterizationStateCreateInfo FVulkanPipeline::CreatePipelineRasterizat
     return RasterizerCreateInfos;
 }
 
-VkPipelineMultisampleStateCreateInfo FVulkanPipeline::CreatePipelineMultisamplingStateInfos() {
+VkPipelineMultisampleStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineMultisamplingStateInfos() {
     VkPipelineMultisampleStateCreateInfo MultisamplingCreateInfos = {};
     MultisamplingCreateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     MultisamplingCreateInfos.sampleShadingEnable = VK_FALSE;
@@ -152,7 +141,7 @@ VkPipelineMultisampleStateCreateInfo FVulkanPipeline::CreatePipelineMultisamplin
     return MultisamplingCreateInfos;
 }
 
-VkPipelineColorBlendStateCreateInfo FVulkanPipeline::CreatePipelineColorBlendStateInfos() {
+VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColorBlendStateInfos() {
     VkPipelineColorBlendAttachmentState ColorBlendAttachment = {};
     ColorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     ColorBlendAttachment.blendEnable = VK_FALSE;
@@ -185,14 +174,14 @@ VkPipelineColorBlendStateCreateInfo FVulkanPipeline::CreatePipelineColorBlendSta
     return ColorBlendingCreateInfos;
 }
 
-AVulkanRenderManager* FVulkanPipeline::GetRenderManager() const {
+AVulkanRenderManager* FVulkanGraphicsPipeline::GetRenderManager() const {
     return RenderManager;
 }
 
-FVulkanDevice* FVulkanPipeline::GetVkDevice() const {
+FVulkanDevice* FVulkanGraphicsPipeline::GetVkDevice() const {
     return GetRenderManager()->GetVkDevice();
 }
 
-FVulkanSwapChain* FVulkanPipeline::GetVkSwapChain() {
+FVulkanSwapChain* FVulkanGraphicsPipeline::GetVkSwapChain() {
     return GetRenderManager()->GetVkSwapChain();
 }
