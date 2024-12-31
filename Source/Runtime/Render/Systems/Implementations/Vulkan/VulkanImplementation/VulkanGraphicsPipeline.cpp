@@ -1,5 +1,8 @@
 #include "VulkanGraphicsPipeline.h"
 
+#include "VulkanDevice.h"
+#include "VulkanPipelineLayout.h"
+#include "VulkanRenderPass.h"
 #include "VulkanSwapChain.h"
 #include "../VulkanRenderManager.h"
 #include "../../../../../Engine/Statics/GameplayStatics.h"
@@ -15,18 +18,43 @@ FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
 }
 
 VkResult FVulkanGraphicsPipeline::Init() {
-    
     VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo{};
     GraphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     GraphicsPipelineCreateInfo.stageCount = 2;
-    GraphicsPipelineCreateInfo.pStages = CreateShaderStagesInfos().Data();
-
     
-    return VK_SUCCESS;
+    GraphicsPipelineCreateInfo.pStages = CreateShaderStagesInfos().Data();
+    
+    VkPipelineVertexInputStateCreateInfo VertexInputInfos = CreatePipelineVertexInputInfos();
+    GraphicsPipelineCreateInfo.pVertexInputState = &VertexInputInfos;
+    VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfos = CreatePipelineInputAssemblyInfos();
+    GraphicsPipelineCreateInfo.pInputAssemblyState = &InputAssemblyInfos;
+    VkPipelineViewportStateCreateInfo ViewportStateInfos = CreatePipelineViewportStateInfos();
+    GraphicsPipelineCreateInfo.pViewportState = &ViewportStateInfos;
+    VkPipelineRasterizationStateCreateInfo RasterizationStateInfos = CreatePipelineRasterizationStateInfos();
+    GraphicsPipelineCreateInfo.pRasterizationState = &RasterizationStateInfos;
+    VkPipelineMultisampleStateCreateInfo MultisamplingStateInfos = CreatePipelineMultisamplingStateInfos();
+    GraphicsPipelineCreateInfo.pMultisampleState = &MultisamplingStateInfos;
+    GraphicsPipelineCreateInfo.pDepthStencilState = nullptr;
+    VkPipelineColorBlendStateCreateInfo ColorBlendStateInfos = CreatePipelineColorBlendStateInfos();
+    GraphicsPipelineCreateInfo.pColorBlendState = &ColorBlendStateInfos;
+    VkPipelineDynamicStateCreateInfo DynamicStateInfos = CreatePipelineDynamicStateInfos();
+    GraphicsPipelineCreateInfo.pDynamicState = &DynamicStateInfos;
+
+    GraphicsPipelineCreateInfo.layout = CreatePipelineLayout()->GetPrivatePipelineLayout();
+
+    GraphicsPipelineCreateInfo.renderPass = GetVkRenderPass()->GetPrivateRenderPass();
+    GraphicsPipelineCreateInfo.subpass = 0;
+
+    GraphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
+    GraphicsPipelineCreateInfo.basePipelineIndex = -1;
+    
+    return vkCreateGraphicsPipelines(GetVkDevice()->GetPrivateLogicalDevice(), VK_NULL_HANDLE, 1, &GraphicsPipelineCreateInfo, nullptr, &GraphicsPipeline);
 }
 
 void FVulkanGraphicsPipeline::Clean() {
     GetRenderManager()->GetShaderManager()->ClearShaders();
+    CleanPipelineLayout();
+    vkDestroyPipeline(GetVkDevice()->GetPrivateLogicalDevice(), GraphicsPipeline, nullptr);
 }
 
 
@@ -174,6 +202,21 @@ VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColor
     return ColorBlendingCreateInfos;
 }
 
+FVulkanPipelineLayout* FVulkanGraphicsPipeline::CreatePipelineLayout() {
+    if (VulkanPipelineLayout == nullptr) {
+        FVulkanPipelineLayout* PipelineLayout = new FVulkanPipelineLayout();
+        PipelineLayout->Init();
+        VulkanPipelineLayout = PipelineLayout;
+    }
+    return VulkanPipelineLayout;
+}
+
+void FVulkanGraphicsPipeline::CleanPipelineLayout() {
+    VulkanPipelineLayout->Clean();
+    delete VulkanPipelineLayout;
+    VulkanPipelineLayout = nullptr;
+}
+
 AVulkanRenderManager* FVulkanGraphicsPipeline::GetRenderManager() const {
     return RenderManager;
 }
@@ -184,4 +227,8 @@ FVulkanDevice* FVulkanGraphicsPipeline::GetVkDevice() const {
 
 FVulkanSwapChain* FVulkanGraphicsPipeline::GetVkSwapChain() {
     return GetRenderManager()->GetVkSwapChain();
+}
+
+FVulkanRenderPass* FVulkanGraphicsPipeline::GetVkRenderPass() const {
+    return GetRenderManager()->GetVkRenderPass();
 }

@@ -4,5 +4,5 @@ mkdir out\binaries
 cd out\binaries
 
 cmake %SOURCE_PATH%
-
+pause
 cmake --build

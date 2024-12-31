@@ -4,6 +4,7 @@
 #include "../../../../../Utils/Array.h"
 #include "../../../../../Utils/Path/Path.h"
 
+class FVulkanRenderPass;
 class FVulkanPipelineLayout;
 class FVulkanSwapChain;
 class AVulkanShader;
@@ -28,11 +29,16 @@ private:
     VkPipelineRasterizationStateCreateInfo CreatePipelineRasterizationStateInfos();
     VkPipelineMultisampleStateCreateInfo CreatePipelineMultisamplingStateInfos();
     VkPipelineColorBlendStateCreateInfo CreatePipelineColorBlendStateInfos();
+
+    FVulkanPipelineLayout* CreatePipelineLayout();
+    void CleanPipelineLayout();
 private:
     AVulkanRenderManager* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
     FVulkanSwapChain* GetVkSwapChain();
+    FVulkanRenderPass* GetVkRenderPass() const;
 private:
+    VkPipeline GraphicsPipeline = VK_NULL_HANDLE;
     AVulkanRenderManager* RenderManager = nullptr;
 
 private:
