@@ -2,6 +2,20 @@
 #include <string>
 #include <filesystem>
 
+#define MAKE_FILE_PATH(FolderPath, FileName, FileExtension)\
+    FPath(FolderPath + FileName + FPathExtension(FileExtension))
+
+struct FPathExtension {
+public:
+    FPathExtension();
+    FPathExtension(const std::string& ExtensionIn);
+    ~FPathExtension();
+
+    std::string ToString() const;
+private:
+    std::string PathExtension;
+};
+
 class FPath {
 public:
     FPath();
@@ -11,7 +25,9 @@ public:
     bool IsRelative() const;
     bool IsAbsolute() const; 
 
-    
+    FPath operator+(const FPath& OtherPath);
+    FPath operator+(const std::string& OtherString);
+    FPath operator+(const FPathExtension& OtherExtension);
     
     std::string ToString() const;
 private:
@@ -22,4 +38,6 @@ private:
 class FPathUtils {
 public:
     static FPath GetEnginePath();
+    static FPath GetEngineRessourcePath();
+    static FPath GetEngineShadersPath();
 };

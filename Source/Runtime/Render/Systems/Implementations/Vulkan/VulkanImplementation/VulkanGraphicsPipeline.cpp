@@ -1,3 +1,4 @@
+// ReSharper disable All
 #include "VulkanGraphicsPipeline.h"
 
 #include "VulkanDevice.h"
@@ -59,9 +60,9 @@ void FVulkanGraphicsPipeline::Clean() {
 
 
 TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
-    //TODO fix the path to really load shaders
-    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(FPath(GameplayStatics::GetEnginePath()));
-    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(FPath(GameplayStatics::GetEnginePath()));
+    
+    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "Triangle", "spirv"));
+    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "Triangle", "spirv"));
 
     VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
     VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);
