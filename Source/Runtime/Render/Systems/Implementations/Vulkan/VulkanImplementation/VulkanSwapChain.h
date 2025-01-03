@@ -3,6 +3,7 @@
 
 #include "../../../../../Utils/Array.h"
 
+class FVulkanFrameBuffer;
 class FVulkanSurface;
 class FVulkanDevice;
 class AGLFWWindow;
@@ -27,6 +28,9 @@ public:
     VkResult InitImageViews();
     void CleanImageViews();
 
+    VkResult InitFrameBuffers();
+    void CleanFrameBuffers();
+
     VkFormat GetFormat();
     VkExtent2D GetExtent();
 private:
@@ -45,6 +49,9 @@ private:
 
     TArray<VkImage> SwapChainImages;
     TArray<VkImageView> SwapChainImageViews;
+    
+    TArray<FVulkanFrameBuffer*> SwapChainFrameBuffers;
+    
     VkFormat SwapChainImageFormat;
     VkExtent2D SwapChainExtent;
 };

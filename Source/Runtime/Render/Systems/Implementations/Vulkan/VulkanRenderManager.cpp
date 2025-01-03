@@ -26,6 +26,7 @@ void AVulkanRenderManager::Init() {
         CreateVulkanSwapChainImageViews();
         CreateVulkanRenderPass();
         CreateVulkanGraphicsPipeline();
+        CreateVulkanFrameBuffers();
     }
     else {
         //TODO throw an exception
@@ -34,6 +35,7 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanVulkanFrameBuffers();
     CleanVulkanGraphicsPipeline();
     CleanVulkanRenderPass();
     CleanVulkanSwapChainImageViews();
@@ -132,6 +134,14 @@ VkResult AVulkanRenderManager::CreateVulkanSwapChainImageViews() {
 
 void AVulkanRenderManager::CleanVulkanSwapChainImageViews() {
     VulkanSwapChain->CleanImageViews();
+}
+
+VkResult AVulkanRenderManager::CreateVulkanFrameBuffers() {
+    return VulkanSwapChain->InitFrameBuffers();
+}
+
+void AVulkanRenderManager::CleanVulkanFrameBuffers() {
+    VulkanSwapChain->CleanFrameBuffers();
 }
 
 VkResult AVulkanRenderManager::CreateVulkanRenderPass() {

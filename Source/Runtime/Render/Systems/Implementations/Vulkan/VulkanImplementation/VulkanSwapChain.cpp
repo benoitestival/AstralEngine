@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "VulkanDevice.h"
+#include "VulkanFrameBuffer.h"
 #include "VulkanSurface.h"
 #include "../VulkanRenderManager.h"
 #include "../../../../../Engine/Engine/Engine.h"
@@ -111,6 +112,32 @@ void FVulkanSwapChain::CleanImageViews() {
     for (auto& SwapChainImageView : SwapChainImageViews) {
         vkDestroyImageView(GetVkDevice()->GetPrivateLogicalDevice(), SwapChainImageView, nullptr);
     }
+    SwapChainImageViews.Clear();
+}
+
+VkResult FVulkanSwapChain::InitFrameBuffers() {
+    VkResult FinalResult = VK_SUCCESS;
+    SwapChainFrameBuffers.Resize(SwapChainImages.Lenght());
+    for (int SWAP_CHAIN_IMAGE_INDEX = 0; SWAP_CHAIN_IMAGE_INDEX < SwapChainImages.Lenght(); SWAP_CHAIN_IMAGE_INDEX++) {
+        FVulkanFrameBuffer* FrameBuffer = new FVulkanFrameBuffer();
+        VkResult Result = FrameBuffer->Init({SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]});
+        if (Result != VK_SUCCESS) {
+            FinalResult = Result;
+            break;
+        }
+        SwapChainFrameBuffers[SWAP_CHAIN_IMAGE_INDEX] = FrameBuffer;
+    }
+
+    return FinalResult;
+}
+
+void FVulkanSwapChain::CleanFrameBuffers() {
+    for (auto& FrameBuffer : SwapChainFrameBuffers) {
+        FrameBuffer->Clean();
+        delete FrameBuffer;
+        FrameBuffer = nullptr;
+    }
+    SwapChainFrameBuffers.Clear();
 }
 
 VkFormat FVulkanSwapChain::GetFormat() {

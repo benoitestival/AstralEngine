@@ -43,6 +43,8 @@ private:
     void CleanVulkanSwapChain();
     VkResult CreateVulkanSwapChainImageViews();
     void CleanVulkanSwapChainImageViews();
+    VkResult CreateVulkanFrameBuffers();
+    void CleanVulkanFrameBuffers();
 
     //Vulkan RenderPass methods
     VkResult CreateVulkanRenderPass();
