@@ -140,12 +140,34 @@ void FVulkanSwapChain::CleanFrameBuffers() {
     SwapChainFrameBuffers.Clear();
 }
 
-VkFormat FVulkanSwapChain::GetFormat() {
+VkFormat FVulkanSwapChain::GetFormat() const{
     return SwapChainImageFormat;
 }
 
-VkExtent2D FVulkanSwapChain::GetExtent() {
+VkExtent2D FVulkanSwapChain::GetExtent() const{
     return SwapChainExtent;
+}
+
+VkViewport FVulkanSwapChain::GetViewport() const {
+    VkViewport Viewport = {};
+    Viewport.x = 0.0f;
+    Viewport.y = 0.0f;
+    Viewport.width = static_cast<float>(GetExtent().width);
+    Viewport.height = static_cast<float>(GetExtent().height);
+    Viewport.minDepth = 0.0f;
+    Viewport.maxDepth = 1.0f;
+    return Viewport;
+}
+
+VkRect2D FVulkanSwapChain::GetScissor() const {
+    VkRect2D Scissor = {};
+    Scissor.offset = {0, 0};
+    Scissor.extent = GetExtent();
+    return Scissor;
+}
+
+FVulkanFrameBuffer* FVulkanSwapChain::GetFrameBuffer(int FRAME_BUFFER_INDEX) const {
+    return SwapChainFrameBuffers[FRAME_BUFFER_INDEX];
 }
 
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {

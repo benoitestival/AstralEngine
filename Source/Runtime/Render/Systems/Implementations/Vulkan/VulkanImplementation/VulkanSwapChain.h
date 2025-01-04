@@ -31,8 +31,11 @@ public:
     VkResult InitFrameBuffers();
     void CleanFrameBuffers();
 
-    VkFormat GetFormat();
-    VkExtent2D GetExtent();
+    VkFormat GetFormat() const;
+    VkExtent2D GetExtent() const;
+    VkViewport GetViewport() const;
+    VkRect2D GetScissor() const;
+    FVulkanFrameBuffer* GetFrameBuffer(int FRAME_BUFFER_INDEX) const;
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);

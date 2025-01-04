@@ -19,6 +19,7 @@ public:
     VkResult Init();
     void Clean();
 
+    VkPipeline GetPrivateGraphicsPipeline();
 private:
     TArray<VkPipelineShaderStageCreateInfo> CreateShaderStagesInfos();
     VkPipelineShaderStageCreateInfo CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, AVulkanShader* Shader);

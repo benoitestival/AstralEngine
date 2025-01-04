@@ -58,6 +58,10 @@ void FVulkanGraphicsPipeline::Clean() {
     vkDestroyPipeline(GetVkDevice()->GetPrivateLogicalDevice(), GraphicsPipeline, nullptr);
 }
 
+VkPipeline FVulkanGraphicsPipeline::GetPrivateGraphicsPipeline() {
+    return GraphicsPipeline;
+}
+
 
 TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
     

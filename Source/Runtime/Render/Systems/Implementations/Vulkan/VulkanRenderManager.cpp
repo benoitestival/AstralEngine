@@ -3,6 +3,7 @@
 #include <optional>
 #include <GLFW/glfw3.h>
 
+#include "VulkanImplementation/VulkanCommandBuffer.h"
 #include "VulkanImplementation/VulkanDevice.h"
 #include "VulkanImplementation/VulkanGraphicsPipeline.h"
 #include "VulkanImplementation/VulkanRenderPass.h"
@@ -27,6 +28,7 @@ void AVulkanRenderManager::Init() {
         CreateVulkanRenderPass();
         CreateVulkanGraphicsPipeline();
         CreateVulkanFrameBuffers();
+        CreateVulkanCommandBuffer();
     }
     else {
         //TODO throw an exception
@@ -35,6 +37,7 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanVulkanCommandBuffer();
     CleanVulkanFrameBuffers();
     CleanVulkanGraphicsPipeline();
     CleanVulkanRenderPass();
@@ -68,6 +71,10 @@ FVulkanRenderPass* AVulkanRenderManager::GetVkRenderPass() const {
 
 FVulkanGraphicsPipeline* AVulkanRenderManager::GetVkGraphicsPipeline() const {
     return VulkanGraphicsPipeline;
+}
+
+FVulkanCommandBuffer* AVulkanRenderManager::GetVkCommandBuffer() const {
+    return VulkanCommandBuffer;
 }
 
 VkResult AVulkanRenderManager::CreateInstance() {
@@ -164,4 +171,15 @@ void AVulkanRenderManager::CleanVulkanGraphicsPipeline() {
     VulkanGraphicsPipeline->Clean();
     delete VulkanGraphicsPipeline;
     VulkanGraphicsPipeline = nullptr;
+}
+
+VkResult AVulkanRenderManager::CreateVulkanCommandBuffer() {
+    VulkanCommandBuffer = new FVulkanCommandBuffer();
+    return VulkanCommandBuffer->Init();
+}
+
+void AVulkanRenderManager::CleanVulkanCommandBuffer() {
+    VulkanCommandBuffer->Clean();
+    delete VulkanCommandBuffer;
+    VulkanCommandBuffer = nullptr;
 }

@@ -3,6 +3,7 @@
 #include "../../RenderManager.h"
 
 
+class FVulkanCommandBuffer;
 class FVulkanGraphicsPipeline;
 class FVulkanRenderPass;
 class FVulkanSwapChain;
@@ -26,6 +27,7 @@ public:
     FVulkanSurface* GetVkSurface() const;
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
+    FVulkanCommandBuffer* GetVkCommandBuffer() const;
 private:
     //Instance Methods
     VkResult CreateInstance();
@@ -53,6 +55,10 @@ private:
     //Vulkan GraphicsPipeline methods
     VkResult CreateVulkanGraphicsPipeline();
     void CleanVulkanGraphicsPipeline();
+
+    //Vulkan CommandBuffer methods
+    VkResult CreateVulkanCommandBuffer();
+    void CleanVulkanCommandBuffer();
 private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
@@ -62,4 +68,5 @@ private:
     FVulkanSwapChain* VulkanSwapChain = nullptr;
     FVulkanRenderPass* VulkanRenderPass = nullptr;
     FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
+    FVulkanCommandBuffer* VulkanCommandBuffer = nullptr;
 };
