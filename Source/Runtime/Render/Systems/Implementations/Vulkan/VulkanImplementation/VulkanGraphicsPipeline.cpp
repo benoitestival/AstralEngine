@@ -65,8 +65,8 @@ VkPipeline FVulkanGraphicsPipeline::GetPrivateGraphicsPipeline() {
 
 TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
     
-    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "Triangle", "spirv"));
-    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "Triangle", "spirv"));
+    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "TriangleVert.vert", "spv"));
+    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "TriangleFrag.frag", "spv"));
 
     VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
     VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);

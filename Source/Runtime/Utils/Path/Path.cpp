@@ -62,5 +62,5 @@ FPath FPathUtils::GetEngineRessourcePath() {
 }
 
 FPath FPathUtils::GetEngineShadersPath() {
-    return GetEngineRessourcePath() + "Shaders";
+    return GetEngineRessourcePath() + "Shaders" + "bin";
 }

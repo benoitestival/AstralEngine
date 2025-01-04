@@ -4,12 +4,12 @@ for %%i in ("%CD%\..\Shaders") do (
 )
 
 cd %SHADER_PATH%
+rmdir /S /Q bin
 mkdir bin
 
 for %%f in (*.glsl*) do (
 	 %GLSLANG_PATH%\glslangValidator -V %%f -o bin/%%~nf.spv
 )
-pause
 
 
 
