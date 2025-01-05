@@ -29,14 +29,13 @@ void AVulkanRenderManager::Init() {
         CreateVulkanGraphicsPipeline();
         CreateVulkanFrameBuffers();
         CreateVulkanCommandBuffer();
-    }
-    else {
-        //TODO throw an exception
+        CreateSyncObjects();
     }
     
 }
 
 void AVulkanRenderManager::DeInit() {
+    CleanSyncObjects();
     CleanVulkanCommandBuffer();
     CleanVulkanFrameBuffers();
     CleanVulkanGraphicsPipeline();
@@ -47,6 +46,58 @@ void AVulkanRenderManager::DeInit() {
     CleanVulkanSurface();
     vkDestroyInstance(VulkanInstance, nullptr);
     ARenderManager::DeInit();
+}
+
+void AVulkanRenderManager::Draw() {
+    ARenderManager::Draw();
+
+    //This function run and does not return until The fence are signaled
+    vkWaitForFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
+
+    //Reset to unsignaled
+    vkResetFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence);
+
+    uint32_t ImageAcquiredIndex = INVALID_INDEX;
+    vkAcquireNextImageKHR(GetVkDevice()->GetPrivateLogicalDevice(), GetVkSwapChain()->GetPrivateSwapChain(), UINT64_MAX, ImageAvailableSemaphore, VK_NULL_HANDLE, &ImageAcquiredIndex);
+    
+    vkResetCommandBuffer(GetVkCommandBuffer()->GetPrivateCommandBuffer(), 0);
+
+    GetVkCommandBuffer()->RecordRenderPassCommand(ImageAcquiredIndex);
+
+    VkSubmitInfo SubmitInfo = {};
+    SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    SubmitInfo.waitSemaphoreCount = 1;
+    
+    TArray<VkSemaphore> WaitSemaphores = {ImageAvailableSemaphore};
+    TArray<VkSemaphore> SignalSemaphores = {RenderFinishedSemaphore};
+    TArray<VkPipelineStageFlags> WaitStages = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+
+    SubmitInfo.pWaitSemaphores = WaitSemaphores.Data();
+    SubmitInfo.pWaitDstStageMask = WaitStages.Data();
+
+    SubmitInfo.commandBufferCount = 1;
+    VkCommandBuffer CommandBuffer = GetVkCommandBuffer()->GetPrivateCommandBuffer();
+    SubmitInfo.pCommandBuffers = &CommandBuffer;
+
+    SubmitInfo.signalSemaphoreCount = 1;
+    SubmitInfo.pSignalSemaphores = SignalSemaphores.Data();
+
+    vkQueueSubmit(GetVkDevice()->GetGraphicsQueue(), 1, &SubmitInfo, InFlightFence);
+
+    VkPresentInfoKHR PresentInfo = {};
+    PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+    PresentInfo.waitSemaphoreCount = 1;
+    PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
+
+    TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateSwapChain()};
+    PresentInfo.swapchainCount = 1;
+    PresentInfo.pSwapchains = SwapChains.Data();
+    PresentInfo.pImageIndices = &ImageAcquiredIndex;
+
+    PresentInfo.pResults = nullptr;
+
+    vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
 }
 
 VkInstance AVulkanRenderManager::GetVkInstance() {
@@ -182,4 +233,26 @@ void AVulkanRenderManager::CleanVulkanCommandBuffer() {
     VulkanCommandBuffer->Clean();
     delete VulkanCommandBuffer;
     VulkanCommandBuffer = nullptr;
+}
+
+VkResult AVulkanRenderManager::CreateSyncObjects() {
+    VkSemaphoreCreateInfo SemaphoreCreateInfo = {};
+    SemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+    VkFenceCreateInfo FenceCreateInfo{};
+    FenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    FenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+    vkCreateSemaphore(GetVkDevice()->GetPrivateLogicalDevice(), &SemaphoreCreateInfo, nullptr, &ImageAvailableSemaphore);
+    vkCreateSemaphore(GetVkDevice()->GetPrivateLogicalDevice(), &SemaphoreCreateInfo, nullptr, &RenderFinishedSemaphore);
+
+    vkCreateFence(GetVkDevice()->GetPrivateLogicalDevice(), &FenceCreateInfo, nullptr, &InFlightFence);
+
+    return VK_SUCCESS;
+}
+
+void AVulkanRenderManager::CleanSyncObjects() {
+    vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), ImageAvailableSemaphore, nullptr);
+    vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), RenderFinishedSemaphore, nullptr);
+    vkDestroyFence(GetVkDevice()->GetPrivateLogicalDevice(), InFlightFence, nullptr);
 }

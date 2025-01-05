@@ -36,12 +36,23 @@ VkResult FVulkanRenderPass::Init() {
     SubPass.colorAttachmentCount = 1;
     SubPass.pColorAttachments = &ColorAttachmentRef;
 
+    VkSubpassDependency SubPassDependency{};
+    SubPassDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+    SubPassDependency.dstSubpass = 0;
+    SubPassDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    SubPassDependency.srcAccessMask = 0;
+    SubPassDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    SubPassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    
     VkRenderPassCreateInfo RenderPassInfo;
     RenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     RenderPassInfo.attachmentCount = 1;
     RenderPassInfo.pAttachments = &ColorAttachment;
     RenderPassInfo.subpassCount = 1;
     RenderPassInfo.pSubpasses = &SubPass;
+    RenderPassInfo.dependencyCount = 1;
+    RenderPassInfo.pDependencies = &SubPassDependency;
+    
 
     return vkCreateRenderPass(GetVkDevice()->GetPrivateLogicalDevice(), &RenderPassInfo, nullptr, &RenderPass);
 }

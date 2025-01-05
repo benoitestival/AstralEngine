@@ -19,6 +19,7 @@
 #define CONCAT(Args1, Args2)\
     Args1##Args2
 
+#define INVALID_INDEX -1
 
 /**
  * Macro for detecting the number of arguments in _VA_ARG_

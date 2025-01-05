@@ -36,6 +36,7 @@ public:
     VkViewport GetViewport() const;
     VkRect2D GetScissor() const;
     FVulkanFrameBuffer* GetFrameBuffer(int FRAME_BUFFER_INDEX) const;
+    VkSwapchainKHR GetPrivateSwapChain() const;
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);

@@ -11,7 +11,6 @@ class FVulkanDevice;
 class FVulkanSurface;
 
 
-
 class AVulkanRenderManager : public ARenderManager {
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(AVulkanRenderManager, ARenderManager)
@@ -21,6 +20,8 @@ public:
     void Init() override;
     void DeInit() override;
 
+    void Draw() override;
+    
     VkInstance GetVkInstance();
     FVulkanDevice* GetVkDevice();
     FVulkanSwapChain* GetVkSwapChain() const;
@@ -59,6 +60,9 @@ private:
     //Vulkan CommandBuffer methods
     VkResult CreateVulkanCommandBuffer();
     void CleanVulkanCommandBuffer();
+
+    VkResult CreateSyncObjects();
+    void CleanSyncObjects();
 private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
@@ -69,4 +73,9 @@ private:
     FVulkanRenderPass* VulkanRenderPass = nullptr;
     FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
     FVulkanCommandBuffer* VulkanCommandBuffer = nullptr;
+
+    //Sync Objects
+    VkSemaphore ImageAvailableSemaphore = VK_NULL_HANDLE;
+    VkSemaphore RenderFinishedSemaphore = VK_NULL_HANDLE;
+    VkFence InFlightFence = VK_NULL_HANDLE;
 };

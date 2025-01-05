@@ -25,6 +25,14 @@ void FVulkanDevice::Clean() {
     vkDestroyDevice(LogicalDevice, nullptr);
 }
 
+VkQueue FVulkanDevice::GetGraphicsQueue() const {
+    return GraphicsQueue;
+}
+
+VkQueue FVulkanDevice::GetPresentingQueue() const {
+    return PresentingQueue;
+}
+
 VkPhysicalDevice FVulkanDevice::GetPrivatePhysicalDevice() const {
     return PhysicalDevice;
 }

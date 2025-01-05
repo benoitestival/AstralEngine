@@ -170,6 +170,10 @@ FVulkanFrameBuffer* FVulkanSwapChain::GetFrameBuffer(int FRAME_BUFFER_INDEX) con
     return SwapChainFrameBuffers[FRAME_BUFFER_INDEX];
 }
 
+VkSwapchainKHR FVulkanSwapChain::GetPrivateSwapChain() const {
+    return SwapChain;
+}
+
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
     VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
     for (auto& Format : AvailableFormats) {

@@ -36,6 +36,9 @@ public:
     VkResult Init();
     void Clean();
 
+    VkQueue GetGraphicsQueue() const;
+    VkQueue GetPresentingQueue() const;
+    
     VkPhysicalDevice GetPrivatePhysicalDevice() const;
     VkDevice GetPrivateLogicalDevice() const;
 private:
