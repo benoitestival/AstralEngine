@@ -11,7 +11,7 @@ class FVulkanSwapChain;
 class FVulkanDevice;
 class FVulkanSurface;
 
-#define MANUAL_VULKAN_DEBUG 0;
+#define MANUAL_VULKAN_DEBUG 1;
 #define IS_VULKAN_DEBUG IS_DEBUG && MANUAL_VULKAN_DEBUG;
 
 class AVulkanRenderManager : public ARenderManager {

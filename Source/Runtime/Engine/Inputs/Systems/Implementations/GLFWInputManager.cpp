@@ -172,7 +172,6 @@ void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionI
     MouseMotionDirection.SafeNormalize();
 
     MotionDirection = MouseMotionDirection;
-    MotionDirection.Log();
     
     if (!GameplayStatics::ShowMouseCursor()) {
         ListenMouseMotionCallBack = false;

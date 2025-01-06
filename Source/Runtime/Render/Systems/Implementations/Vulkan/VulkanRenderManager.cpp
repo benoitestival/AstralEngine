@@ -38,6 +38,8 @@ void AVulkanRenderManager::Init() {
 }
 
 void AVulkanRenderManager::DeInit() {
+    vkDeviceWaitIdle(GetVkDevice()->GetPrivateLogicalDevice());
+    
     CleanSyncObjects();
     CleanVulkanCommandBuffer();
     CleanVulkanFrameBuffers();
@@ -56,52 +58,54 @@ void AVulkanRenderManager::Draw() {
     ARenderManager::Draw();
 
     //This function run and does not return until The fence are signaled
-    // vkWaitForFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
-    //
-    // //Reset to unsignaled
-    // vkResetFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence);
-    //
-    // uint32_t ImageAcquiredIndex = INVALID_INDEX;
-    // vkAcquireNextImageKHR(GetVkDevice()->GetPrivateLogicalDevice(), GetVkSwapChain()->GetPrivateSwapChain(), UINT64_MAX, ImageAvailableSemaphore, VK_NULL_HANDLE, &ImageAcquiredIndex);
-    //
-    // vkResetCommandBuffer(GetVkCommandBuffer()->GetPrivateCommandBuffer(), 0);
-    //
-    // auto Result = GetVkCommandBuffer()->RecordRenderPassCommand(ImageAcquiredIndex);
-    //
-    // VkSubmitInfo SubmitInfo = {};
-    // SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    // SubmitInfo.waitSemaphoreCount = 1;
-    //
-    // TArray<VkSemaphore> WaitSemaphores = {ImageAvailableSemaphore};
-    // TArray<VkSemaphore> SignalSemaphores = {RenderFinishedSemaphore};
-    // TArray<VkPipelineStageFlags> WaitStages = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-    //
-    // SubmitInfo.pWaitSemaphores = WaitSemaphores.Data();
-    // SubmitInfo.pWaitDstStageMask = WaitStages.Data();
-    //
-    // SubmitInfo.commandBufferCount = 1;
-    // VkCommandBuffer CommandBuffer = GetVkCommandBuffer()->GetPrivateCommandBuffer();
-    // SubmitInfo.pCommandBuffers = &CommandBuffer;
-    //
-    // SubmitInfo.signalSemaphoreCount = 1;
-    // SubmitInfo.pSignalSemaphores = SignalSemaphores.Data();
-    //
-    // vkQueueSubmit(GetVkDevice()->GetGraphicsQueue(), 1, &SubmitInfo, InFlightFence);
-    //
-    // VkPresentInfoKHR PresentInfo = {};
-    // PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-    //
-    // PresentInfo.waitSemaphoreCount = 1;
-    // PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
-    //
-    // TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateSwapChain()};
-    // PresentInfo.swapchainCount = 1;
-    // PresentInfo.pSwapchains = SwapChains.Data();
-    // PresentInfo.pImageIndices = &ImageAcquiredIndex;
-    //
-    // PresentInfo.pResults = nullptr;
-    //
-    // vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
+    vkWaitForFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
+    
+    //Reset to unsignaled
+    vkResetFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence);
+    
+    uint32_t ImageAcquiredIndex = INVALID_INDEX;
+    vkAcquireNextImageKHR(GetVkDevice()->GetPrivateLogicalDevice(), GetVkSwapChain()->GetPrivateSwapChain(), UINT64_MAX, ImageAvailableSemaphore, VK_NULL_HANDLE, &ImageAcquiredIndex);
+    
+    vkResetCommandBuffer(GetVkCommandBuffer()->GetPrivateCommandBuffer(), 0);
+    
+    auto Result = GetVkCommandBuffer()->RecordRenderPassCommand(ImageAcquiredIndex);
+    
+    VkSubmitInfo SubmitInfo = {};
+    SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    SubmitInfo.waitSemaphoreCount = 1;
+    
+    TArray<VkSemaphore> WaitSemaphores = {ImageAvailableSemaphore};
+    TArray<VkSemaphore> SignalSemaphores = {RenderFinishedSemaphore};
+    TArray<VkPipelineStageFlags> WaitStages = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    
+    SubmitInfo.pWaitSemaphores = WaitSemaphores.Data();
+    SubmitInfo.pWaitDstStageMask = WaitStages.Data();
+    
+    SubmitInfo.commandBufferCount = 1;
+    VkCommandBuffer CommandBuffer = GetVkCommandBuffer()->GetPrivateCommandBuffer();
+    SubmitInfo.pCommandBuffers = &CommandBuffer;
+    
+    SubmitInfo.signalSemaphoreCount = 1;
+    SubmitInfo.pSignalSemaphores = SignalSemaphores.Data();
+    
+    auto Result2 = vkQueueSubmit(GetVkDevice()->GetGraphicsQueue(), 1, &SubmitInfo, InFlightFence);
+    
+    VkPresentInfoKHR PresentInfo = {};
+    PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+    
+    PresentInfo.waitSemaphoreCount = 1;
+    PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
+    
+    TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateSwapChain()};
+    PresentInfo.swapchainCount = 1;
+    PresentInfo.pSwapchains = SwapChains.Data();
+    PresentInfo.pImageIndices = &ImageAcquiredIndex;
+    
+    PresentInfo.pResults = nullptr;
+    
+    auto result3 = vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
+
+    //std::cout << "sfcsdf";
 }
 
 VkInstance AVulkanRenderManager::GetVkInstance() {
@@ -275,7 +279,7 @@ VkResult AVulkanRenderManager::CreateSyncObjects() {
     VkSemaphoreCreateInfo SemaphoreCreateInfo = {};
     SemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-    VkFenceCreateInfo FenceCreateInfo{};
+    VkFenceCreateInfo FenceCreateInfo = {};
     FenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     FenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
