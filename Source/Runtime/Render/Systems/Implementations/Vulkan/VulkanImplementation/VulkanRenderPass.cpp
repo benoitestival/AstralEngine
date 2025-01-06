@@ -13,7 +13,7 @@ FVulkanRenderPass::~FVulkanRenderPass() {
 }
 
 VkResult FVulkanRenderPass::Init() {
-    VkAttachmentDescription ColorAttachment;
+    VkAttachmentDescription ColorAttachment = {};
     ColorAttachment.format = GetVkSwapChain()->GetFormat();
     ColorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 
@@ -27,16 +27,16 @@ VkResult FVulkanRenderPass::Init() {
     ColorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
 
-    VkAttachmentReference ColorAttachmentRef;
+    VkAttachmentReference ColorAttachmentRef = {};
     ColorAttachmentRef.attachment = 0;
     ColorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    VkSubpassDescription SubPass;
+    VkSubpassDescription SubPass = {};
     SubPass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     SubPass.colorAttachmentCount = 1;
     SubPass.pColorAttachments = &ColorAttachmentRef;
 
-    VkSubpassDependency SubPassDependency{};
+    VkSubpassDependency SubPassDependency = {};
     SubPassDependency.srcSubpass = VK_SUBPASS_EXTERNAL;
     SubPassDependency.dstSubpass = 0;
     SubPassDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -44,7 +44,7 @@ VkResult FVulkanRenderPass::Init() {
     SubPassDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     SubPassDependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
     
-    VkRenderPassCreateInfo RenderPassInfo;
+    VkRenderPassCreateInfo RenderPassInfo = {};
     RenderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     RenderPassInfo.attachmentCount = 1;
     RenderPassInfo.pAttachments = &ColorAttachment;

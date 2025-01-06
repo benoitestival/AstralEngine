@@ -13,14 +13,15 @@ AVulkanShader::AVulkanShader(){
 AVulkanShader::~AVulkanShader() {
 }
 
-VkResult AVulkanShader::Init() {
+void AVulkanShader::InitShader() {
+    AShader::InitShader();
 
     VkShaderModuleCreateInfo ShaderModuleCreateInfo{};
     ShaderModuleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     ShaderModuleCreateInfo.codeSize = ContentSize();
     ShaderModuleCreateInfo.pCode = reinterpret_cast<const uint32_t*>(GetShaderContent().Data());
 
-    return vkCreateShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), &ShaderModuleCreateInfo, nullptr, &ShaderModule);
+    vkCreateShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), &ShaderModuleCreateInfo, nullptr, &ShaderModule);
 }
 
 void AVulkanShader::CleanShader() {

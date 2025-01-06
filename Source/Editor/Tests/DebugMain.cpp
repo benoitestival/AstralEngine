@@ -11,7 +11,8 @@
 #include "../../Runtime/Engine/Statics/GameplayStatics.h"
 
 int ADebugMain::DebugMain() {
-    
+    int Test[] = {2,8,7};
+    int* Test2 = Test;
     std::cout << "Hello World" << std::endl; 
     // FMatrix4X4 Matrix;
     // FVector2D Vec;

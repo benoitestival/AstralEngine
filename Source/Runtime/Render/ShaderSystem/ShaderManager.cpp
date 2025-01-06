@@ -7,6 +7,7 @@
 AShader* AShaderManager::CreateShaderFromPath(const FPath& ShaderPath, FClass* ShaderClass) {
     AShader* Shader = NewObject<AShader>(ShaderClass, this);
     Shader->LoadShader(ShaderPath);
+    Shader->InitShader();
     return Shader;
 }
 

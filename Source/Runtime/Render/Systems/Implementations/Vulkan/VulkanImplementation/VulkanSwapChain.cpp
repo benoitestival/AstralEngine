@@ -45,10 +45,13 @@ VkResult FVulkanSwapChain::Init() {
     SwapChainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
     FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetSupportedQueueFamilies();
+    TArray<uint32_t> QueueFamilyIndices = SupportedQueueFamilyIndices.ToUnsignedArray();
+    
     if (SupportedQueueFamilyIndices.GraphicsFamilyIndice != SupportedQueueFamilyIndices.PresentingFamilyIndice) {
         SwapChainCreateInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
         SwapChainCreateInfo.queueFamilyIndexCount = 2;
-        SwapChainCreateInfo.pQueueFamilyIndices = SupportedQueueFamilyIndices.ToUnsignedArray().Data();
+        
+        SwapChainCreateInfo.pQueueFamilyIndices = QueueFamilyIndices.Data();
     } else {
         SwapChainCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         SwapChainCreateInfo.queueFamilyIndexCount = 0; // Optional
@@ -63,6 +66,8 @@ VkResult FVulkanSwapChain::Init() {
 
     SwapChainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
 
+    vkCreateSwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), &SwapChainCreateInfo, nullptr, &SwapChain);
+    
     vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, nullptr);
     SwapChainImages.Resize(ImageCount);
     vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, SwapChainImages.Data());
@@ -70,7 +75,7 @@ VkResult FVulkanSwapChain::Init() {
     SwapChainImageFormat = SurfaceFormat.format;
     SwapChainExtent = Extent;
     
-    return vkCreateSwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), &SwapChainCreateInfo, nullptr, &SwapChain);
+    return VK_SUCCESS;
 }
 
 void FVulkanSwapChain::Clean() {

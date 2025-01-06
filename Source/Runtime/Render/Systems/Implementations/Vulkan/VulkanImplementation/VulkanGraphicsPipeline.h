@@ -23,13 +23,13 @@ public:
 private:
     TArray<VkPipelineShaderStageCreateInfo> CreateShaderStagesInfos();
     VkPipelineShaderStageCreateInfo CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, AVulkanShader* Shader);
-    VkPipelineDynamicStateCreateInfo CreatePipelineDynamicStateInfos();
     VkPipelineVertexInputStateCreateInfo  CreatePipelineVertexInputInfos();
     VkPipelineInputAssemblyStateCreateInfo CreatePipelineInputAssemblyInfos();
     VkPipelineViewportStateCreateInfo CreatePipelineViewportStateInfos(bool UseDynamicState = true);
     VkPipelineRasterizationStateCreateInfo CreatePipelineRasterizationStateInfos();
     VkPipelineMultisampleStateCreateInfo CreatePipelineMultisamplingStateInfos();
     VkPipelineColorBlendStateCreateInfo CreatePipelineColorBlendStateInfos();
+    VkPipelineDynamicStateCreateInfo CreatePipelineDynamicStateInfos();
 
     FVulkanPipelineLayout* CreatePipelineLayout();
     void CleanPipelineLayout();
@@ -44,4 +44,6 @@ private:
 
 private:
     FVulkanPipelineLayout* VulkanPipelineLayout = nullptr;
+
+    TArray<VkDynamicState> DynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 };

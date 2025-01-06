@@ -19,10 +19,12 @@ void AShader::LoadShader(const FPath& ShaderPath) {
 
         ShaderFile.seekg(0);
         ShaderFile.read(ShaderContent.Data(), ShaderFileSize);
-
+        
         ShaderFile.close();
-
     }
+}
+
+void AShader::InitShader() {
 }
 
 void AShader::CleanShader() {

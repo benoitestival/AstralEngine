@@ -33,7 +33,7 @@ bool FPath::IsAbsolute() const {
 }
 
 FPath FPath::operator+(const FPath& OtherPath) {
-    return FPath(PathString + "/" + OtherPath.ToString());
+    return FPath(PathString + "\\" + OtherPath.ToString());
 }
 
 FPath FPath::operator+(const std::string& OtherString) {

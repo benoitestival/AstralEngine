@@ -89,7 +89,8 @@ VkResult FVulkanDevice::CreateLogicalDevice() {
     CreateInfo.pEnabledFeatures = &DeviceFeatures;
 
     CreateInfo.enabledExtensionCount = GetRequiredDeviceExtensions().Lenght();
-    CreateInfo.ppEnabledExtensionNames = GetRequiredDeviceExtensions().Data();
+    TArray<const char*> EnabledExtensionNames = GetRequiredDeviceExtensions();
+    CreateInfo.ppEnabledExtensionNames = EnabledExtensionNames.Data();
     
     CreateInfo.enabledLayerCount = 0;
 

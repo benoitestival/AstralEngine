@@ -16,7 +16,7 @@ public:
     AVulkanShader();
     ~AVulkanShader() override;
     
-    VkResult Init();
+    void InitShader() override;
     virtual void CleanShader() override;
 
     VkShaderModule GetPrivateShader();

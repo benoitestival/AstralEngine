@@ -1,5 +1,6 @@
 ﻿#include "VulkanRenderManager.h"
 
+#include <iostream>
 #include <optional>
 #include <GLFW/glfw3.h>
 
@@ -9,6 +10,28 @@
 #include "VulkanImplementation/VulkanRenderPass.h"
 #include "VulkanImplementation/VulkanSurface.h"
 
+static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
+
+    std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+
+    return VK_FALSE;
+}
+
+VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    } else {
+        return VK_ERROR_EXTENSION_NOT_PRESENT;
+    }
+}
+
+void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if (func != nullptr) {
+        func(instance, debugMessenger, pAllocator);
+    }
+}
 
 AVulkanRenderManager::AVulkanRenderManager() {
     
@@ -21,6 +44,7 @@ void AVulkanRenderManager::Init() {
     ARenderManager::Init();
 
     if (CreateInstance() == VK_SUCCESS) {
+        //SetupDebugMessenger();
         CreateVulkanSurface();
         CreateVulkanDevice();
         CreateVulkanSwapChain();
@@ -44,6 +68,7 @@ void AVulkanRenderManager::DeInit() {
     CleanVulkanSwapChain();
     CleanVulkanDevice();
     CleanVulkanSurface();
+    //CleanDebugMessenger();
     vkDestroyInstance(VulkanInstance, nullptr);
     ARenderManager::DeInit();
 }
@@ -141,16 +166,45 @@ VkResult AVulkanRenderManager::CreateInstance() {
     VkCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     VkCreateInfo.pApplicationInfo = &VkAppInfo;
 
-    uint32_t GlfwExtensionCount;
-    const char** GlfwExtensionsName;
-    GlfwExtensionsName = glfwGetRequiredInstanceExtensions(&GlfwExtensionCount);
-    
-    VkCreateInfo.enabledExtensionCount = GlfwExtensionCount;
-    VkCreateInfo.ppEnabledExtensionNames = GlfwExtensionsName;
+    uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+    VkCreateInfo.enabledExtensionCount = glfwExtensionCount;
+    VkCreateInfo.ppEnabledExtensionNames = glfwExtensions;
 
     VkCreateInfo.enabledLayerCount = 0;
+    VkCreateInfo.pNext = nullptr;
+    
+    // std::vector<const char*> RequiredExtensions = GetRequiredExtensions();
+    //
+    // VkCreateInfo.enabledExtensionCount = static_cast<uint32_t>(RequiredExtensions.size());
+    // VkCreateInfo.ppEnabledExtensionNames = RequiredExtensions.data();
+    //
+    // VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
+    // if (UseValidationLayers) {
+    //     VkCreateInfo.enabledLayerCount = static_cast<uint32_t>(ValidationLayers.Lenght());
+    //     VkCreateInfo.ppEnabledLayerNames = ValidationLayers.Data();
+    //
+    //     populateDebugMessengerCreateInfo(debugCreateInfo);
+    //     VkCreateInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
+    //     
+    // } else {
+    //     VkCreateInfo.enabledLayerCount = 0;
+    //     VkCreateInfo.pNext = nullptr;
+    // }
 
     return vkCreateInstance(&VkCreateInfo, nullptr, &VulkanInstance);
+}
+
+VkResult AVulkanRenderManager::SetupDebugMessenger() {
+    VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+    populateDebugMessengerCreateInfo(createInfo);
+
+    return CreateDebugUtilsMessengerEXT(VulkanInstance, &createInfo, nullptr, &DebugMessenger);
+}
+
+void AVulkanRenderManager::CleanDebugMessenger() {
+    DestroyDebugUtilsMessengerEXT(VulkanInstance, DebugMessenger, nullptr);
 }
 
 VkResult AVulkanRenderManager::CreateVulkanDevice() {
@@ -256,3 +310,51 @@ void AVulkanRenderManager::CleanSyncObjects() {
     vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), RenderFinishedSemaphore, nullptr);
     vkDestroyFence(GetVkDevice()->GetPrivateLogicalDevice(), InFlightFence, nullptr);
 }
+
+bool AVulkanRenderManager::CheckValidationLayerSupport() {
+    uint32_t LayerCount;
+    vkEnumerateInstanceLayerProperties(&LayerCount, nullptr);
+
+    std::vector<VkLayerProperties> availableLayers(LayerCount);
+    vkEnumerateInstanceLayerProperties(&LayerCount, availableLayers.data());
+
+    for (const char* layerName : ValidationLayers) {
+        bool layerFound = false;
+
+        for (const auto& layerProperties : availableLayers) {
+            if (strcmp(layerName, layerProperties.layerName) == 0) {
+                layerFound = true;
+                break;
+            }
+        }
+
+        if (!layerFound) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+std::vector<const char*> AVulkanRenderManager::GetRequiredExtensions() {
+    uint32_t glfwExtensionCount = 0;
+    const char** glfwExtensions;
+    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+    if (UseValidationLayers) {
+        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    }
+
+    return extensions;
+}
+
+void AVulkanRenderManager::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
+    createInfo = {};
+    createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
+    createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
+    createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
+    createInfo.pfnUserCallback = DebugCallback;
+}
+

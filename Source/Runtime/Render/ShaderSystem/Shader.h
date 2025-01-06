@@ -10,11 +10,12 @@ public:
     ~AShader() override;
     
     void LoadShader(const FPath& ShaderPath);
+    virtual void InitShader();
     virtual void CleanShader();
     TArray<char>& GetShaderContent();
 
     int ContentSize();
-private:
+protected:
     FPath ShaderDiskPath;
     TArray<char> ShaderContent;
 };

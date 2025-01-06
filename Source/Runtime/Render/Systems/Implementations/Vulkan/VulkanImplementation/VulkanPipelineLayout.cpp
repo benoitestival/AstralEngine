@@ -12,7 +12,7 @@ FVulkanPipelineLayout::~FVulkanPipelineLayout() {
 }
 
 VkResult FVulkanPipelineLayout::Init() {
-    VkPipelineLayoutCreateInfo PipelineLayoutInfo{};
+    VkPipelineLayoutCreateInfo PipelineLayoutInfo = {};
     PipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     PipelineLayoutInfo.setLayoutCount = 0; 
     PipelineLayoutInfo.pSetLayouts = nullptr; 

@@ -7,9 +7,12 @@ void AGLFWWindow::Construct() {
     AWindow::Construct();
 
     if (glfwInit()) {
-        glfwInitHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwInitHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        glfwInitHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        // glfwInitHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        // glfwInitHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        // glfwInitHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
         
         Window = glfwCreateWindow(800, 800, "Window", nullptr, nullptr);
         if (Window != nullptr) {

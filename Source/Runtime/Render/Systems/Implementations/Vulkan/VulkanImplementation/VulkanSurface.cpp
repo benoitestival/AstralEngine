@@ -21,6 +21,9 @@ FVulkanSurface::~FVulkanSurface() {
 }
 
 VkResult FVulkanSurface::Init() {
+    if (!glfwVulkanSupported()) {
+        std::cout << "Vulkan is not supported by GLFW!" << std::endl;
+    }
     VkResult Result = glfwCreateWindowSurface(GetRenderManager()->GetVkInstance(), GetWindow()->GetPrivateWindow(), nullptr, &VkSurface); 
     return Result;
 }

@@ -19,11 +19,12 @@ FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
 }
 
 VkResult FVulkanGraphicsPipeline::Init() {
-    VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo{};
+    VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo = {};
     GraphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     GraphicsPipelineCreateInfo.stageCount = 2;
-    
-    GraphicsPipelineCreateInfo.pStages = CreateShaderStagesInfos().Data();
+
+    TArray<VkPipelineShaderStageCreateInfo> StagesCreateInfo = CreateShaderStagesInfos();
+    GraphicsPipelineCreateInfo.pStages = StagesCreateInfo.Data();
     
     VkPipelineVertexInputStateCreateInfo VertexInputInfos = CreatePipelineVertexInputInfos();
     GraphicsPipelineCreateInfo.pVertexInputState = &VertexInputInfos;
@@ -40,12 +41,12 @@ VkResult FVulkanGraphicsPipeline::Init() {
     GraphicsPipelineCreateInfo.pColorBlendState = &ColorBlendStateInfos;
     VkPipelineDynamicStateCreateInfo DynamicStateInfos = CreatePipelineDynamicStateInfos();
     GraphicsPipelineCreateInfo.pDynamicState = &DynamicStateInfos;
-
+    
     GraphicsPipelineCreateInfo.layout = CreatePipelineLayout()->GetPrivatePipelineLayout();
-
+    
     GraphicsPipelineCreateInfo.renderPass = GetVkRenderPass()->GetPrivateRenderPass();
     GraphicsPipelineCreateInfo.subpass = 0;
-
+    
     GraphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
     GraphicsPipelineCreateInfo.basePipelineIndex = -1;
     
@@ -75,7 +76,7 @@ TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderSta
 }
 
 VkPipelineShaderStageCreateInfo FVulkanGraphicsPipeline::CreatePipelineShaderStageInfos(VkShaderStageFlagBits Stage, AVulkanShader* Shader) {
-    VkPipelineShaderStageCreateInfo ShaderStageInfos{};
+    VkPipelineShaderStageCreateInfo ShaderStageInfos = {};
     ShaderStageInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     ShaderStageInfos.stage = Stage;
     ShaderStageInfos.module = Shader->GetPrivateShader();
@@ -84,20 +85,13 @@ VkPipelineShaderStageCreateInfo FVulkanGraphicsPipeline::CreatePipelineShaderSta
     return ShaderStageInfos;
 }
 
-VkPipelineDynamicStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineDynamicStateInfos() {
-    TArray<VkDynamicState> DynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
-    VkPipelineDynamicStateCreateInfo DynamicStateInfos = {};
-    DynamicStateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    DynamicStateInfos.dynamicStateCount = static_cast<uint32_t>(DynamicStates.Lenght());
-    DynamicStateInfos.pDynamicStates = DynamicStates.Data();
-    return DynamicStateInfos;
-}
+
 
 VkPipelineVertexInputStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineVertexInputInfos() {
     VkPipelineVertexInputStateCreateInfo VertexInputInfo = {};
     VertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     VertexInputInfo.vertexBindingDescriptionCount = 0;
-    VertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
+    VertexInputInfo.pVertexBindingDescriptions = nullptr;
     VertexInputInfo.vertexAttributeDescriptionCount = 0;
     VertexInputInfo.pVertexAttributeDescriptions = nullptr;
     return VertexInputInfo;
@@ -185,14 +179,6 @@ VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColor
     ColorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
     ColorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
-    ColorBlendAttachment.blendEnable = VK_TRUE;
-    ColorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    ColorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
-    ColorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-    ColorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    ColorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-    ColorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-
     VkPipelineColorBlendStateCreateInfo ColorBlendingCreateInfos{};
     ColorBlendingCreateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     ColorBlendingCreateInfos.logicOpEnable = VK_FALSE;
@@ -205,6 +191,14 @@ VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColor
     ColorBlendingCreateInfos.blendConstants[3] = 0.0f;
 
     return ColorBlendingCreateInfos;
+}
+
+VkPipelineDynamicStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineDynamicStateInfos() {
+    VkPipelineDynamicStateCreateInfo DynamicStateInfos = {};
+    DynamicStateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
+    DynamicStateInfos.dynamicStateCount = static_cast<uint32_t>(DynamicStates.Lenght());
+    DynamicStateInfos.pDynamicStates = DynamicStates.Data();
+    return DynamicStateInfos;
 }
 
 FVulkanPipelineLayout* FVulkanGraphicsPipeline::CreatePipelineLayout() {

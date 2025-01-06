@@ -2,9 +2,9 @@
 #include <type_traits>
 
 #ifdef NDEBUG
-    #define CONFIG_DEBUG 1
-#else
     #define CONFIG_DEBUG 0
+#else
+    #define CONFIG_DEBUG 1
 #endif
 
 #define MANUAL_DEBUG 1
