@@ -3,11 +3,11 @@
 #include "VulkanDevice.h"
 #include "VulkanRenderPass.h"
 #include "VulkanSwapChain.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanFrameBuffer::FVulkanFrameBuffer() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanFrameBuffer::~FVulkanFrameBuffer() {
@@ -37,7 +37,7 @@ VkFramebuffer FVulkanFrameBuffer::GetPrivateFrameBuffer() {
 }
 
 
-AVulkanRenderManager* FVulkanFrameBuffer::GetRenderManager() const {
+AVulkanRenderer* FVulkanFrameBuffer::GetRenderManager() const {
     return RenderManager;
 }
 

@@ -2,7 +2,7 @@
 #include "vulkan/vulkan.h"
 
 class AGLFWWindow;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 class FVulkanSurface {
 public:
@@ -14,10 +14,10 @@ public:
 
     VkSurfaceKHR GetPrivateSurface() const;
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     AGLFWWindow* GetWindow();
 private:
     VkSurfaceKHR VkSurface = VK_NULL_HANDLE;
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
 };
     

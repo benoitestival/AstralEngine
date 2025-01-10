@@ -17,7 +17,7 @@ public:
     VkResult RecordRenderPassCommand(int FRAME_INDEX);
     VkCommandBuffer GetPrivateCommandBuffer() const;
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
 
     FVulkanDevice* GetVkDevice() const;
     FVulkanRenderPass* GetVkRenderPass() const;
@@ -26,6 +26,6 @@ private:
 private:
     VkCommandPool CommandPool = VK_NULL_HANDLE;
     VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
     
 };

@@ -2,11 +2,11 @@
 
 #include "VulkanDevice.h"
 #include "VulkanSwapChain.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanRenderPass::FVulkanRenderPass() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
     //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
@@ -66,7 +66,7 @@ VkRenderPass FVulkanRenderPass::GetPrivateRenderPass() const {
     return RenderPass;
 }
 
-AVulkanRenderManager* FVulkanRenderPass::GetRenderManager() const {
+AVulkanRenderer* FVulkanRenderPass::GetRenderManager() const {
     return RenderManager;
 }
 

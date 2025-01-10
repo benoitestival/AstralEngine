@@ -1,13 +1,13 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 
-#include "../../../../../Utils/Array.h"
+#include "../../../../Utils/Array.h"
 
 class FVulkanFrameBuffer;
 class FVulkanSurface;
 class FVulkanDevice;
 class AGLFWWindow;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 
 struct FSwapChainSupportDetails {
@@ -37,20 +37,18 @@ public:
     VkRect2D GetScissor();
     FVulkanFrameBuffer* GetFrameBuffer(int FRAME_BUFFER_INDEX) const;
     VkSwapchainKHR GetPrivateSwapChain() const;
-    TArray<VkImage>& GetImages();
-    TArray<VkImageView>& GetImagesViews();
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);
     VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& Capabilities);
 private:
     AGLFWWindow* GetActiveWindow() const;
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
 
     FVulkanDevice* GetVkDevice() const;
     FVulkanSurface* GetVkSurface() const;
 private:
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
     VkSwapchainKHR SwapChain = VK_NULL_HANDLE;
 
     TArray<VkImage> SwapChainImages;

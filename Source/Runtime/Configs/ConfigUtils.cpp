@@ -3,9 +3,9 @@
 #include "../Engine/Engine/Implementations/AstralEngine.h"
 #include "../Engine/Inputs/Systems/Implementations/GLFWInputManager.h"
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
-#include "../Render/Systems/Implementations/ASFMLRenderManager.h"
-#include "../Render/Systems/Implementations/OpenGLRenderManager.h"
-#include "../Render/Systems/Implementations/Vulkan/VulkanRenderManager.h"
+#include "../Render/RenderAPIs/Implementations/ASFMLRenderManager.h"
+#include "../Render/RenderAPIs/Implementations/OpenGLRenderManager.h"
+#include "../Render/RenderAPIs/Implementations/Vulkan/VulkanRenderManager.h"
 #include "../Window/Implementations/GLFWWindow.h"
 #include "../Window/Implementations/SFMLWindow.h"
 

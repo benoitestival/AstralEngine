@@ -1,11 +1,11 @@
 #include "VulkanPipelineLayout.h"
 
 #include "VulkanDevice.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanPipelineLayout::FVulkanPipelineLayout() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
     //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
@@ -29,7 +29,7 @@ VkPipelineLayout FVulkanPipelineLayout::GetPrivatePipelineLayout() const {
     return PipelineLayout;
 }
 
-AVulkanRenderManager* FVulkanPipelineLayout::GetRenderManager() const {
+AVulkanRenderer* FVulkanPipelineLayout::GetRenderManager() const {
     return RenderManager;
 }
 

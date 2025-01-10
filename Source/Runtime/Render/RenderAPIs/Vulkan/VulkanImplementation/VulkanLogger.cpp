@@ -2,14 +2,13 @@
 
 #include <iostream>
 
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../../../Utils/TemplateUtils.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 TArray<const char*> FVulkanLogger::ValidationLayers = {"VK_LAYER_KHRONOS_validation"};
 
 FVulkanLogger::FVulkanLogger() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanLogger::~FVulkanLogger() {
@@ -45,6 +44,6 @@ VkBool32 FVulkanLogger::DebugCallback2(VkDebugUtilsMessageSeverityFlagBitsEXT me
     return VK_FALSE;
 }
 
-AVulkanRenderManager* FVulkanLogger::GetRenderManager() const {
+AVulkanRenderer* FVulkanLogger::GetRenderManager() const {
     return RenderManager;
 }

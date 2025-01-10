@@ -1,4 +1,4 @@
-﻿#include "VulkanRenderManager.h"
+﻿#include "VulkanRenderer.h"
 
 #include <iostream>
 #include <optional>
@@ -12,15 +12,15 @@
 #include "VulkanImplementation/VulkanSurface.h"
 
 
-AVulkanRenderManager::AVulkanRenderManager() {
+AVulkanRenderer::AVulkanRenderer() {
     
 }
 
-AVulkanRenderManager::~AVulkanRenderManager() {
+AVulkanRenderer::~AVulkanRenderer() {
 }
 
-void AVulkanRenderManager::Init() {
-    ARenderManager::Init();
+void AVulkanRenderer::Init() {
+    ARenderer::Init();
 
     if (CreateInstance() == VK_SUCCESS) {
         CreateDebugMessenger();
@@ -37,7 +37,7 @@ void AVulkanRenderManager::Init() {
     
 }
 
-void AVulkanRenderManager::DeInit() {
+void AVulkanRenderer::DeInit() {
     vkDeviceWaitIdle(GetVkDevice()->GetPrivateLogicalDevice());
     
     CleanSyncObjects();
@@ -51,11 +51,11 @@ void AVulkanRenderManager::DeInit() {
     CleanVulkanSurface();
     CleanDebugMessenger();
     vkDestroyInstance(VulkanInstance, nullptr);
-    ARenderManager::DeInit();
+    ARenderer::DeInit();
 }
 
-void AVulkanRenderManager::Draw() {
-    ARenderManager::Draw();
+void AVulkanRenderer::Draw() {
+    ARenderer::Draw();
     
     //This function run and does not return until The fence are signaled
     vkWaitForFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
@@ -108,35 +108,35 @@ void AVulkanRenderManager::Draw() {
     vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
 }
 
-VkInstance AVulkanRenderManager::GetVkInstance() {
+VkInstance AVulkanRenderer::GetVkInstance() {
     return VulkanInstance;
 }
 
-FVulkanDevice* AVulkanRenderManager::GetVkDevice() {
+FVulkanDevice* AVulkanRenderer::GetVkDevice() {
     return VulkanDevice;
 }
 
-FVulkanSwapChain* AVulkanRenderManager::GetVkSwapChain() const {
+FVulkanSwapChain* AVulkanRenderer::GetVkSwapChain() const {
     return VulkanSwapChain;
 }
 
-FVulkanSurface* AVulkanRenderManager::GetVkSurface() const {
+FVulkanSurface* AVulkanRenderer::GetVkSurface() const {
     return VulkanSurface;
 }
 
-FVulkanRenderPass* AVulkanRenderManager::GetVkRenderPass() const {
+FVulkanRenderPass* AVulkanRenderer::GetVkRenderPass() const {
     return VulkanRenderPass;
 }
 
-FVulkanGraphicsPipeline* AVulkanRenderManager::GetVkGraphicsPipeline() const {
+FVulkanGraphicsPipeline* AVulkanRenderer::GetVkGraphicsPipeline() const {
     return VulkanGraphicsPipeline;
 }
 
-FVulkanCommandBuffer* AVulkanRenderManager::GetVkCommandBuffer() const {
+FVulkanCommandBuffer* AVulkanRenderer::GetVkCommandBuffer() const {
     return VulkanCommandBuffer;
 }
 
-VkResult AVulkanRenderManager::CreateInstance() {
+VkResult AVulkanRenderer::CreateInstance() {
     VkApplicationInfo VkAppInfo = {};
     VkAppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     VkAppInfo.pApplicationName = "Astral Engine";
@@ -178,7 +178,7 @@ VkResult AVulkanRenderManager::CreateInstance() {
     return vkCreateInstance(&VkCreateInfo, nullptr, &VulkanInstance);
 }
 
-VkResult AVulkanRenderManager::CreateDebugMessenger() {
+VkResult AVulkanRenderer::CreateDebugMessenger() {
     VkResult Result = VK_SUCCESS;
     if (RunInDebug()) {
         VulkanLogger = new FVulkanLogger();
@@ -187,95 +187,95 @@ VkResult AVulkanRenderManager::CreateDebugMessenger() {
     return Result;
 }
 
-void AVulkanRenderManager::CleanDebugMessenger() {
+void AVulkanRenderer::CleanDebugMessenger() {
     if (RunInDebug()) {
         VulkanLogger->Clean();
     }
 }
 
-VkResult AVulkanRenderManager::CreateVulkanDevice() {
+VkResult AVulkanRenderer::CreateVulkanDevice() {
     VulkanDevice = new FVulkanDevice();
     return VulkanDevice->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanDevice() {
+void AVulkanRenderer::CleanVulkanDevice() {
     VulkanDevice->Clean();
     delete VulkanDevice;
     VulkanDevice = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateVulkanSurface() {
+VkResult AVulkanRenderer::CreateVulkanSurface() {
     VulkanSurface = new FVulkanSurface();
     return VulkanSurface->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanSurface() {
+void AVulkanRenderer::CleanVulkanSurface() {
     VulkanSurface->Clean();
     delete VulkanSurface;
     VulkanSurface = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateVulkanSwapChain() {
+VkResult AVulkanRenderer::CreateVulkanSwapChain() {
     VulkanSwapChain = new FVulkanSwapChain();
     return VulkanSwapChain->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanSwapChain() {
+void AVulkanRenderer::CleanVulkanSwapChain() {
     VulkanSwapChain->Clean();
     delete VulkanSwapChain;
     VulkanSwapChain = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateVulkanSwapChainImageViews() {
+VkResult AVulkanRenderer::CreateVulkanSwapChainImageViews() {
     return VulkanSwapChain->InitImageViews();
 }
 
-void AVulkanRenderManager::CleanVulkanSwapChainImageViews() {
+void AVulkanRenderer::CleanVulkanSwapChainImageViews() {
     VulkanSwapChain->CleanImageViews();
 }
 
-VkResult AVulkanRenderManager::CreateVulkanFrameBuffers() {
+VkResult AVulkanRenderer::CreateVulkanFrameBuffers() {
     return VulkanSwapChain->InitFrameBuffers();
 }
 
-void AVulkanRenderManager::CleanVulkanFrameBuffers() {
+void AVulkanRenderer::CleanVulkanFrameBuffers() {
     VulkanSwapChain->CleanFrameBuffers();
 }
 
-VkResult AVulkanRenderManager::CreateVulkanRenderPass() {
+VkResult AVulkanRenderer::CreateVulkanRenderPass() {
     VulkanRenderPass = new FVulkanRenderPass();
     return VulkanRenderPass->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanRenderPass() {
+void AVulkanRenderer::CleanVulkanRenderPass() {
     VulkanRenderPass->Clean();
     delete VulkanRenderPass;
     VulkanRenderPass = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateVulkanGraphicsPipeline() {
+VkResult AVulkanRenderer::CreateVulkanGraphicsPipeline() {
     VulkanGraphicsPipeline = new FVulkanGraphicsPipeline();
     return VulkanGraphicsPipeline->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanGraphicsPipeline() {
+void AVulkanRenderer::CleanVulkanGraphicsPipeline() {
     VulkanGraphicsPipeline->Clean();
     delete VulkanGraphicsPipeline;
     VulkanGraphicsPipeline = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateVulkanCommandBuffer() {
+VkResult AVulkanRenderer::CreateVulkanCommandBuffer() {
     VulkanCommandBuffer = new FVulkanCommandBuffer();
     return VulkanCommandBuffer->Init();
 }
 
-void AVulkanRenderManager::CleanVulkanCommandBuffer() {
+void AVulkanRenderer::CleanVulkanCommandBuffer() {
     VulkanCommandBuffer->Clean();
     delete VulkanCommandBuffer;
     VulkanCommandBuffer = nullptr;
 }
 
-VkResult AVulkanRenderManager::CreateSyncObjects() {
+VkResult AVulkanRenderer::CreateSyncObjects() {
     VkSemaphoreCreateInfo SemaphoreCreateInfo = {};
     SemaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -291,13 +291,13 @@ VkResult AVulkanRenderManager::CreateSyncObjects() {
     return VK_SUCCESS;
 }
 
-void AVulkanRenderManager::CleanSyncObjects() {
+void AVulkanRenderer::CleanSyncObjects() {
     vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), ImageAvailableSemaphore, nullptr);
     vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), RenderFinishedSemaphore, nullptr);
     vkDestroyFence(GetVkDevice()->GetPrivateLogicalDevice(), InFlightFence, nullptr);
 }
 
-TArray<const char*> AVulkanRenderManager::GetRequiredExtensions() {
+TArray<const char*> AVulkanRenderer::GetRequiredExtensions() {
     uint32_t glfwExtensionCount = 0;
     const char** glfwExtensions;
     glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -305,7 +305,7 @@ TArray<const char*> AVulkanRenderManager::GetRequiredExtensions() {
     return TArray<const char*>(Extensions);
 }
 
-bool AVulkanRenderManager::RunInDebug() const {
+bool AVulkanRenderer::RunInDebug() const {
     bool IsDebug = false;
 #if IS_VULKAN_DEBUG
     IsDebug = true;

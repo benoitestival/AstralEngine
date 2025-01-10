@@ -2,7 +2,7 @@
 #include <vulkan/vulkan_core.h>
 
 class FVulkanDevice;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 class FVulkanPipelineLayout {
 public:
@@ -14,10 +14,10 @@ public:
 
     VkPipelineLayout GetPrivatePipelineLayout() const;
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
 
 private:
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
     VkPipelineLayout PipelineLayout = VK_NULL_HANDLE;
 };

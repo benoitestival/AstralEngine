@@ -6,14 +6,11 @@
 #include "VulkanDevice.h"
 #include "VulkanFrameBuffer.h"
 #include "VulkanSurface.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Engine/Engine.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../../../Utils/TemplateUtils.h"
-#include "../../../../../Window/Implementations/GLFWWindow.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanSwapChain::FVulkanSwapChain(): SwapChainImageFormat(), SwapChainExtent() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanSwapChain::~FVulkanSwapChain() {
@@ -239,7 +236,7 @@ AGLFWWindow* FVulkanSwapChain::GetActiveWindow() const {
     return Cast<AGLFWWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
 }
 
-AVulkanRenderManager* FVulkanSwapChain::GetRenderManager() const {
+AVulkanRenderer* FVulkanSwapChain::GetRenderManager() const {
     return RenderManager;
 }
 

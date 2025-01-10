@@ -1,7 +1,6 @@
 #include "VulkanSurface.h"
 
-#include "../../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../../../Utils/TemplateUtils.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
@@ -9,12 +8,12 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Engine/Engine.h"
-#include "../../../../../Window/Implementations/GLFWWindow.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Engine/Engine.h"
+#include "../../../../Window/Implementations/GLFWWindow.h"
 
 FVulkanSurface::FVulkanSurface() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
     //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
@@ -37,7 +36,7 @@ VkSurfaceKHR FVulkanSurface::GetPrivateSurface() const {
     return VkSurface;
 }
 
-AVulkanRenderManager* FVulkanSurface::GetRenderManager() const {
+AVulkanRenderer* FVulkanSurface::GetRenderManager() const {
     return RenderManager;
 }
 

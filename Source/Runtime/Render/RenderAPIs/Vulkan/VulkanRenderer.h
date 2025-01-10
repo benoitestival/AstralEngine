@@ -1,6 +1,6 @@
 ﻿#pragma once
+#include "../Renderer.h"
 #include "vulkan/vulkan.h"
-#include "../../RenderManager.h"
 
 
 class FVulkanLogger;
@@ -14,11 +14,11 @@ class FVulkanSurface;
 #define MANUAL_VULKAN_DEBUG 1;
 #define IS_VULKAN_DEBUG IS_DEBUG && MANUAL_VULKAN_DEBUG;
 
-class AVulkanRenderManager : public ARenderManager {
+class AVulkanRenderer : public ARenderer {
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(AVulkanRenderManager, ARenderManager)
-    AVulkanRenderManager();
-    ~AVulkanRenderManager() override;
+    DECLARE_ASTRAL_ENGINE_CLASS(AVulkanRenderer, ARenderer)
+    AVulkanRenderer();
+    ~AVulkanRenderer() override;
     
     void Init() override;
     void DeInit() override;

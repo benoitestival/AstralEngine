@@ -5,7 +5,7 @@
 
 
 class FVulkanDevice;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 class AShader;
 
 class AVulkanShader : public AShader {
@@ -22,10 +22,10 @@ public:
     VkShaderModule GetPrivateShader();
 private:
 
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
 private:
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
 private:
     //AShader* InternShader = nullptr;
     VkShaderModule ShaderModule = VK_NULL_HANDLE;

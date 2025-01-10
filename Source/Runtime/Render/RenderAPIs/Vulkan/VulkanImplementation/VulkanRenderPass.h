@@ -3,7 +3,7 @@
 
 class FVulkanSwapChain;
 class FVulkanDevice;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 class FVulkanRenderPass {
 public:
@@ -15,12 +15,12 @@ public:
 
     VkRenderPass GetPrivateRenderPass() const;
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
     FVulkanSwapChain* GetVkSwapChain() const;
 private:
 
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
     
     VkRenderPass RenderPass = VK_NULL_HANDLE;
 };

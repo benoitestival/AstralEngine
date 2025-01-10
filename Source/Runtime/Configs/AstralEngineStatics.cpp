@@ -18,10 +18,10 @@
 #include "../Render/ShaderSystem/Shader.h"
 #include "../Render/ShaderSystem/ShaderManager.h"
 #include "../Render/ShaderSystem/Vulkan/VulkanShader.h"
-#include "../Render/Systems/RenderManager.h"
-#include "../Render/Systems/Implementations/ASFMLRenderManager.h"
-#include "../Render/Systems/Implementations/OpenGLRenderManager.h"
-#include "../Render/Systems/Implementations/Vulkan/VulkanRenderManager.h"
+#include "../Render/RenderAPIs/Renderer.h"
+#include "../Render/RenderAPIs/Implementations/ASFMLRenderManager.h"
+#include "../Render/RenderAPIs/Implementations/OpenGLRenderManager.h"
+#include "../Render/RenderAPIs/Implementations/Vulkan/VulkanRenderManager.h"
 #include "../Serialization/Parsers/ParserBase.h"
 #include "../Window/Window.h"
 #include "../Window/Implementations/GLFWWindow.h"
@@ -56,7 +56,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ARenderManager)
     REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
     REGISTER_ASTRAL_CLASS(AOpenGLRenderManager)
-    REGISTER_ASTRAL_CLASS(AVulkanRenderManager)
+    REGISTER_ASTRAL_CLASS(AVulkanRenderer)
     REGISTER_ASTRAL_CLASS(ATimerManager)
 
     //Tests
@@ -117,7 +117,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ARenderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLRenderManager, ARenderManager)
-    LINK_ASTRAL_CLASS_PARENTS(AVulkanRenderManager, ARenderManager)
+    LINK_ASTRAL_CLASS_PARENTS(AVulkanRenderer, ARenderManager)
     LINK_ASTRAL_CLASS_PARENTS(ATimerManager, AManager)
     
     //Engines

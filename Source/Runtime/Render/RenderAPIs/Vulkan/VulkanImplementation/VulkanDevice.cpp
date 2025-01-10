@@ -2,11 +2,11 @@
 
 #include "VulkanLogger.h"
 #include "VulkanSurface.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanDevice::FVulkanDevice() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
     //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
@@ -246,7 +246,7 @@ FQueueFamilyIndices FVulkanDevice::GetDeviceSupportedQueueFamilies(VkPhysicalDev
     return FamilyIndices;
 }
 
-AVulkanRenderManager* FVulkanDevice::GetRenderManager() const {
+AVulkanRenderer* FVulkanDevice::GetRenderManager() const {
     return RenderManager;
 }
 

@@ -8,7 +8,7 @@
 #include "../../Inputs/Systems/InpuManager.h"
 #include "../../Time/TimerManager.h"
 #include "../../World/World.h"
-#include "../../../Render/Systems/RenderManager.h"
+#include "../../../Render/RenderAPIs/Renderer.h"
 #include "../../CoreObjects/ObjectManager.h"
 #include "../../CoreObjects/Utils/ObjectCoreUtility.h"
 

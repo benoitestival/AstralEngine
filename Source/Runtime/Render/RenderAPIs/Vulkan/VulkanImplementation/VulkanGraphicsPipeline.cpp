@@ -7,17 +7,14 @@
 #include "VulkanPipelineLayout.h"
 #include "VulkanRenderPass.h"
 #include "VulkanSwapChain.h"
-#include "../VulkanRenderManager.h"
-#include "../../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../../../Utils/TemplateUtils.h"
-#include "../../../../ShaderSystem/ShaderManager.h"
-#include "../../../../ShaderSystem/Vulkan/VulkanShader.h"
-
-
+#include "../VulkanRenderer.h"
+#include "../../../../Engine/Statics/GameplayStatics.h"
+#include "../../../ShaderSystem/ShaderManager.h"
+#include "../../../ShaderSystem/Vulkan/VulkanShader.h"
 
 
 FVulkanGraphicsPipeline::FVulkanGraphicsPipeline() {
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
@@ -217,7 +214,7 @@ void FVulkanGraphicsPipeline::CleanPipelineLayout() {
     VulkanPipelineLayout = nullptr;
 }
 
-AVulkanRenderManager* FVulkanGraphicsPipeline::GetRenderManager() const {
+AVulkanRenderer* FVulkanGraphicsPipeline::GetRenderManager() const {
     return RenderManager;
 }
 

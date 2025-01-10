@@ -1,12 +1,11 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
-
-#include "../../../../../Utils/Array.h"
+#include "../../../../Utils/Array.h"
 
 class FVulkanDevice;
 class FVulkanSwapChain;
 class FVulkanRenderPass;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 class FVulkanFrameBuffer {
 public:
@@ -18,7 +17,7 @@ public:
 
     VkFramebuffer GetPrivateFrameBuffer();
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanSwapChain* GetVkSwapChain() const;
@@ -26,5 +25,5 @@ private:
 private:
     TArray<VkImageView> LinkedAttachement;
     VkFramebuffer FrameBuffer = VK_NULL_HANDLE;
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
 };

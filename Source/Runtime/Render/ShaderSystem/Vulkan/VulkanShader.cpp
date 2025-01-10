@@ -2,13 +2,13 @@
 
 #include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../../Utils/TemplateUtils.h"
-#include "../../Systems/Implementations/Vulkan/VulkanRenderManager.h"
-#include "../../Systems/Implementations/Vulkan/VulkanImplementation/VulkanDevice.h"
-#include "../../Systems/Implementations/Vulkan/VulkanImplementation/Test/VulkanClass.h"
+#include "../../RenderAPIs/Implementations/Vulkan/VulkanRenderManager.h"
+#include "../../RenderAPIs/Implementations/Vulkan/VulkanImplementation/VulkanDevice.h"
+#include "../../RenderAPIs/Implementations/Vulkan/VulkanImplementation/Test/VulkanClass.h"
 
 
 AVulkanShader::AVulkanShader(){
-    RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 AVulkanShader::~AVulkanShader() {
@@ -34,7 +34,7 @@ VkShaderModule AVulkanShader::GetPrivateShader() {
     return ShaderModule;
 }
 
-AVulkanRenderManager* AVulkanShader::GetRenderManager() const {
+AVulkanRenderer* AVulkanShader::GetRenderManager() const {
     return RenderManager;
 }
 

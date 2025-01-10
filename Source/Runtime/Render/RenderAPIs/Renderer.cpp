@@ -1,19 +1,19 @@
-﻿#include "RenderManager.h"
+﻿#include "Renderer.h"
 
 #include "../../Engine/CoreObjects/Utils/ObjectCoreUtility.h"
 #include "../ShaderSystem/ShaderManager.h"
 
-void ARenderManager::Init() {
+void ARenderer::Init() {
     ShaderManager = NewObject<AShaderManager>(AShaderManager::StaticClass(), this);
     ShaderManager->Init();
 }
 
-void ARenderManager::Draw() {
+void ARenderer::Draw() {
 }
 
-void ARenderManager::Clear() {
+void ARenderer::Clear() {
 }
 
-AShaderManager* ARenderManager::GetShaderManager() const {
+AShaderManager* ARenderer::GetShaderManager() const {
     return ShaderManager;
 }

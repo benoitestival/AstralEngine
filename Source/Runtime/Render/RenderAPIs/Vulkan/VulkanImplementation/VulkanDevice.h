@@ -8,7 +8,7 @@
 #include "vulkan/vulkan.h"
 
 class FVulkanSurface;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 
 #define INVALID_FAMILY_INDICE -1
 
@@ -71,10 +71,10 @@ private:
     FQueueFamilyIndices GetDeviceSupportedQueueFamilies(VkPhysicalDevice Device);
 
     ///////////////////////////////////////////////////////////
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     FVulkanSurface* GetVkSurface() const;
 private:
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
 
     //Physical GPU used by Vulkan
     VkPhysicalDevice PhysicalDevice = VK_NULL_HANDLE;

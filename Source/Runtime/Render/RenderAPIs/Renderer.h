@@ -4,9 +4,9 @@
 
 class AShaderManager;
 
-class ARenderManager : public AManager{
+class ARenderer : public AManager{
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(ARenderManager, AManager)
+    DECLARE_ASTRAL_ENGINE_CLASS(ARenderer, AManager)
 
     virtual void Init() override;
     

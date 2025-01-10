@@ -1,14 +1,14 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 
-#include "../../../../../Utils/Array.h"
-#include "../../../../../Utils/Path/Path.h"
+#include "../../../../Utils/Array.h"
+
 
 class FVulkanRenderPass;
 class FVulkanPipelineLayout;
 class FVulkanSwapChain;
 class AVulkanShader;
-class AVulkanRenderManager;
+class AVulkanRenderer;
 class FVulkanDevice;
 
 class FVulkanGraphicsPipeline {
@@ -34,13 +34,13 @@ private:
     FVulkanPipelineLayout* CreatePipelineLayout();
     void CleanPipelineLayout();
 private:
-    AVulkanRenderManager* GetRenderManager() const;
+    AVulkanRenderer* GetRenderManager() const;
     FVulkanDevice* GetVkDevice() const;
     FVulkanSwapChain* GetVkSwapChain();
     FVulkanRenderPass* GetVkRenderPass() const;
 private:
     VkPipeline GraphicsPipeline = VK_NULL_HANDLE;
-    AVulkanRenderManager* RenderManager = nullptr;
+    AVulkanRenderer* RenderManager = nullptr;
 
 private:
     FVulkanPipelineLayout* VulkanPipelineLayout = nullptr;
