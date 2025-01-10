@@ -32,7 +32,7 @@ public:
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
     FVulkanCommandBuffer* GetVkCommandBuffer() const;
-private:
+public:
     //Instance Methods
     VkResult CreateInstance();
 
@@ -69,14 +69,15 @@ private:
 
     VkResult CreateSyncObjects();
     void CleanSyncObjects();
-
+public:
+    bool RunInDebug() const;
 private:
     //bool CheckValidationLayerSupport();
     TArray<const char*> GetRequiredExtensions();
     //void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
-    bool RunInDebug() const;
-private:
+    
+public:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
     
@@ -99,6 +100,7 @@ private:
     //     "VK_LAYER_KHRONOS_validation"
     // };
 
+    bool Candraw = true;
 // #ifdef IS_DEBUG
 //     const bool UseValidationLayers = true;
 // #else

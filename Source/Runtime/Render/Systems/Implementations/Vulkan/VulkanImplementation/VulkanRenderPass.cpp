@@ -7,6 +7,7 @@
 
 FVulkanRenderPass::FVulkanRenderPass() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanRenderPass::~FVulkanRenderPass() {

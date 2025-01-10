@@ -54,8 +54,6 @@ VkResult FVulkanSwapChain::Init() {
         SwapChainCreateInfo.pQueueFamilyIndices = QueueFamilyIndices.Data();
     } else {
         SwapChainCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        SwapChainCreateInfo.queueFamilyIndexCount = 0; // Optional
-        SwapChainCreateInfo.pQueueFamilyIndices = nullptr; // Optional
     }
 
     SwapChainCreateInfo.preTransform = SwapChainSupportDetails.Capabilities.currentTransform;
@@ -153,8 +151,7 @@ VkExtent2D FVulkanSwapChain::GetExtent() const{
     return SwapChainExtent;
 }
 
-VkViewport FVulkanSwapChain::GetViewport() const {
-    VkViewport Viewport = {};
+VkViewport FVulkanSwapChain::GetViewport() {
     Viewport.x = 0.0f;
     Viewport.y = 0.0f;
     Viewport.width = static_cast<float>(GetExtent().width);
@@ -164,8 +161,7 @@ VkViewport FVulkanSwapChain::GetViewport() const {
     return Viewport;
 }
 
-VkRect2D FVulkanSwapChain::GetScissor() const {
-    VkRect2D Scissor = {};
+VkRect2D FVulkanSwapChain::GetScissor() {
     Scissor.offset = {0, 0};
     Scissor.extent = GetExtent();
     return Scissor;
@@ -179,11 +175,20 @@ VkSwapchainKHR FVulkanSwapChain::GetPrivateSwapChain() const {
     return SwapChain;
 }
 
+TArray<VkImage>& FVulkanSwapChain::GetImages() {
+    return SwapChainImages;
+}
+
+TArray<VkImageView>& FVulkanSwapChain::GetImagesViews() {
+    return SwapChainImageViews;
+}
+
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
     VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
     for (auto& Format : AvailableFormats) {
         if (Format.format == VK_FORMAT_B8G8R8A8_SRGB && Format.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
             ChoosenSurfaceFormat = Format;
+            break;
         }
     }
     return ChoosenSurfaceFormat;
@@ -207,6 +212,7 @@ VkPresentModeKHR FVulkanSwapChain::ChooseSwapPresentMode(const TArray<VkPresentM
     for (auto& PresentMode : AvailablePresentModes) {
         if (PresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
             ChoosenPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+            break;
         }
     }
     return ChoosenPresentMode;

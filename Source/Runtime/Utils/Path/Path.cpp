@@ -54,7 +54,8 @@ std::filesystem::path FPath::ToStdPath() const {
 
 FPath FPathUtils::GetEnginePath() {
     std::filesystem::path CurrentPath = std::filesystem::current_path();
-    return FPath(CurrentPath.parent_path().parent_path().string());
+    return FPath(CurrentPath.parent_path().parent_path().string());//For IDE
+    //return FPath(CurrentPath.parent_path().parent_path().parent_path().string());//For Exe
 }
 
 FPath FPathUtils::GetEngineRessourcePath() {

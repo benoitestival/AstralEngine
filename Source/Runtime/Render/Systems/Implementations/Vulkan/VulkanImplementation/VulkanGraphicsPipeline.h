@@ -18,7 +18,6 @@ public:
     
     VkResult Init();
     void Clean();
-
     VkPipeline GetPrivateGraphicsPipeline();
 private:
     TArray<VkPipelineShaderStageCreateInfo> CreateShaderStagesInfos();
@@ -28,6 +27,7 @@ private:
     VkPipelineViewportStateCreateInfo CreatePipelineViewportStateInfos(bool UseDynamicState = true);
     VkPipelineRasterizationStateCreateInfo CreatePipelineRasterizationStateInfos();
     VkPipelineMultisampleStateCreateInfo CreatePipelineMultisamplingStateInfos();
+    VkPipelineColorBlendAttachmentState CreatePipelineColorBlendAttachmentsState();
     VkPipelineColorBlendStateCreateInfo CreatePipelineColorBlendStateInfos();
     VkPipelineDynamicStateCreateInfo CreatePipelineDynamicStateInfos();
 

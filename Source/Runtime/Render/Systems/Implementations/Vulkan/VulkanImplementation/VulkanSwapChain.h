@@ -33,10 +33,12 @@ public:
 
     VkFormat GetFormat() const;
     VkExtent2D GetExtent() const;
-    VkViewport GetViewport() const;
-    VkRect2D GetScissor() const;
+    VkViewport GetViewport();
+    VkRect2D GetScissor();
     FVulkanFrameBuffer* GetFrameBuffer(int FRAME_BUFFER_INDEX) const;
     VkSwapchainKHR GetPrivateSwapChain() const;
+    TArray<VkImage>& GetImages();
+    TArray<VkImageView>& GetImagesViews();
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);
@@ -58,4 +60,7 @@ private:
     
     VkFormat SwapChainImageFormat;
     VkExtent2D SwapChainExtent;
+
+    VkViewport Viewport;
+    VkRect2D Scissor;
 };

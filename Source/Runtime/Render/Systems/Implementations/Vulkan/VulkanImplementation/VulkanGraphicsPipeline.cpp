@@ -1,6 +1,8 @@
 // ReSharper disable All
 #include "VulkanGraphicsPipeline.h"
 
+#include <fstream>
+
 #include "VulkanDevice.h"
 #include "VulkanPipelineLayout.h"
 #include "VulkanRenderPass.h"
@@ -10,6 +12,9 @@
 #include "../../../../../Utils/TemplateUtils.h"
 #include "../../../../ShaderSystem/ShaderManager.h"
 #include "../../../../ShaderSystem/Vulkan/VulkanShader.h"
+
+
+
 
 FVulkanGraphicsPipeline::FVulkanGraphicsPipeline() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
@@ -22,22 +27,30 @@ VkResult FVulkanGraphicsPipeline::Init() {
     VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo = {};
     GraphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     GraphicsPipelineCreateInfo.stageCount = 2;
-
+    
+    
     TArray<VkPipelineShaderStageCreateInfo> StagesCreateInfo = CreateShaderStagesInfos();
     GraphicsPipelineCreateInfo.pStages = StagesCreateInfo.Data();
     
     VkPipelineVertexInputStateCreateInfo VertexInputInfos = CreatePipelineVertexInputInfos();
     GraphicsPipelineCreateInfo.pVertexInputState = &VertexInputInfos;
+    
     VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfos = CreatePipelineInputAssemblyInfos();
     GraphicsPipelineCreateInfo.pInputAssemblyState = &InputAssemblyInfos;
+    
     VkPipelineViewportStateCreateInfo ViewportStateInfos = CreatePipelineViewportStateInfos();
     GraphicsPipelineCreateInfo.pViewportState = &ViewportStateInfos;
+    
     VkPipelineRasterizationStateCreateInfo RasterizationStateInfos = CreatePipelineRasterizationStateInfos();
     GraphicsPipelineCreateInfo.pRasterizationState = &RasterizationStateInfos;
+    
     VkPipelineMultisampleStateCreateInfo MultisamplingStateInfos = CreatePipelineMultisamplingStateInfos();
     GraphicsPipelineCreateInfo.pMultisampleState = &MultisamplingStateInfos;
-    GraphicsPipelineCreateInfo.pDepthStencilState = nullptr;
+    //GraphicsPipelineCreateInfo.pDepthStencilState = nullptr;
+
+    VkPipelineColorBlendAttachmentState ColorBlendAttachments = CreatePipelineColorBlendAttachmentsState();
     VkPipelineColorBlendStateCreateInfo ColorBlendStateInfos = CreatePipelineColorBlendStateInfos();
+    ColorBlendStateInfos.pAttachments = &ColorBlendAttachments;
     GraphicsPipelineCreateInfo.pColorBlendState = &ColorBlendStateInfos;
     VkPipelineDynamicStateCreateInfo DynamicStateInfos = CreatePipelineDynamicStateInfos();
     GraphicsPipelineCreateInfo.pDynamicState = &DynamicStateInfos;
@@ -66,8 +79,8 @@ VkPipeline FVulkanGraphicsPipeline::GetPrivateGraphicsPipeline() {
 
 TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
     
-    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "TriangleVert.vert", "spv"));
-    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "TriangleFrag.frag", "spv"));
+    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "vert", "spv"));
+    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "frag", "spv"));
 
     VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
     VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);
@@ -91,9 +104,7 @@ VkPipelineVertexInputStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineVert
     VkPipelineVertexInputStateCreateInfo VertexInputInfo = {};
     VertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
     VertexInputInfo.vertexBindingDescriptionCount = 0;
-    VertexInputInfo.pVertexBindingDescriptions = nullptr;
     VertexInputInfo.vertexAttributeDescriptionCount = 0;
-    VertexInputInfo.pVertexAttributeDescriptions = nullptr;
     return VertexInputInfo;
 }
 
@@ -145,12 +156,9 @@ VkPipelineRasterizationStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineRa
     RasterizerCreateInfos.lineWidth = 1.0f;
 
     RasterizerCreateInfos.cullMode = VK_CULL_MODE_BACK_BIT;
-    RasterizerCreateInfos.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    RasterizerCreateInfos.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
     RasterizerCreateInfos.depthBiasEnable = VK_FALSE;
-    RasterizerCreateInfos.depthBiasConstantFactor = 0.0f;
-    RasterizerCreateInfos.depthBiasClamp = 0.0f; 
-    RasterizerCreateInfos.depthBiasSlopeFactor = 0.0f;
 
     return RasterizerCreateInfos;
 }
@@ -160,31 +168,24 @@ VkPipelineMultisampleStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineMult
     MultisamplingCreateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     MultisamplingCreateInfos.sampleShadingEnable = VK_FALSE;
     MultisamplingCreateInfos.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-    MultisamplingCreateInfos.minSampleShading = 1.0f;
-    MultisamplingCreateInfos.pSampleMask = nullptr; 
-    MultisamplingCreateInfos.alphaToCoverageEnable = VK_FALSE;
-    MultisamplingCreateInfos.alphaToOneEnable = VK_FALSE; 
 
     return MultisamplingCreateInfos;
 }
 
-VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColorBlendStateInfos() {
+VkPipelineColorBlendAttachmentState FVulkanGraphicsPipeline::CreatePipelineColorBlendAttachmentsState() {
     VkPipelineColorBlendAttachmentState ColorBlendAttachment = {};
     ColorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
     ColorBlendAttachment.blendEnable = VK_FALSE;
-    ColorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE;
-    ColorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO;
-    ColorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-    ColorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    ColorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-    ColorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+    return ColorBlendAttachment;
+}
 
+VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColorBlendStateInfos() {
     VkPipelineColorBlendStateCreateInfo ColorBlendingCreateInfos{};
     ColorBlendingCreateInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
     ColorBlendingCreateInfos.logicOpEnable = VK_FALSE;
     ColorBlendingCreateInfos.logicOp = VK_LOGIC_OP_COPY;
     ColorBlendingCreateInfos.attachmentCount = 1;
-    ColorBlendingCreateInfos.pAttachments = &ColorBlendAttachment;
+    //ColorBlendingCreateInfos.pAttachments = &ColorBlendAttachment;
     ColorBlendingCreateInfos.blendConstants[0] = 0.0f;
     ColorBlendingCreateInfos.blendConstants[1] = 0.0f;
     ColorBlendingCreateInfos.blendConstants[2] = 0.0f;

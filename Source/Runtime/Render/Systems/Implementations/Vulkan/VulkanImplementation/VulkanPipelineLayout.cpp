@@ -6,6 +6,7 @@
 
 FVulkanPipelineLayout::FVulkanPipelineLayout() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanPipelineLayout::~FVulkanPipelineLayout() {
@@ -15,9 +16,7 @@ VkResult FVulkanPipelineLayout::Init() {
     VkPipelineLayoutCreateInfo PipelineLayoutInfo = {};
     PipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     PipelineLayoutInfo.setLayoutCount = 0; 
-    PipelineLayoutInfo.pSetLayouts = nullptr; 
     PipelineLayoutInfo.pushConstantRangeCount = 0; 
-    PipelineLayoutInfo.pPushConstantRanges = nullptr; 
 
     return vkCreatePipelineLayout(GetVkDevice()->GetPrivateLogicalDevice(), &PipelineLayoutInfo, nullptr, &PipelineLayout);
 }

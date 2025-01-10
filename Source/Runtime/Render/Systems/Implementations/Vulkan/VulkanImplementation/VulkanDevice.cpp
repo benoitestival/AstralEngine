@@ -1,11 +1,13 @@
 #include "VulkanDevice.h"
 
+#include "VulkanLogger.h"
 #include "VulkanSurface.h"
 #include "../VulkanRenderManager.h"
 #include "../../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanDevice::FVulkanDevice() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanDevice::~FVulkanDevice() {
@@ -65,11 +67,21 @@ VkResult FVulkanDevice::SelectPhysicalDevice() {
 }
 
 VkResult FVulkanDevice::CreateLogicalDevice() {
+    // VkPhysicalDeviceIDProperties deviceIdProperties{ .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES };
+    // VkPhysicalDeviceProperties2 deviceProperties{ .sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2 };
+    // deviceProperties.pNext = &deviceIdProperties;
+    // ::vkGetPhysicalDeviceProperties2(PhysicalDevice, &deviceProperties);
+    //
+    // const auto& properties = deviceProperties.properties;
+    // auto m_name = std::string(properties.deviceName); // NOLINT(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+    
+
+    
     FQueueFamilyIndices QueueFamiliesSupported = GetDeviceSupportedQueueFamilies(PhysicalDevice);
     TArray<VkDeviceQueueCreateInfo> QueueCreateInfos = {};
     float QueuePriority = 1.0f;
 
-    for (auto QueueFamilyIndice : QueueFamiliesSupported.ToArray()) {
+    for (auto QueueFamilyIndice : QueueFamiliesSupported.ToSet()) {
         VkDeviceQueueCreateInfo QueueCreateInfo = {};
         QueueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         QueueCreateInfo.queueFamilyIndex = QueueFamilyIndice;
@@ -91,8 +103,14 @@ VkResult FVulkanDevice::CreateLogicalDevice() {
     CreateInfo.enabledExtensionCount = GetRequiredDeviceExtensions().Lenght();
     TArray<const char*> EnabledExtensionNames = GetRequiredDeviceExtensions();
     CreateInfo.ppEnabledExtensionNames = EnabledExtensionNames.Data();
-    
-    CreateInfo.enabledLayerCount = 0;
+
+    if (GetRenderManager()->RunInDebug()) {
+        CreateInfo.enabledLayerCount = static_cast<uint32_t>(FVulkanLogger::ValidationLayers.Lenght());
+        CreateInfo.ppEnabledLayerNames = FVulkanLogger::ValidationLayers.Data();
+    }
+    else {
+        CreateInfo.enabledLayerCount = 0;
+    }
 
     return vkCreateDevice(PhysicalDevice, &CreateInfo, nullptr, &LogicalDevice);
 }
@@ -217,6 +235,10 @@ FQueueFamilyIndices FVulkanDevice::GetDeviceSupportedQueueFamilies(VkPhysicalDev
             vkGetPhysicalDeviceSurfaceSupportKHR(PhysicalDevice, QUEUE_FAMILY_INDEX, GetVkSurface()->GetPrivateSurface(), &PresentingSupport);
             if (PresentingSupport) {
                 FamilyIndices.PresentingFamilyIndice = QUEUE_FAMILY_INDEX;
+            }
+
+            if (FamilyIndices.IsValid()) {
+                break;
             }
         }
     }

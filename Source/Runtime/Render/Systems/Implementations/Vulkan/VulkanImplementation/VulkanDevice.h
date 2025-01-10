@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <string>
 
 #include "VulkanSwapChain.h"
@@ -20,6 +21,9 @@ struct FQueueFamilyIndices {
     }
 
     TArray<int> ToArray() {
+        return {GraphicsFamilyIndice, PresentingFamilyIndice};
+    }
+    std::set<int> ToSet() {
         return {GraphicsFamilyIndice, PresentingFamilyIndice};
     }
     TArray<uint32_t> ToUnsignedArray() {

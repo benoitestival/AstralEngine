@@ -46,14 +46,12 @@ void FVulkanCommandBuffer::CleanCommandPool() {
 }
 
 VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
-    VkCommandBufferBeginInfo CommandBufferBeginInfo{};
+    VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
     CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    CommandBufferBeginInfo.flags = 0;
-    CommandBufferBeginInfo.pInheritanceInfo = nullptr;
 
     vkBeginCommandBuffer(CommandBuffer, &CommandBufferBeginInfo);
 
-    VkRenderPassBeginInfo RenderPassBeginInfo{};
+    VkRenderPassBeginInfo RenderPassBeginInfo = {};
     RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     RenderPassBeginInfo.renderPass = GetVkRenderPass()->GetPrivateRenderPass();
     RenderPassBeginInfo.framebuffer = GetVkSwapChain()->GetFrameBuffer(FRAME_INDEX)->GetPrivateFrameBuffer();

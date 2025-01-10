@@ -4,6 +4,7 @@
 #include "../../../Utils/TemplateUtils.h"
 #include "../../Systems/Implementations/Vulkan/VulkanRenderManager.h"
 #include "../../Systems/Implementations/Vulkan/VulkanImplementation/VulkanDevice.h"
+#include "../../Systems/Implementations/Vulkan/VulkanImplementation/Test/VulkanClass.h"
 
 
 AVulkanShader::AVulkanShader(){

@@ -15,6 +15,7 @@
 
 FVulkanSurface::FVulkanSurface() {
     RenderManager = Cast<AVulkanRenderManager>(GameplayStatics::GetRenderManager());
+    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanSurface::~FVulkanSurface() {
