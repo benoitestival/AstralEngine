@@ -4,12 +4,12 @@
 #include <optional>
 #include <GLFW/glfw3.h>
 
-#include "VulkanImplementation/VulkanCommandBuffer.h"
-#include "VulkanImplementation/VulkanDevice.h"
-#include "VulkanImplementation/VulkanGraphicsPipeline.h"
-#include "VulkanImplementation/VulkanLogger.h"
-#include "VulkanImplementation/VulkanRenderPass.h"
-#include "VulkanImplementation/VulkanSurface.h"
+#include "VulkanClasses/VulkanCommandBuffer.h"
+#include "VulkanClasses/VulkanDevice.h"
+#include "VulkanClasses/VulkanGraphicsPipeline.h"
+#include "VulkanClasses/VulkanLogger.h"
+#include "VulkanClasses/VulkanRenderPass.h"
+#include "VulkanClasses/VulkanSurface.h"
 
 
 AVulkanRenderer::AVulkanRenderer() {
@@ -38,7 +38,7 @@ void AVulkanRenderer::Init() {
 }
 
 void AVulkanRenderer::DeInit() {
-    vkDeviceWaitIdle(GetVkDevice()->GetPrivateLogicalDevice());
+    vkDeviceWaitIdle(GetVkDevice()->GetPrivateRessource());
     
     CleanSyncObjects();
     CleanVulkanCommandBuffer();
@@ -58,15 +58,15 @@ void AVulkanRenderer::Draw() {
     ARenderer::Draw();
     
     //This function run and does not return until The fence are signaled
-    vkWaitForFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
+    vkWaitForFences(GetVkDevice()->GetPrivateRessource(), 1, &InFlightFence, VK_TRUE, UINT64_MAX);
     
     //Reset to unsignaled
-    vkResetFences(GetVkDevice()->GetPrivateLogicalDevice(), 1, &InFlightFence);
+    vkResetFences(GetVkDevice()->GetPrivateRessource(), 1, &InFlightFence);
 
     uint32_t ImageAcquiredIndex = INVALID_INDEX;
-    vkAcquireNextImageKHR(GetVkDevice()->GetPrivateLogicalDevice(), GetVkSwapChain()->GetPrivateSwapChain(), UINT64_MAX, ImageAvailableSemaphore, VK_NULL_HANDLE, &ImageAcquiredIndex);
+    vkAcquireNextImageKHR(GetVkDevice()->GetPrivateRessource(), GetVkSwapChain()->GetPrivateRessource(), UINT64_MAX, ImageAvailableSemaphore, VK_NULL_HANDLE, &ImageAcquiredIndex);
 
-    vkResetCommandBuffer(GetVkCommandBuffer()->GetPrivateCommandBuffer(), 0);
+    vkResetCommandBuffer(GetVkCommandBuffer()->GetPrivateRessource(), 0);
 
     GetVkCommandBuffer()->RecordRenderPassCommand(ImageAcquiredIndex);
 
@@ -84,7 +84,7 @@ void AVulkanRenderer::Draw() {
     SubmitInfo.pWaitDstStageMask = WaitStages.Data();
 
     SubmitInfo.commandBufferCount = 1;
-    VkCommandBuffer CommandBuffer = GetVkCommandBuffer()->GetPrivateCommandBuffer();
+    VkCommandBuffer CommandBuffer = GetVkCommandBuffer()->GetPrivateRessource();
     SubmitInfo.pCommandBuffers = &CommandBuffer;
 
     SubmitInfo.signalSemaphoreCount = 1;
@@ -98,7 +98,7 @@ void AVulkanRenderer::Draw() {
     PresentInfo.waitSemaphoreCount = 1;
     PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
 
-    TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateSwapChain()};
+    TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateRessource()};
     PresentInfo.swapchainCount = 1;
     PresentInfo.pSwapchains = SwapChains.Data();
     PresentInfo.pImageIndices = &ImageAcquiredIndex;
@@ -283,18 +283,18 @@ VkResult AVulkanRenderer::CreateSyncObjects() {
     FenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     FenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-    vkCreateSemaphore(GetVkDevice()->GetPrivateLogicalDevice(), &SemaphoreCreateInfo, nullptr, &ImageAvailableSemaphore);
-    vkCreateSemaphore(GetVkDevice()->GetPrivateLogicalDevice(), &SemaphoreCreateInfo, nullptr, &RenderFinishedSemaphore);
+    vkCreateSemaphore(GetVkDevice()->GetPrivateRessource(), &SemaphoreCreateInfo, nullptr, &ImageAvailableSemaphore);
+    vkCreateSemaphore(GetVkDevice()->GetPrivateRessource(), &SemaphoreCreateInfo, nullptr, &RenderFinishedSemaphore);
 
-    vkCreateFence(GetVkDevice()->GetPrivateLogicalDevice(), &FenceCreateInfo, nullptr, &InFlightFence);
+    vkCreateFence(GetVkDevice()->GetPrivateRessource(), &FenceCreateInfo, nullptr, &InFlightFence);
 
     return VK_SUCCESS;
 }
 
 void AVulkanRenderer::CleanSyncObjects() {
-    vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), ImageAvailableSemaphore, nullptr);
-    vkDestroySemaphore(GetVkDevice()->GetPrivateLogicalDevice(), RenderFinishedSemaphore, nullptr);
-    vkDestroyFence(GetVkDevice()->GetPrivateLogicalDevice(), InFlightFence, nullptr);
+    vkDestroySemaphore(GetVkDevice()->GetPrivateRessource(), ImageAvailableSemaphore, nullptr);
+    vkDestroySemaphore(GetVkDevice()->GetPrivateRessource(), RenderFinishedSemaphore, nullptr);
+    vkDestroyFence(GetVkDevice()->GetPrivateRessource(), InFlightFence, nullptr);
 }
 
 TArray<const char*> AVulkanRenderer::GetRequiredExtensions() {

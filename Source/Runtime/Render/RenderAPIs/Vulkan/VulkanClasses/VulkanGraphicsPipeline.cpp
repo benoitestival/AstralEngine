@@ -14,7 +14,6 @@
 
 
 FVulkanGraphicsPipeline::FVulkanGraphicsPipeline() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
@@ -52,32 +51,28 @@ VkResult FVulkanGraphicsPipeline::Init() {
     VkPipelineDynamicStateCreateInfo DynamicStateInfos = CreatePipelineDynamicStateInfos();
     GraphicsPipelineCreateInfo.pDynamicState = &DynamicStateInfos;
     
-    GraphicsPipelineCreateInfo.layout = CreatePipelineLayout()->GetPrivatePipelineLayout();
+    GraphicsPipelineCreateInfo.layout = CreatePipelineLayout()->GetPrivateRessource();
     
-    GraphicsPipelineCreateInfo.renderPass = GetVkRenderPass()->GetPrivateRenderPass();
+    GraphicsPipelineCreateInfo.renderPass = GetVkRenderPass()->GetPrivateRessource();
     GraphicsPipelineCreateInfo.subpass = 0;
     
     GraphicsPipelineCreateInfo.basePipelineHandle = VK_NULL_HANDLE;
     GraphicsPipelineCreateInfo.basePipelineIndex = -1;
     
-    return vkCreateGraphicsPipelines(GetVkDevice()->GetPrivateLogicalDevice(), VK_NULL_HANDLE, 1, &GraphicsPipelineCreateInfo, nullptr, &GraphicsPipeline);
+    return vkCreateGraphicsPipelines(GetVkDevice()->GetPrivateRessource(), VK_NULL_HANDLE, 1, &GraphicsPipelineCreateInfo, nullptr, &GetPrivateRessource());
 }
 
 void FVulkanGraphicsPipeline::Clean() {
-    GetRenderManager()->GetShaderManager()->ClearShaders();
+    GetVKRenderer()->GetShaderManager()->ClearShaders();
     CleanPipelineLayout();
-    vkDestroyPipeline(GetVkDevice()->GetPrivateLogicalDevice(), GraphicsPipeline, nullptr);
-}
-
-VkPipeline FVulkanGraphicsPipeline::GetPrivateGraphicsPipeline() {
-    return GraphicsPipeline;
+    vkDestroyPipeline(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), nullptr);
 }
 
 
 TArray<VkPipelineShaderStageCreateInfo> FVulkanGraphicsPipeline::CreateShaderStagesInfos() {
     
-    AVulkanShader* VertexShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "vert", "spv"));
-    AVulkanShader* PixelShader = GetRenderManager()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "frag", "spv"));
+    AVulkanShader* VertexShader = GetVKRenderer()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "vert", "spv"));
+    AVulkanShader* PixelShader = GetVKRenderer()->GetShaderManager()->CreateShaderFromPath<AVulkanShader>(MAKE_FILE_PATH(FPathUtils::GetEngineShadersPath(), "frag", "spv"));
 
     VkPipelineShaderStageCreateInfo VertShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_VERTEX_BIT, VertexShader);
     VkPipelineShaderStageCreateInfo FragShaderStageInfo = CreatePipelineShaderStageInfos(VK_SHADER_STAGE_FRAGMENT_BIT, PixelShader);
@@ -182,7 +177,6 @@ VkPipelineColorBlendStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineColor
     ColorBlendingCreateInfos.logicOpEnable = VK_FALSE;
     ColorBlendingCreateInfos.logicOp = VK_LOGIC_OP_COPY;
     ColorBlendingCreateInfos.attachmentCount = 1;
-    //ColorBlendingCreateInfos.pAttachments = &ColorBlendAttachment;
     ColorBlendingCreateInfos.blendConstants[0] = 0.0f;
     ColorBlendingCreateInfos.blendConstants[1] = 0.0f;
     ColorBlendingCreateInfos.blendConstants[2] = 0.0f;
@@ -214,18 +208,14 @@ void FVulkanGraphicsPipeline::CleanPipelineLayout() {
     VulkanPipelineLayout = nullptr;
 }
 
-AVulkanRenderer* FVulkanGraphicsPipeline::GetRenderManager() const {
-    return RenderManager;
-}
-
 FVulkanDevice* FVulkanGraphicsPipeline::GetVkDevice() const {
-    return GetRenderManager()->GetVkDevice();
+    return GetVKRenderer()->GetVkDevice();
 }
 
 FVulkanSwapChain* FVulkanGraphicsPipeline::GetVkSwapChain() {
-    return GetRenderManager()->GetVkSwapChain();
+    return GetVKRenderer()->GetVkSwapChain();
 }
 
 FVulkanRenderPass* FVulkanGraphicsPipeline::GetVkRenderPass() const {
-    return GetRenderManager()->GetVkRenderPass();
+    return GetVKRenderer()->GetVkRenderPass();
 }

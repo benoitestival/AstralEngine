@@ -2,12 +2,12 @@
 
 #include "VulkanDevice.h"
 #include "VulkanGraphicsPipeline.h"
+#include "VulkanPhysicalDevice.h"
 #include "VulkanRenderPass.h"
 #include "../VulkanRenderer.h"
 #include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanCommandBuffer::FVulkanCommandBuffer() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanCommandBuffer::~FVulkanCommandBuffer() {
@@ -22,7 +22,7 @@ VkResult FVulkanCommandBuffer::Init() {
     BufferAllocateInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     BufferAllocateInfo.commandBufferCount = 1;
 
-    return vkAllocateCommandBuffers(GetVkDevice()->GetPrivateLogicalDevice(), &BufferAllocateInfo, &CommandBuffer);
+    return vkAllocateCommandBuffers(GetVkDevice()->GetPrivateRessource(), &BufferAllocateInfo, &GetPrivateRessource());
 }
 
 void FVulkanCommandBuffer::Clean() {
@@ -30,30 +30,30 @@ void FVulkanCommandBuffer::Clean() {
 }
 
 VkResult FVulkanCommandBuffer::CreateCommandPool() {
-    FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetSupportedQueueFamilies();
+    FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetVkPhysicalDevice()->GetSupportedQueueFamilies();
 
     VkCommandPoolCreateInfo CommandPoolInfo{};
     CommandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     CommandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     CommandPoolInfo.queueFamilyIndex = SupportedQueueFamilyIndices.GraphicsFamilyIndice;
 
-    return vkCreateCommandPool(GetVkDevice()->GetPrivateLogicalDevice(), &CommandPoolInfo, nullptr, &CommandPool);
+    return vkCreateCommandPool(GetVkDevice()->GetPrivateRessource(), &CommandPoolInfo, nullptr, &CommandPool);
 }
 
 void FVulkanCommandBuffer::CleanCommandPool() {
-    vkDestroyCommandPool(GetVkDevice()->GetPrivateLogicalDevice(), CommandPool, nullptr);
+    vkDestroyCommandPool(GetVkDevice()->GetPrivateRessource(), CommandPool, nullptr);
 }
 
 VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
     CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-    vkBeginCommandBuffer(CommandBuffer, &CommandBufferBeginInfo);
+    vkBeginCommandBuffer(GetPrivateRessource(), &CommandBufferBeginInfo);
 
     VkRenderPassBeginInfo RenderPassBeginInfo = {};
     RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    RenderPassBeginInfo.renderPass = GetVkRenderPass()->GetPrivateRenderPass();
-    RenderPassBeginInfo.framebuffer = GetVkSwapChain()->GetFrameBuffer(FRAME_INDEX)->GetPrivateFrameBuffer();
+    RenderPassBeginInfo.renderPass = GetVkRenderPass()->GetPrivateRessource();
+    RenderPassBeginInfo.framebuffer = GetVkSwapChain()->GetFrameBuffer(FRAME_INDEX)->GetPrivateRessource();
 
     RenderPassBeginInfo.renderArea.offset = {0, 0};
     RenderPassBeginInfo.renderArea.extent = GetVkSwapChain()->GetExtent();
@@ -63,44 +63,36 @@ VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     RenderPassBeginInfo.pClearValues = &ClearColor;
 
     //Start the render pass
-    vkCmdBeginRenderPass(CommandBuffer, &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBeginRenderPass(GetPrivateRessource(), &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     
-    vkCmdBindPipeline(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, GetVkGraphicsPipeline()->GetPrivateGraphicsPipeline());
+    vkCmdBindPipeline(GetPrivateRessource(), VK_PIPELINE_BIND_POINT_GRAPHICS, GetVkGraphicsPipeline()->GetPrivateRessource());
 
     VkViewport Viewport = GetVkSwapChain()->GetViewport();
-    vkCmdSetViewport(CommandBuffer, 0, 1, &Viewport);
+    vkCmdSetViewport(GetPrivateRessource(), 0, 1, &Viewport);
 
     VkRect2D Scissor = GetVkSwapChain()->GetScissor();
-    vkCmdSetScissor(CommandBuffer, 0, 1, &Scissor);
+    vkCmdSetScissor(GetPrivateRessource(), 0, 1, &Scissor);
 
-    vkCmdDraw(CommandBuffer, 3, 1, 0, 0);
+    vkCmdDraw(GetPrivateRessource(), 3, 1, 0, 0);
 
     //End the render pass
-    vkCmdEndRenderPass(CommandBuffer);
+    vkCmdEndRenderPass(GetPrivateRessource());
 
-    return vkEndCommandBuffer(CommandBuffer);
-}
-
-VkCommandBuffer FVulkanCommandBuffer::GetPrivateCommandBuffer() const {
-    return CommandBuffer;
-}
-
-AVulkanRenderer* FVulkanCommandBuffer::GetRenderManager() const {
-    return RenderManager;
+    return vkEndCommandBuffer(GetPrivateRessource());
 }
 
 FVulkanDevice* FVulkanCommandBuffer::GetVkDevice() const {
-    return GetRenderManager()->GetVkDevice();
+    return GetVKRenderer()->GetVkDevice();
 }
 
 FVulkanRenderPass* FVulkanCommandBuffer::GetVkRenderPass() const {
-    return GetRenderManager()->GetVkRenderPass();
+    return GetVKRenderer()->GetVkRenderPass();
 }
 
 FVulkanSwapChain* FVulkanCommandBuffer::GetVkSwapChain() const {
-    return GetRenderManager()->GetVkSwapChain();
+    return GetVKRenderer()->GetVkSwapChain();
 }
 
 FVulkanGraphicsPipeline* FVulkanCommandBuffer::GetVkGraphicsPipeline() const {
-    return GetRenderManager()->GetVkGraphicsPipeline();
+    return GetVKRenderer()->GetVkGraphicsPipeline();
 }

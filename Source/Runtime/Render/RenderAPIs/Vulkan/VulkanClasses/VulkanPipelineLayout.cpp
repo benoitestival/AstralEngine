@@ -5,8 +5,6 @@
 #include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanPipelineLayout::FVulkanPipelineLayout() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
-    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanPipelineLayout::~FVulkanPipelineLayout() {
@@ -18,21 +16,14 @@ VkResult FVulkanPipelineLayout::Init() {
     PipelineLayoutInfo.setLayoutCount = 0; 
     PipelineLayoutInfo.pushConstantRangeCount = 0; 
 
-    return vkCreatePipelineLayout(GetVkDevice()->GetPrivateLogicalDevice(), &PipelineLayoutInfo, nullptr, &PipelineLayout);
+    return vkCreatePipelineLayout(GetVkDevice()->GetPrivateRessource(), &PipelineLayoutInfo, nullptr, &GetPrivateRessource());
 }
 
 void FVulkanPipelineLayout::Clean() {
-    vkDestroyPipelineLayout(GetVkDevice()->GetPrivateLogicalDevice(), PipelineLayout, nullptr);
+    vkDestroyPipelineLayout(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), nullptr);
 }
 
-VkPipelineLayout FVulkanPipelineLayout::GetPrivatePipelineLayout() const {
-    return PipelineLayout;
-}
-
-AVulkanRenderer* FVulkanPipelineLayout::GetRenderManager() const {
-    return RenderManager;
-}
 
 FVulkanDevice* FVulkanPipelineLayout::GetVkDevice() const {
-    return GetRenderManager()->GetVkDevice();
+    return GetVKRenderer()->GetVkDevice();
 }

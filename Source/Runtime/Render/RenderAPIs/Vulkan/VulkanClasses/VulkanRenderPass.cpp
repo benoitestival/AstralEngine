@@ -6,8 +6,6 @@
 #include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanRenderPass::FVulkanRenderPass() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
-    //RenderManager = FVulkanClass::VulkanRenderManager;
 }
 
 FVulkanRenderPass::~FVulkanRenderPass() {
@@ -55,25 +53,18 @@ VkResult FVulkanRenderPass::Init() {
     RenderPassInfo.pDependencies = &SubPassDependency;
     
 
-    return vkCreateRenderPass(GetVkDevice()->GetPrivateLogicalDevice(), &RenderPassInfo, nullptr, &RenderPass);
+    return vkCreateRenderPass(GetVkDevice()->GetPrivateRessource(), &RenderPassInfo, nullptr, &GetPrivateRessource());
 }
 
 void FVulkanRenderPass::Clean() {
-    vkDestroyRenderPass(GetVkDevice()->GetPrivateLogicalDevice(), RenderPass, nullptr);
+    vkDestroyRenderPass(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), nullptr);
 }
 
-VkRenderPass FVulkanRenderPass::GetPrivateRenderPass() const {
-    return RenderPass;
-}
-
-AVulkanRenderer* FVulkanRenderPass::GetRenderManager() const {
-    return RenderManager;
-}
 
 FVulkanDevice* FVulkanRenderPass::GetVkDevice() const {
-    return GetRenderManager()->GetVkDevice();
+    return GetVKRenderer()->GetVkDevice();
 }
 
 FVulkanSwapChain* FVulkanRenderPass::GetVkSwapChain() const {
-    return GetRenderManager()->GetVkSwapChain();
+    return GetVKRenderer()->GetVkSwapChain();
 }

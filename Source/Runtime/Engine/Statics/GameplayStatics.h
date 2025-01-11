@@ -1,6 +1,7 @@
 #pragma once
 #include "../../Utils/Path/Path.h"
 
+class ARenderer;
 class ATimerManager;
 class ARenderManager;
 class AInputManager;
@@ -10,7 +11,7 @@ class GameplayStatics {
 public:
     static AEngine* GetEngine();
     static AInputManager* GetInputManager();
-    static ARenderManager* GetRenderManager();
+    static ARenderer* GetRenderManager();
     static ATimerManager* GetTimerManager();
     static float GetDeltaTime();
 

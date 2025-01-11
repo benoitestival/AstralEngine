@@ -12,9 +12,7 @@
 #include "../../../../Engine/Engine/Engine.h"
 #include "../../../../Window/Implementations/GLFWWindow.h"
 
-FVulkanSurface::FVulkanSurface() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
-    //RenderManager = FVulkanClass::VulkanRenderManager;
+FVulkanSurface::FVulkanSurface(){
 }
 
 FVulkanSurface::~FVulkanSurface() {
@@ -24,20 +22,12 @@ VkResult FVulkanSurface::Init() {
     if (!glfwVulkanSupported()) {
         std::cout << "Vulkan is not supported by GLFW!" << std::endl;
     }
-    VkResult Result = glfwCreateWindowSurface(GetRenderManager()->GetVkInstance(), GetWindow()->GetPrivateWindow(), nullptr, &VkSurface); 
+    VkResult Result = glfwCreateWindowSurface(GetVKRenderer()->GetVkInstance(), GetWindow()->GetPrivateWindow(), nullptr, &GetPrivateRessource()); 
     return Result;
 }
 
 void FVulkanSurface::Clean() {
-    vkDestroySurfaceKHR(GetRenderManager()->GetVkInstance(), VkSurface, nullptr);
-}
-
-VkSurfaceKHR FVulkanSurface::GetPrivateSurface() const {
-    return VkSurface;
-}
-
-AVulkanRenderer* FVulkanSurface::GetRenderManager() const {
-    return RenderManager;
+    vkDestroySurfaceKHR(GetVKRenderer()->GetVkInstance(), GetPrivateRessource(), nullptr);
 }
 
 AGLFWWindow* FVulkanSurface::GetWindow() {

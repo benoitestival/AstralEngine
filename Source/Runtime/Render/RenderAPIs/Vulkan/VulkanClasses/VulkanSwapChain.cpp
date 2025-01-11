@@ -5,19 +5,21 @@
 
 #include "VulkanDevice.h"
 #include "VulkanFrameBuffer.h"
+#include "VulkanPhysicalDevice.h"
 #include "VulkanSurface.h"
 #include "../VulkanRenderer.h"
+#include "../../../../Engine/Engine/Engine.h"
 #include "../../../../Engine/Statics/GameplayStatics.h"
+#include "../../../../Window/Implementations/GLFWWindow.h"
 
-FVulkanSwapChain::FVulkanSwapChain(): SwapChainImageFormat(), SwapChainExtent() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
+FVulkanSwapChain::FVulkanSwapChain(): SwapChainImageFormat(), SwapChainExtent(), Viewport(), Scissor() {
 }
 
 FVulkanSwapChain::~FVulkanSwapChain() {
 }
 
 VkResult FVulkanSwapChain::Init() {
-    FSwapChainSupportDetails SwapChainSupportDetails = GetVkDevice()->QuerySwapChainSupportDetails();
+    FSwapChainSupportDetails SwapChainSupportDetails = GetVkDevice()->GetVkPhysicalDevice()->QuerySwapChainSupportDetails();
 
     VkSurfaceFormatKHR SurfaceFormat = ChooseSwapSurfaceFormat(SwapChainSupportDetails.Formats);
     VkPresentModeKHR PresentMode = ChooseSwapPresentMode(SwapChainSupportDetails.PresentModes);
@@ -32,7 +34,7 @@ VkResult FVulkanSwapChain::Init() {
 
     VkSwapchainCreateInfoKHR SwapChainCreateInfo{};
     SwapChainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    SwapChainCreateInfo.surface = GetVkSurface()->GetPrivateSurface();
+    SwapChainCreateInfo.surface = GetVkSurface()->GetPrivateRessource();
 
     SwapChainCreateInfo.minImageCount = ImageCount;
     SwapChainCreateInfo.imageFormat = SurfaceFormat.format;
@@ -41,7 +43,7 @@ VkResult FVulkanSwapChain::Init() {
     SwapChainCreateInfo.imageArrayLayers = 1;
     SwapChainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetSupportedQueueFamilies();
+    FQueueFamilyIndices SupportedQueueFamilyIndices = GetVkDevice()->GetVkPhysicalDevice()->GetSupportedQueueFamilies();
     TArray<uint32_t> QueueFamilyIndices = SupportedQueueFamilyIndices.ToUnsignedArray();
     
     if (SupportedQueueFamilyIndices.GraphicsFamilyIndice != SupportedQueueFamilyIndices.PresentingFamilyIndice) {
@@ -61,11 +63,11 @@ VkResult FVulkanSwapChain::Init() {
 
     SwapChainCreateInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    vkCreateSwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), &SwapChainCreateInfo, nullptr, &SwapChain);
+    vkCreateSwapchainKHR(GetVkDevice()->GetPrivateRessource(), &SwapChainCreateInfo, nullptr, &GetPrivateRessource());
     
-    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, nullptr);
+    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), &ImageCount, nullptr);
     SwapChainImages.Resize(ImageCount);
-    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, &ImageCount, SwapChainImages.Data());
+    vkGetSwapchainImagesKHR(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), &ImageCount, SwapChainImages.Data());
 
     SwapChainImageFormat = SurfaceFormat.format;
     SwapChainExtent = Extent;
@@ -74,7 +76,7 @@ VkResult FVulkanSwapChain::Init() {
 }
 
 void FVulkanSwapChain::Clean() {
-    vkDestroySwapchainKHR(GetVkDevice()->GetPrivateLogicalDevice(), SwapChain, nullptr);
+    vkDestroySwapchainKHR(GetVkDevice()->GetPrivateRessource(), GetPrivateRessource(), nullptr);
 }
 
 VkResult FVulkanSwapChain::InitImageViews() {
@@ -99,7 +101,7 @@ VkResult FVulkanSwapChain::InitImageViews() {
         ImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
         ImageViewCreateInfo.subresourceRange.layerCount = 1;
 
-        VkResult Result = vkCreateImageView(GetVkDevice()->GetPrivateLogicalDevice(), &ImageViewCreateInfo, nullptr, &SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]);
+        VkResult Result = vkCreateImageView(GetVkDevice()->GetPrivateRessource(), &ImageViewCreateInfo, nullptr, &SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]);
         if (Result != VK_SUCCESS) {
             FinalResult = Result;
             break;
@@ -110,7 +112,7 @@ VkResult FVulkanSwapChain::InitImageViews() {
 
 void FVulkanSwapChain::CleanImageViews() {
     for (auto& SwapChainImageView : SwapChainImageViews) {
-        vkDestroyImageView(GetVkDevice()->GetPrivateLogicalDevice(), SwapChainImageView, nullptr);
+        vkDestroyImageView(GetVkDevice()->GetPrivateRessource(), SwapChainImageView, nullptr);
     }
     SwapChainImageViews.Clear();
 }
@@ -119,8 +121,8 @@ VkResult FVulkanSwapChain::InitFrameBuffers() {
     VkResult FinalResult = VK_SUCCESS;
     SwapChainFrameBuffers.Resize(SwapChainImages.Lenght());
     for (int SWAP_CHAIN_IMAGE_INDEX = 0; SWAP_CHAIN_IMAGE_INDEX < SwapChainImages.Lenght(); SWAP_CHAIN_IMAGE_INDEX++) {
-        FVulkanFrameBuffer* FrameBuffer = new FVulkanFrameBuffer();
-        VkResult Result = FrameBuffer->Init({SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]});
+        FVulkanFrameBuffer* FrameBuffer = new FVulkanFrameBuffer({SwapChainImageViews[SWAP_CHAIN_IMAGE_INDEX]});
+        VkResult Result = FrameBuffer->Init();
         if (Result != VK_SUCCESS) {
             FinalResult = Result;
             break;
@@ -168,17 +170,6 @@ FVulkanFrameBuffer* FVulkanSwapChain::GetFrameBuffer(int FRAME_BUFFER_INDEX) con
     return SwapChainFrameBuffers[FRAME_BUFFER_INDEX];
 }
 
-VkSwapchainKHR FVulkanSwapChain::GetPrivateSwapChain() const {
-    return SwapChain;
-}
-
-TArray<VkImage>& FVulkanSwapChain::GetImages() {
-    return SwapChainImages;
-}
-
-TArray<VkImageView>& FVulkanSwapChain::GetImagesViews() {
-    return SwapChainImageViews;
-}
 
 VkSurfaceFormatKHR FVulkanSwapChain::ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats) {
     VkSurfaceFormatKHR ChoosenSurfaceFormat = AvailableFormats[0];//By default we take the first
@@ -236,14 +227,10 @@ AGLFWWindow* FVulkanSwapChain::GetActiveWindow() const {
     return Cast<AGLFWWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
 }
 
-AVulkanRenderer* FVulkanSwapChain::GetRenderManager() const {
-    return RenderManager;
-}
-
 FVulkanDevice* FVulkanSwapChain::GetVkDevice() const {
-    return GetRenderManager()->GetVkDevice();
+    return GetVKRenderer()->GetVkDevice();
 }
 
 FVulkanSurface* FVulkanSwapChain::GetVkSurface() const {
-    return GetRenderManager()->GetVkSurface();
+    return GetVKRenderer()->GetVkSurface();
 }

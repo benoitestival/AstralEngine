@@ -1,7 +1,9 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 
+#include "../VulkanObject.h"
 #include "../../../../Utils/Array.h"
+#include "../VulkanHelpers/VulkanRessource.h"
 
 class FVulkanFrameBuffer;
 class FVulkanSurface;
@@ -10,20 +12,14 @@ class AGLFWWindow;
 class AVulkanRenderer;
 
 
-struct FSwapChainSupportDetails {
-    VkSurfaceCapabilitiesKHR Capabilities;
-    TArray<VkSurfaceFormatKHR> Formats;
-    TArray<VkPresentModeKHR> PresentModes;
-};
-
 //Class Handling the swaping of the frame because Vulkan doesnt have a frame buffer 
-class FVulkanSwapChain {
+class FVulkanSwapChain : public FVulkanObject, public TVulkanRessource<VkSwapchainKHR>{
 public:
     FVulkanSwapChain();
-    ~FVulkanSwapChain();
-
-    VkResult Init();
-    void Clean();
+    ~FVulkanSwapChain() override;
+    
+    virtual VkResult Init() override;
+    virtual void Clean() override;
 
     VkResult InitImageViews();
     void CleanImageViews();
@@ -36,21 +32,16 @@ public:
     VkViewport GetViewport();
     VkRect2D GetScissor();
     FVulkanFrameBuffer* GetFrameBuffer(int FRAME_BUFFER_INDEX) const;
-    VkSwapchainKHR GetPrivateSwapChain() const;
 private:
     VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const TArray<VkSurfaceFormatKHR>& AvailableFormats);
     VkPresentModeKHR ChooseSwapPresentMode(const TArray<VkPresentModeKHR>& AvailablePresentModes);
     VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& Capabilities);
 private:
     AGLFWWindow* GetActiveWindow() const;
-    AVulkanRenderer* GetRenderManager() const;
 
     FVulkanDevice* GetVkDevice() const;
     FVulkanSurface* GetVkSurface() const;
 private:
-    AVulkanRenderer* RenderManager = nullptr;
-    VkSwapchainKHR SwapChain = VK_NULL_HANDLE;
-
     TArray<VkImage> SwapChainImages;
     TArray<VkImageView> SwapChainImageViews;
     

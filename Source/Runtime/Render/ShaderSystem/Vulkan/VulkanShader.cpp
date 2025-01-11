@@ -2,9 +2,8 @@
 
 #include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../../Utils/TemplateUtils.h"
-#include "../../RenderAPIs/Implementations/Vulkan/VulkanRenderManager.h"
-#include "../../RenderAPIs/Implementations/Vulkan/VulkanImplementation/VulkanDevice.h"
-#include "../../RenderAPIs/Implementations/Vulkan/VulkanImplementation/Test/VulkanClass.h"
+#include "../../RenderAPIs/Vulkan/VulkanRenderer.h"
+#include "../../RenderAPIs/Vulkan/VulkanClasses/VulkanDevice.h"
 
 
 AVulkanShader::AVulkanShader(){
@@ -22,12 +21,12 @@ void AVulkanShader::InitShader() {
     ShaderModuleCreateInfo.codeSize = ContentSize();
     ShaderModuleCreateInfo.pCode = reinterpret_cast<const uint32_t*>(GetShaderContent().Data());
 
-    vkCreateShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), &ShaderModuleCreateInfo, nullptr, &ShaderModule);
+    vkCreateShaderModule(GetVkDevice()->GetPrivateRessource(), &ShaderModuleCreateInfo, nullptr, &ShaderModule);
 }
 
 void AVulkanShader::CleanShader() {
     AShader::CleanShader();
-    vkDestroyShaderModule(GetVkDevice()->GetPrivateLogicalDevice(), ShaderModule, nullptr);
+    vkDestroyShaderModule(GetVkDevice()->GetPrivateRessource(), ShaderModule, nullptr);
 }
 
 VkShaderModule AVulkanShader::GetPrivateShader() {

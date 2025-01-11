@@ -4,6 +4,8 @@
 #include "../../Editor/Tests/DebugMain.h"
 #include "../../Editor/Tests/DebugTick.h"
 #include "../Engine/CoreObjects/ObjectManager.h"
+#include "../Engine/CoreObjects/Components/Implementations/PrimitiveComponent.h"
+#include "../Engine/CoreObjects/Components/Implementations/SceneComponent.h"
 #include "../Engine/CoreObjects/Entities/Entity.h"
 #include "../Engine/Engine/Implementations/AstralEngine.h"
 #include "../Engine/Inputs/Components/InputComponent.h"
@@ -13,15 +15,11 @@
 #include "../Engine/Inputs/Systems/Implementations/SFMLInputManager.h"
 #include "../Engine/Time/TimerManager.h"
 #include "../Engine/World/World.h"
-#include "../Render/Components/SFML/Implementation/SFMLAnimatedSpriteComponent.h"
-#include "../Render/Components/SFML/Implementation/SFMLStaticSpriteComponent.h"
 #include "../Render/ShaderSystem/Shader.h"
 #include "../Render/ShaderSystem/ShaderManager.h"
 #include "../Render/ShaderSystem/Vulkan/VulkanShader.h"
 #include "../Render/RenderAPIs/Renderer.h"
-#include "../Render/RenderAPIs/Implementations/ASFMLRenderManager.h"
-#include "../Render/RenderAPIs/Implementations/OpenGLRenderManager.h"
-#include "../Render/RenderAPIs/Implementations/Vulkan/VulkanRenderManager.h"
+#include "../Render/RenderAPIs/Vulkan/VulkanRenderer.h"
 #include "../Serialization/Parsers/ParserBase.h"
 #include "../Window/Window.h"
 #include "../Window/Implementations/GLFWWindow.h"
@@ -53,9 +51,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(ASFMLInputManager)
     REGISTER_ASTRAL_CLASS(AOpenGLInputManager)
     REGISTER_ASTRAL_CLASS(AShaderManager)
-    REGISTER_ASTRAL_CLASS(ARenderManager)
-    REGISTER_ASTRAL_CLASS(ASFMLRenderManager)
-    REGISTER_ASTRAL_CLASS(AOpenGLRenderManager)
+    REGISTER_ASTRAL_CLASS(ARenderer)
     REGISTER_ASTRAL_CLASS(AVulkanRenderer)
     REGISTER_ASTRAL_CLASS(ATimerManager)
 
@@ -98,9 +94,6 @@ void AstralEngineStatics::RegisterAstralClasses() {
     //////////////////////
     REGISTER_ASTRAL_CLASS(ASceneComponent)
     REGISTER_ASTRAL_CLASS(APrimitiveComponent)
-    REGISTER_ASTRAL_CLASS(ASFMLSpriteComponent)
-    REGISTER_ASTRAL_CLASS(ASFMLStaticSpriteComponent)
-    REGISTER_ASTRAL_CLASS(ASFMLAnimatedSpriteComponent)
     //////////////////////
     REGISTER_ASTRAL_CLASS(AInputComponent)
     //REGISTER_ASTRAL_CLASS(ASFMLInputComponent)
@@ -114,10 +107,8 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AShaderManager, AManager)
-    LINK_ASTRAL_CLASS_PARENTS(ARenderManager, AManager)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLRenderManager, ARenderManager)
-    LINK_ASTRAL_CLASS_PARENTS(AOpenGLRenderManager, ARenderManager)
-    LINK_ASTRAL_CLASS_PARENTS(AVulkanRenderer, ARenderManager)
+    LINK_ASTRAL_CLASS_PARENTS(ARenderer, AManager)
+    LINK_ASTRAL_CLASS_PARENTS(AVulkanRenderer, ARenderer)
     LINK_ASTRAL_CLASS_PARENTS(ATimerManager, AManager)
     
     //Engines
@@ -155,9 +146,6 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AComponent, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(ASceneComponent, AComponent)
     LINK_ASTRAL_CLASS_PARENTS(APrimitiveComponent, ASceneComponent)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLSpriteComponent, APrimitiveComponent)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLStaticSpriteComponent, ASFMLSpriteComponent)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLAnimatedSpriteComponent, ASFMLSpriteComponent)
     //////////////////////
     LINK_ASTRAL_CLASS_PARENTS(AInputComponent, AComponent)
     //LINK_ASTRAL_CLASS_PARENTS(ASFMLInputComponent, AInputComponent)

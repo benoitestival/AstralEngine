@@ -8,7 +8,6 @@
 TArray<const char*> FVulkanLogger::ValidationLayers = {"VK_LAYER_KHRONOS_validation"};
 
 FVulkanLogger::FVulkanLogger() {
-    RenderManager = Cast<AVulkanRenderer>(GameplayStatics::GetRenderManager());
 }
 
 FVulkanLogger::~FVulkanLogger() {
@@ -16,7 +15,7 @@ FVulkanLogger::~FVulkanLogger() {
 
 VkResult FVulkanLogger::Init() {
     VkResult Result = VK_SUCCESS;
-    PFN_vkCreateDebugUtilsMessengerEXT CreateDubugMessengerFunc = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(GetRenderManager()->GetVkInstance(), "vkCreateDebugUtilsMessengerEXT");
+    PFN_vkCreateDebugUtilsMessengerEXT CreateDubugMessengerFunc = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(GetVKRenderer()->GetVkInstance(), "vkCreateDebugUtilsMessengerEXT");
     if (CreateDubugMessengerFunc != nullptr) {
         VkDebugUtilsMessengerCreateInfoEXT DebugMessengerCreateInfo = {};
         DebugMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -24,7 +23,7 @@ VkResult FVulkanLogger::Init() {
         DebugMessengerCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         DebugMessengerCreateInfo.pfnUserCallback = FVulkanLogger::DebugCallback2;
         
-        Result = CreateDubugMessengerFunc(GetRenderManager()->GetVkInstance(), &DebugMessengerCreateInfo, nullptr, &DebugMessenger);
+        Result = CreateDubugMessengerFunc(GetVKRenderer()->GetVkInstance(), &DebugMessengerCreateInfo, nullptr, &DebugMessenger);
     }
     else {
         Result = VK_ERROR_EXTENSION_NOT_PRESENT;
@@ -33,17 +32,13 @@ VkResult FVulkanLogger::Init() {
 }
 
 void FVulkanLogger::Clean() {
-    PFN_vkDestroyDebugUtilsMessengerEXT DestroyDubugMessengerFunc = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(GetRenderManager()->GetVkInstance(), "vkDestroyDebugUtilsMessengerEXT");
+    PFN_vkDestroyDebugUtilsMessengerEXT DestroyDubugMessengerFunc = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(GetVKRenderer()->GetVkInstance(), "vkDestroyDebugUtilsMessengerEXT");
     if (DestroyDubugMessengerFunc != nullptr) {
-        DestroyDubugMessengerFunc(GetRenderManager()->GetVkInstance(), DebugMessenger, nullptr);
+        DestroyDubugMessengerFunc(GetVKRenderer()->GetVkInstance(), DebugMessenger, nullptr);
     }
 }
 
 VkBool32 FVulkanLogger::DebugCallback2(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) {
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
     return VK_FALSE;
-}
-
-AVulkanRenderer* FVulkanLogger::GetRenderManager() const {
-    return RenderManager;
 }

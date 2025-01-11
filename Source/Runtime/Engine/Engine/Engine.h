@@ -3,6 +3,7 @@
 #include "../CoreObjects/Objects/BaseObject.h"
 #include "../Time/AstralClock.h"
 
+class ARenderer;
 class AManager;
 class AWindow;
 class AWorld;
@@ -37,7 +38,7 @@ public:
     }
     
     AInputManager* GetInputManager();
-    ARenderManager* GetRenderManager();
+    ARenderer* GetRenderManager();
     ATimerManager* GetTimerManager();
     
     AWorld* GetActiveWorld();

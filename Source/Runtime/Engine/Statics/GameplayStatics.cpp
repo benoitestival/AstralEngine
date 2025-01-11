@@ -12,7 +12,7 @@ AInputManager* GameplayStatics::GetInputManager() {
     return GameplayStatics::GetEngine()->GetInputManager();
 }
 
-ARenderManager* GameplayStatics::GetRenderManager() {
+ARenderer* GameplayStatics::GetRenderManager() {
     return GameplayStatics::GetEngine()->GetRenderManager();
 }
 

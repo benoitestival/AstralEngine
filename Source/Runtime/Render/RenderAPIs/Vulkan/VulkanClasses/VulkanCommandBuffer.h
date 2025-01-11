@@ -3,21 +3,19 @@
 
 class FVulkanGraphicsPipeline;
 
-class FVulkanCommandBuffer {
+class FVulkanCommandBuffer : public FVulkanObject, public TVulkanRessource<VkCommandBuffer>{
 public:
     FVulkanCommandBuffer();
-    ~FVulkanCommandBuffer();
+    ~FVulkanCommandBuffer() override;
     
-    VkResult Init();
-    void Clean();
+    virtual VkResult Init() override;
+    virtual void Clean() override;
 
     VkResult CreateCommandPool();
     void CleanCommandPool();
 
     VkResult RecordRenderPassCommand(int FRAME_INDEX);
-    VkCommandBuffer GetPrivateCommandBuffer() const;
 private:
-    AVulkanRenderer* GetRenderManager() const;
 
     FVulkanDevice* GetVkDevice() const;
     FVulkanRenderPass* GetVkRenderPass() const;
@@ -25,7 +23,5 @@ private:
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
 private:
     VkCommandPool CommandPool = VK_NULL_HANDLE;
-    VkCommandBuffer CommandBuffer = VK_NULL_HANDLE;
-    AVulkanRenderer* RenderManager = nullptr;
     
 };

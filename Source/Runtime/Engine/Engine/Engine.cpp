@@ -16,7 +16,7 @@ void AEngine::Start() {
     ActiveWindow = NewObject<AWindow>(ConfigUtils::GetWindowClass());
     
     EngineManagers.Add(NewObject<AInputManager>(ConfigUtils::GetInputManagerClass()));
-    EngineManagers.Add(NewObject<ARenderManager>(ConfigUtils::GetRenderManagerClass()));
+    EngineManagers.Add(NewObject<ARenderer>(ConfigUtils::GetRenderManagerClass()));
     EngineManagers.Add(NewObject<ATimerManager>(ATimerManager::StaticClass()));
     
     EngineClock = FAstralClock();
@@ -48,8 +48,8 @@ AInputManager* AEngine::GetInputManager() {
     return GetManager<AInputManager>();
 }
 
-ARenderManager* AEngine::GetRenderManager() {
-    return GetManager<ARenderManager>();
+ARenderer* AEngine::GetRenderManager() {
+    return GetManager<ARenderer>();
 }
 
 ATimerManager* AEngine::GetTimerManager() {
