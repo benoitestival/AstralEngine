@@ -25,6 +25,12 @@ DECLARE_CONCRETE_MATH_TYPE(FRotator, TRotator<float>)
 DECLARE_CONCRETE_MATH_TYPE(FMatrix3X3, TMatrix<float COMMA 3 COMMA 3>)
 DECLARE_CONCRETE_MATH_TYPE(FMatrix4X4, TMatrix<float COMMA 4 COMMA 4>)
 
+//Type to add:
+// - Quat
+// - Triangle
+// - Rect
+// - Plane
+// - Box
 
 class AMathsUtils {
 public:

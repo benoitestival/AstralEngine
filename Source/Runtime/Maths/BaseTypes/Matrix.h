@@ -9,6 +9,15 @@ public:
     TMatrix() : RowNumbers(R), ColumnNumbers(C) {
         Matrix.assign(RowNumbers, TArray<T>().assign(ColumnNumbers));
     };
+    TMatrix(const TVector2D<T> Vector) {
+        RowNumbers = 1;
+        ColumnNumbers = 3;
+
+        
+    }
+    TMatrix(const TVector3D<T> Vector) {
+        
+    }
     
     TMatrix<T,R,C> operator*(const TMatrix<T,R,C>& Other) {
         TMatrix<T, R, C> ReturnMatrix;
