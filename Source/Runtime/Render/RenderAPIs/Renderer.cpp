@@ -14,6 +14,9 @@ void ARenderer::Draw() {
 void ARenderer::Clear() {
 }
 
+void ARenderer::OnFrameBufferResize() {
+}
+
 AShaderManager* ARenderer::GetShaderManager() const {
     return ShaderManager;
 }

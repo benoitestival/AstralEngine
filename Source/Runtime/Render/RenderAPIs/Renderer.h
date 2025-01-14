@@ -13,6 +13,8 @@ public:
     virtual void Draw();
     virtual void Clear();
 
+    virtual void OnFrameBufferResize();
+    
     AShaderManager* GetShaderManager() const;
 private:
     AShaderManager* ShaderManager = nullptr;

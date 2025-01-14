@@ -2,6 +2,7 @@
 #include "GLFWWindow.h"
 
 #include "../../Engine/Statics/GameplayStatics.h"
+#include "../../Render/RenderAPIs/Renderer.h"
 
 void AGLFWWindow::Construct() {
     AWindow::Construct();
@@ -12,7 +13,7 @@ void AGLFWWindow::Construct() {
         // glfwInitHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         
         Window = glfwCreateWindow(800, 800, "Window", nullptr, nullptr);
         if (Window != nullptr) {
@@ -41,6 +42,9 @@ void AGLFWWindow::Construct() {
             glfwSetWindowSizeCallback(Window, [](GLFWwindow* PrivateWindow, int SizeX, int SizeY) {
                 //TODO
 
+            });
+            glfwSetFramebufferSizeCallback(Window, [](GLFWwindow* PrivateWindow, int Width, int Height) {
+                GameplayStatics::GetRenderManager()->OnFrameBufferResize();
             });
         }
         else {

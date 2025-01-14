@@ -3,6 +3,7 @@
 #include "vulkan/vulkan.h"
 
 
+class AGLFWWindow;
 class FVulkanLogger;
 class FVulkanCommandBuffer;
 class FVulkanGraphicsPipeline;
@@ -24,6 +25,8 @@ public:
     void DeInit() override;
 
     void Draw() override;
+
+    void OnFrameBufferResize() override;
     
     VkInstance GetVkInstance();
     FVulkanDevice* GetVkDevice();
@@ -32,7 +35,9 @@ public:
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
     FVulkanCommandBuffer* GetVkCommandBuffer(int INDEX) const;
-public:
+private:
+    AGLFWWindow* GetWindow() const;
+private:
     //Instance Methods
     VkResult CreateInstance();
 
@@ -54,6 +59,8 @@ public:
     void CleanVulkanSwapChainImageViews();
     VkResult CreateVulkanFrameBuffers();
     void CleanVulkanFrameBuffers();
+
+    VkResult ReCreateVulkanSwapChain();
 
     //Vulkan RenderPass methods
     VkResult CreateVulkanRenderPass();
@@ -77,7 +84,7 @@ private:
     //void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 
     
-public:
+private:
     //Running Instance of Vulkan
     VkInstance VulkanInstance = VK_NULL_HANDLE;
     
@@ -97,16 +104,6 @@ public:
 private:
     const int MAX_FRAMES_IN_FLIGHT = 2;
     int CurrentFrameDrawn = 0;
-public:
-    // VkDebugUtilsMessengerEXT DebugMessenger = VK_NULL_HANDLE;
-    // TArray<const char*> ValidationLayers = {
-    //     "VK_LAYER_KHRONOS_validation"
-    // };
 
-    //bool Candraw = true;
-// #ifdef IS_DEBUG
-//     const bool UseValidationLayers = true;
-// #else
-//     const bool UseValidationLayers = false;
-// #endif
+    bool FrameBufferResized = false;
 };

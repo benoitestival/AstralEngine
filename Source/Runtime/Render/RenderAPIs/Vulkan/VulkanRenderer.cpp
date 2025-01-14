@@ -4,6 +4,8 @@
 #include <optional>
 #include <GLFW/glfw3.h>
 
+#include "../../../Engine/Engine/Engine.h"
+#include "../../../Window/Implementations/GLFWWindow.h"
 #include "VulkanClasses/VulkanCommandBuffer.h"
 #include "VulkanClasses/VulkanDevice.h"
 #include "VulkanClasses/VulkanGraphicsPipeline.h"
@@ -60,52 +62,65 @@ void AVulkanRenderer::Draw() {
     //This function run and does not return until The fence are signaled
     vkWaitForFences(GetVkDevice()->GetPrivateRessource(), 1, &InFlightFences[CurrentFrameDrawn], VK_TRUE, UINT64_MAX);
     
-    //Reset to unsignaled
-    vkResetFences(GetVkDevice()->GetPrivateRessource(), 1, &InFlightFences[CurrentFrameDrawn]);
-
     uint32_t ImageAcquiredIndex = INVALID_INDEX;
-    vkAcquireNextImageKHR(GetVkDevice()->GetPrivateRessource(), GetVkSwapChain()->GetPrivateRessource(), UINT64_MAX, ImageAvailableSemaphores[CurrentFrameDrawn], VK_NULL_HANDLE, &ImageAcquiredIndex);
+    VkResult AcquireNextImageResult = vkAcquireNextImageKHR(GetVkDevice()->GetPrivateRessource(), GetVkSwapChain()->GetPrivateRessource(), UINT64_MAX, ImageAvailableSemaphores[CurrentFrameDrawn], VK_NULL_HANDLE, &ImageAcquiredIndex);
+    if (AcquireNextImageResult == VK_SUCCESS || AcquireNextImageResult == VK_SUBOPTIMAL_KHR) {
+        //Reset to unsignaled only if there is work to submit
+        vkResetFences(GetVkDevice()->GetPrivateRessource(), 1, &InFlightFences[CurrentFrameDrawn]);
+        
+        vkResetCommandBuffer(GetVkCommandBuffer(CurrentFrameDrawn)->GetPrivateRessource(), 0);
 
-    vkResetCommandBuffer(GetVkCommandBuffer(CurrentFrameDrawn)->GetPrivateRessource(), 0);
+        GetVkCommandBuffer(CurrentFrameDrawn)->RecordRenderPassCommand(ImageAcquiredIndex);
 
-    GetVkCommandBuffer(CurrentFrameDrawn)->RecordRenderPassCommand(ImageAcquiredIndex);
+        TArray<VkSemaphore> WaitSemaphores = {ImageAvailableSemaphores[CurrentFrameDrawn]};
+        TArray<VkSemaphore> SignalSemaphores = {RenderFinishedSemaphores[CurrentFrameDrawn]};
+        TArray<VkPipelineStageFlags> WaitStages = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 
-    TArray<VkSemaphore> WaitSemaphores = {ImageAvailableSemaphores[CurrentFrameDrawn]};
-    TArray<VkSemaphore> SignalSemaphores = {RenderFinishedSemaphores[CurrentFrameDrawn]};
-    TArray<VkPipelineStageFlags> WaitStages = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+        VkSubmitInfo SubmitInfo = {};
+        SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        SubmitInfo.waitSemaphoreCount = 1;
 
-    VkSubmitInfo SubmitInfo = {};
-    SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    SubmitInfo.waitSemaphoreCount = 1;
+        SubmitInfo.pWaitSemaphores = WaitSemaphores.Data();
+        SubmitInfo.pWaitDstStageMask = WaitStages.Data();
 
-    SubmitInfo.pWaitSemaphores = WaitSemaphores.Data();
-    SubmitInfo.pWaitDstStageMask = WaitStages.Data();
+        SubmitInfo.commandBufferCount = 1;
+        VkCommandBuffer CommandBuffer = GetVkCommandBuffer(CurrentFrameDrawn)->GetPrivateRessource();
+        SubmitInfo.pCommandBuffers = &CommandBuffer;
 
-    SubmitInfo.commandBufferCount = 1;
-    VkCommandBuffer CommandBuffer = GetVkCommandBuffer(CurrentFrameDrawn)->GetPrivateRessource();
-    SubmitInfo.pCommandBuffers = &CommandBuffer;
+        SubmitInfo.signalSemaphoreCount = 1;
+        SubmitInfo.pSignalSemaphores = SignalSemaphores.Data();
 
-    SubmitInfo.signalSemaphoreCount = 1;
-    SubmitInfo.pSignalSemaphores = SignalSemaphores.Data();
+        vkQueueSubmit(GetVkDevice()->GetGraphicsQueue(), 1, &SubmitInfo, InFlightFences[CurrentFrameDrawn]);
 
-    vkQueueSubmit(GetVkDevice()->GetGraphicsQueue(), 1, &SubmitInfo, InFlightFences[CurrentFrameDrawn]);
+        VkPresentInfoKHR PresentInfo = {};
+        PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-    VkPresentInfoKHR PresentInfo = {};
-    PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+        PresentInfo.waitSemaphoreCount = 1;
+        PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
 
-    PresentInfo.waitSemaphoreCount = 1;
-    PresentInfo.pWaitSemaphores = SignalSemaphores.Data();
+        TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateRessource()};
+        PresentInfo.swapchainCount = 1;
+        PresentInfo.pSwapchains = SwapChains.Data();
+        PresentInfo.pImageIndices = &ImageAcquiredIndex;
 
-    TArray<VkSwapchainKHR> SwapChains = {GetVkSwapChain()->GetPrivateRessource()};
-    PresentInfo.swapchainCount = 1;
-    PresentInfo.pSwapchains = SwapChains.Data();
-    PresentInfo.pImageIndices = &ImageAcquiredIndex;
+        PresentInfo.pResults = nullptr;
 
-    PresentInfo.pResults = nullptr;
+        VkResult PresentingResult = vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
+        if (PresentingResult == VK_ERROR_OUT_OF_DATE_KHR || PresentingResult == VK_SUBOPTIMAL_KHR || FrameBufferResized) {
+            FrameBufferResized = false;
+            ReCreateVulkanSwapChain();
+        }
 
-    vkQueuePresentKHR(GetVkDevice()->GetPresentingQueue(), &PresentInfo);
+        CurrentFrameDrawn = (CurrentFrameDrawn + 1) % MAX_FRAMES_IN_FLIGHT;
+    }
+    else if(AcquireNextImageResult == VK_ERROR_OUT_OF_DATE_KHR) {
+        ReCreateVulkanSwapChain();
+    }
+}
 
-    CurrentFrameDrawn = (CurrentFrameDrawn + 1) % MAX_FRAMES_IN_FLIGHT;
+void AVulkanRenderer::OnFrameBufferResize() {
+    ARenderer::OnFrameBufferResize();
+    FrameBufferResized = true;
 }
 
 VkInstance AVulkanRenderer::GetVkInstance() {
@@ -134,6 +149,10 @@ FVulkanGraphicsPipeline* AVulkanRenderer::GetVkGraphicsPipeline() const {
 
 FVulkanCommandBuffer* AVulkanRenderer::GetVkCommandBuffer(int INDEX) const {
     return VulkanCommandBuffers[INDEX];
+}
+
+AGLFWWindow* AVulkanRenderer::GetWindow() const {
+    return Cast<AGLFWWindow>(GameplayStatics::GetEngine()->GetActiveWindow());
 }
 
 VkResult AVulkanRenderer::CreateInstance() {
@@ -240,6 +259,29 @@ VkResult AVulkanRenderer::CreateVulkanFrameBuffers() {
 
 void AVulkanRenderer::CleanVulkanFrameBuffers() {
     VulkanSwapChain->CleanFrameBuffers();
+}
+
+VkResult AVulkanRenderer::ReCreateVulkanSwapChain() {
+    int Width = 0;
+    int Height = 0;
+    glfwGetFramebufferSize(GetWindow()->GetPrivateWindow(), &Width, &Height);
+    //While the window is minimize pausing the app //TODO Handle it with callback instead
+    while (Width == 0 || Height == 0) {
+        glfwGetFramebufferSize(GetWindow()->GetPrivateWindow(), &Width, &Height);
+        glfwWaitEvents();
+    }
+    
+    vkDeviceWaitIdle(GetVkDevice()->GetPrivateRessource());
+
+    CleanVulkanFrameBuffers();
+    CleanVulkanSwapChainImageViews();
+    CleanVulkanSwapChain();
+
+    CreateVulkanSwapChain();
+    CreateVulkanSwapChainImageViews();
+    CreateVulkanFrameBuffers();
+
+    return VK_SUCCESS;
 }
 
 VkResult AVulkanRenderer::CreateVulkanRenderPass() {
