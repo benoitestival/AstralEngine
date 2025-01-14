@@ -31,7 +31,7 @@ public:
     FVulkanSurface* GetVkSurface() const;
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
-    FVulkanCommandBuffer* GetVkCommandBuffer() const;
+    FVulkanCommandBuffer* GetVkCommandBuffer(int INDEX) const;
 public:
     //Instance Methods
     VkResult CreateInstance();
@@ -64,8 +64,8 @@ public:
     void CleanVulkanGraphicsPipeline();
 
     //Vulkan CommandBuffer methods
-    VkResult CreateVulkanCommandBuffer();
-    void CleanVulkanCommandBuffer();
+    VkResult CreateVulkanCommandBuffers();
+    void CleanVulkanCommandBuffers();
 
     VkResult CreateSyncObjects();
     void CleanSyncObjects();
@@ -86,21 +86,24 @@ public:
     FVulkanSwapChain* VulkanSwapChain = nullptr;
     FVulkanRenderPass* VulkanRenderPass = nullptr;
     FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
-    FVulkanCommandBuffer* VulkanCommandBuffer = nullptr;
+    TArray<FVulkanCommandBuffer*> VulkanCommandBuffers;
     
     FVulkanLogger* VulkanLogger = nullptr;
 
     //Sync Objects
-    VkSemaphore ImageAvailableSemaphore = VK_NULL_HANDLE;
-    VkSemaphore RenderFinishedSemaphore = VK_NULL_HANDLE;
-    VkFence InFlightFence = VK_NULL_HANDLE;
-
+    TArray<VkSemaphore> ImageAvailableSemaphores;
+    TArray<VkSemaphore> RenderFinishedSemaphores;
+    TArray<VkFence> InFlightFences;
+private:
+    const int MAX_FRAMES_IN_FLIGHT = 2;
+    int CurrentFrameDrawn = 0;
+public:
     // VkDebugUtilsMessengerEXT DebugMessenger = VK_NULL_HANDLE;
     // TArray<const char*> ValidationLayers = {
     //     "VK_LAYER_KHRONOS_validation"
     // };
 
-    bool Candraw = true;
+    //bool Candraw = true;
 // #ifdef IS_DEBUG
 //     const bool UseValidationLayers = true;
 // #else
