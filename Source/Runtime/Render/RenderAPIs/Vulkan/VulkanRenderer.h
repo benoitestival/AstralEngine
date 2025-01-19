@@ -3,6 +3,8 @@
 #include "vulkan/vulkan.h"
 
 
+class FVulkanPhysicalDevice;
+class FVulkanVertexBuffer;
 class AGLFWWindow;
 class FVulkanLogger;
 class FVulkanCommandBuffer;
@@ -29,11 +31,13 @@ public:
     void OnFrameBufferResize() override;
     
     VkInstance GetVkInstance();
-    FVulkanDevice* GetVkDevice();
+    FVulkanDevice* GetVkDevice() const;
+    FVulkanPhysicalDevice* GetVkPhysicalDevice() const;
     FVulkanSwapChain* GetVkSwapChain() const;
     FVulkanSurface* GetVkSurface() const;
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
+    FVulkanVertexBuffer* GetVkVertexBuffer() const;
     FVulkanCommandBuffer* GetVkCommandBuffer(int INDEX) const;
 private:
     AGLFWWindow* GetWindow() const;
@@ -70,6 +74,10 @@ private:
     VkResult CreateVulkanGraphicsPipeline();
     void CleanVulkanGraphicsPipeline();
 
+    //Vulkan VertexBuffer
+    VkResult CreateVulkanVertexBuffer();
+    void CleanVulkanVertexBuffer();
+    
     //Vulkan CommandBuffer methods
     VkResult CreateVulkanCommandBuffers();
     void CleanVulkanCommandBuffers();
@@ -93,6 +101,7 @@ private:
     FVulkanSwapChain* VulkanSwapChain = nullptr;
     FVulkanRenderPass* VulkanRenderPass = nullptr;
     FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
+    FVulkanVertexBuffer* VulkanVertexBuffer = nullptr;
     TArray<FVulkanCommandBuffer*> VulkanCommandBuffers;
     
     FVulkanLogger* VulkanLogger = nullptr;

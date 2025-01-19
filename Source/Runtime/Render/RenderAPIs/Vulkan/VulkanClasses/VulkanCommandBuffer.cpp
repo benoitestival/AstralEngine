@@ -4,6 +4,7 @@
 #include "VulkanGraphicsPipeline.h"
 #include "VulkanPhysicalDevice.h"
 #include "VulkanRenderPass.h"
+#include "VulkanVertexBuffer.h"
 #include "../VulkanRenderer.h"
 #include "../../../../Engine/Statics/GameplayStatics.h"
 
@@ -66,14 +67,19 @@ VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     vkCmdBeginRenderPass(GetPrivateRessource(), &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     
     vkCmdBindPipeline(GetPrivateRessource(), VK_PIPELINE_BIND_POINT_GRAPHICS, GetVkGraphicsPipeline()->GetPrivateRessource());
-
+    
     VkViewport Viewport = GetVkSwapChain()->GetViewport();
     vkCmdSetViewport(GetPrivateRessource(), 0, 1, &Viewport);
 
     VkRect2D Scissor = GetVkSwapChain()->GetScissor();
     vkCmdSetScissor(GetPrivateRessource(), 0, 1, &Scissor);
 
-    vkCmdDraw(GetPrivateRessource(), 3, 1, 0, 0);
+    TArray<VkBuffer> VertexBuffers = {GetVkVertexBuffer()->GetPrivateRessource()};
+    TArray<VkDeviceSize> Offsets = {0};
+    
+    vkCmdBindVertexBuffers(GetPrivateRessource(), 0, 1, VertexBuffers.Data(), Offsets.Data());
+    
+    vkCmdDraw(GetPrivateRessource(), GetVkVertexBuffer()->GetNumVertex(), 1, 0, 0);
 
     //End the render pass
     vkCmdEndRenderPass(GetPrivateRessource());
@@ -95,4 +101,8 @@ FVulkanSwapChain* FVulkanCommandBuffer::GetVkSwapChain() const {
 
 FVulkanGraphicsPipeline* FVulkanCommandBuffer::GetVkGraphicsPipeline() const {
     return GetVKRenderer()->GetVkGraphicsPipeline();
+}
+
+FVulkanVertexBuffer* FVulkanCommandBuffer::GetVkVertexBuffer() const {
+    return GetVKRenderer()->GetVkVertexBuffer();
 }

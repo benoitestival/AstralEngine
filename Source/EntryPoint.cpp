@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Application.h"
-
 int main(int argc, char* argv[]){
     
     Application* App = new Application();
@@ -12,4 +11,4 @@ int main(int argc, char* argv[]){
 
 
     return EXIT_SUCCESS;
- }
+}

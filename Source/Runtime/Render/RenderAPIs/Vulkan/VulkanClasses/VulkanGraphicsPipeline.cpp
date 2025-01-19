@@ -21,37 +21,58 @@ FVulkanGraphicsPipeline::~FVulkanGraphicsPipeline() {
 
 VkResult FVulkanGraphicsPipeline::Init() {
     VkGraphicsPipelineCreateInfo GraphicsPipelineCreateInfo = {};
+    
     GraphicsPipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     GraphicsPipelineCreateInfo.stageCount = 2;
-    
-    
     TArray<VkPipelineShaderStageCreateInfo> StagesCreateInfo = CreateShaderStagesInfos();
     GraphicsPipelineCreateInfo.pStages = StagesCreateInfo.Data();
     
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     VkPipelineVertexInputStateCreateInfo VertexInputInfos = CreatePipelineVertexInputInfos();
+    VkVertexInputBindingDescription BindingDescription = FVertex::GetBindingDescription();
+    VertexInputInfos.pVertexBindingDescriptions = &BindingDescription;
+    TArray<VkVertexInputAttributeDescription> AttributeDescriptions = FVertex::GetAttributeDescriptions();
+    VertexInputInfos.pVertexAttributeDescriptions = AttributeDescriptions.Data();
     GraphicsPipelineCreateInfo.pVertexInputState = &VertexInputInfos;
+    
+    ///////////////////////////////////////////////////////////////////////////////////
     
     VkPipelineInputAssemblyStateCreateInfo InputAssemblyInfos = CreatePipelineInputAssemblyInfos();
     GraphicsPipelineCreateInfo.pInputAssemblyState = &InputAssemblyInfos;
     
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     VkPipelineViewportStateCreateInfo ViewportStateInfos = CreatePipelineViewportStateInfos();
     GraphicsPipelineCreateInfo.pViewportState = &ViewportStateInfos;
+    
+    ///////////////////////////////////////////////////////////////////////////////////
     
     VkPipelineRasterizationStateCreateInfo RasterizationStateInfos = CreatePipelineRasterizationStateInfos();
     GraphicsPipelineCreateInfo.pRasterizationState = &RasterizationStateInfos;
     
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     VkPipelineMultisampleStateCreateInfo MultisamplingStateInfos = CreatePipelineMultisamplingStateInfos();
     GraphicsPipelineCreateInfo.pMultisampleState = &MultisamplingStateInfos;
-    //GraphicsPipelineCreateInfo.pDepthStencilState = nullptr;
-
+    
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     VkPipelineColorBlendAttachmentState ColorBlendAttachments = CreatePipelineColorBlendAttachmentsState();
     VkPipelineColorBlendStateCreateInfo ColorBlendStateInfos = CreatePipelineColorBlendStateInfos();
     ColorBlendStateInfos.pAttachments = &ColorBlendAttachments;
     GraphicsPipelineCreateInfo.pColorBlendState = &ColorBlendStateInfos;
+    
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     VkPipelineDynamicStateCreateInfo DynamicStateInfos = CreatePipelineDynamicStateInfos();
     GraphicsPipelineCreateInfo.pDynamicState = &DynamicStateInfos;
     
+    ///////////////////////////////////////////////////////////////////////////////////
+    
     GraphicsPipelineCreateInfo.layout = CreatePipelineLayout()->GetPrivateRessource();
+    
+    ///////////////////////////////////////////////////////////////////////////////////
     
     GraphicsPipelineCreateInfo.renderPass = GetVkRenderPass()->GetPrivateRessource();
     GraphicsPipelineCreateInfo.subpass = 0;
@@ -90,14 +111,17 @@ VkPipelineShaderStageCreateInfo FVulkanGraphicsPipeline::CreatePipelineShaderSta
     return ShaderStageInfos;
 }
 
-
-
 VkPipelineVertexInputStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineVertexInputInfos() {
-    VkPipelineVertexInputStateCreateInfo VertexInputInfo = {};
-    VertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    VertexInputInfo.vertexBindingDescriptionCount = 0;
-    VertexInputInfo.vertexAttributeDescriptionCount = 0;
-    return VertexInputInfo;
+    VkPipelineVertexInputStateCreateInfo VertexInputInfos = {};
+    VertexInputInfos.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    VertexInputInfos.vertexBindingDescriptionCount = 0;
+    VertexInputInfos.vertexAttributeDescriptionCount = 0;
+
+    VertexInputInfos.vertexBindingDescriptionCount = 1;
+
+    VertexInputInfos.vertexAttributeDescriptionCount = FVertex::GetAttributeDescriptions().Lenght();
+    
+    return VertexInputInfos;
 }
 
 VkPipelineInputAssemblyStateCreateInfo FVulkanGraphicsPipeline::CreatePipelineInputAssemblyInfos() {

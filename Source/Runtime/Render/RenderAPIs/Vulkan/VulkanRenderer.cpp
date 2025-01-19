@@ -10,8 +10,10 @@
 #include "VulkanClasses/VulkanDevice.h"
 #include "VulkanClasses/VulkanGraphicsPipeline.h"
 #include "VulkanClasses/VulkanLogger.h"
+#include "VulkanClasses/VulkanPhysicalDevice.h"
 #include "VulkanClasses/VulkanRenderPass.h"
 #include "VulkanClasses/VulkanSurface.h"
+#include "VulkanClasses/VulkanVertexBuffer.h"
 
 
 AVulkanRenderer::AVulkanRenderer() {
@@ -33,6 +35,7 @@ void AVulkanRenderer::Init() {
         CreateVulkanRenderPass();
         CreateVulkanGraphicsPipeline();
         CreateVulkanFrameBuffers();
+        CreateVulkanVertexBuffer();
         CreateVulkanCommandBuffers();
         CreateSyncObjects();
     }
@@ -44,6 +47,7 @@ void AVulkanRenderer::DeInit() {
     
     CleanSyncObjects();
     CleanVulkanCommandBuffers();
+    CleanVulkanVertexBuffer();
     CleanVulkanFrameBuffers();
     CleanVulkanGraphicsPipeline();
     CleanVulkanRenderPass();
@@ -127,8 +131,12 @@ VkInstance AVulkanRenderer::GetVkInstance() {
     return VulkanInstance;
 }
 
-FVulkanDevice* AVulkanRenderer::GetVkDevice() {
+FVulkanDevice* AVulkanRenderer::GetVkDevice() const{
     return VulkanDevice;
+}
+
+FVulkanPhysicalDevice* AVulkanRenderer::GetVkPhysicalDevice() const{
+    return VulkanDevice->GetVkPhysicalDevice();
 }
 
 FVulkanSwapChain* AVulkanRenderer::GetVkSwapChain() const {
@@ -145,6 +153,10 @@ FVulkanRenderPass* AVulkanRenderer::GetVkRenderPass() const {
 
 FVulkanGraphicsPipeline* AVulkanRenderer::GetVkGraphicsPipeline() const {
     return VulkanGraphicsPipeline;
+}
+
+FVulkanVertexBuffer* AVulkanRenderer::GetVkVertexBuffer() const {
+    return VulkanVertexBuffer;
 }
 
 FVulkanCommandBuffer* AVulkanRenderer::GetVkCommandBuffer(int INDEX) const {
@@ -304,6 +316,17 @@ void AVulkanRenderer::CleanVulkanGraphicsPipeline() {
     VulkanGraphicsPipeline->Clean();
     delete VulkanGraphicsPipeline;
     VulkanGraphicsPipeline = nullptr;
+}
+
+VkResult AVulkanRenderer::CreateVulkanVertexBuffer() {
+    VulkanVertexBuffer = new FVulkanVertexBuffer();
+    return VulkanVertexBuffer->Init();
+}
+
+void AVulkanRenderer::CleanVulkanVertexBuffer() {
+    VulkanVertexBuffer->Clean();
+    delete VulkanVertexBuffer;
+    VulkanVertexBuffer = nullptr;
 }
 
 VkResult AVulkanRenderer::CreateVulkanCommandBuffers() {

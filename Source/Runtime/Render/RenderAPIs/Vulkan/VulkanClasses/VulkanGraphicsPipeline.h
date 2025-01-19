@@ -40,6 +40,7 @@ private:
     FVulkanRenderPass* GetVkRenderPass() const;
 
 private:
+    VkPipelineLayout Test = VK_NULL_HANDLE;
     FVulkanPipelineLayout* VulkanPipelineLayout = nullptr;
     TArray<VkDynamicState> DynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 };
