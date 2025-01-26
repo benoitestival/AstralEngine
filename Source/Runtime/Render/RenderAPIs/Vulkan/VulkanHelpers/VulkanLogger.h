@@ -1,9 +1,6 @@
 #pragma once
-#include <vulkan/vulkan_core.h>
 
 #include "../VulkanObject.h"
-#include "../../../../Utils/Array.h"
-
 
 class AVulkanRenderer;
 

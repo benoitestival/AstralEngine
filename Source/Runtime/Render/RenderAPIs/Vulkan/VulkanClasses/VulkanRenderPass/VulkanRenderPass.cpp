@@ -1,9 +1,8 @@
 #include "VulkanRenderPass.h"
 
-#include "VulkanDevice.h"
-#include "VulkanSwapChain.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
+#include "../../VulkanRenderer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanSwapChain/VulkanSwapChain.h"
 
 FVulkanRenderPass::FVulkanRenderPass() {
 }

@@ -1,16 +1,14 @@
 #include "VulkanSurface.h"
 
-#include "../../../../Engine/Statics/GameplayStatics.h"
 
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
+#include "../../../../../Engine/Engine/Engine.h"
+#include "../../VulkanRenderer.h"
 
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Engine/Engine.h"
-#include "../../../../Window/Implementations/GLFWWindow.h"
 
 FVulkanSurface::FVulkanSurface(){
 }

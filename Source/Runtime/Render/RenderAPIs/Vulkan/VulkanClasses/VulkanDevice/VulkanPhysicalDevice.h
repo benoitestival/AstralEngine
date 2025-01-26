@@ -1,8 +1,6 @@
 ﻿#pragma once
-#include "../VulkanObject.h"
-#include "../../../../Utils/Array.h"
-#include "../VulkanHelpers/VulkanRessource.h"
-#include "../VulkanHelpers/VulkanTypes.h"
+#include "../../VulkanObject.h"
+#include "../../VulkanHelpers/VulkanRessource.h"
 
 class FVulkanSurface;
 

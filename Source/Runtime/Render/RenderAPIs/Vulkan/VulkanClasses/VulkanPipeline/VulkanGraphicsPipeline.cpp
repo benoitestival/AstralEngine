@@ -2,15 +2,15 @@
 #include "VulkanGraphicsPipeline.h"
 
 #include <fstream>
-
-#include "VulkanDevice.h"
+#include "../../../../ShaderSystem/Vulkan/VulkanShader.h"
+#include "../../../../ShaderSystem/ShaderManager.h"
+#include "../../VulkanRenderer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanRenderPass/VulkanRenderPass.h"
+#include "../VulkanSwapChain/VulkanSwapChain.h"
 #include "VulkanPipelineLayout.h"
-#include "VulkanRenderPass.h"
-#include "VulkanSwapChain.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../ShaderSystem/ShaderManager.h"
-#include "../../../ShaderSystem/Vulkan/VulkanShader.h"
+
+
 
 
 FVulkanGraphicsPipeline::FVulkanGraphicsPipeline() {

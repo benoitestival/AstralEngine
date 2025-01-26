@@ -3,9 +3,8 @@
 #include <set>
 #include <string>
 
-#include "VulkanSwapChain.h"
-#include "../VulkanObject.h"
-#include "../VulkanHelpers/VulkanRessource.h"
+#include "../../VulkanObject.h"
+#include "../../VulkanHelpers/VulkanRessource.h"
 #include "vulkan/vulkan.h"
 
 class FVulkanPhysicalDevice;

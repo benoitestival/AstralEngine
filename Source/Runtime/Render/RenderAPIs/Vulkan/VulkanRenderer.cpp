@@ -6,14 +6,15 @@
 
 #include "../../../Engine/Engine/Engine.h"
 #include "../../../Window/Implementations/GLFWWindow.h"
-#include "VulkanClasses/VulkanCommandBuffer.h"
-#include "VulkanClasses/VulkanDevice.h"
-#include "VulkanClasses/VulkanGraphicsPipeline.h"
-#include "VulkanClasses/VulkanLogger.h"
-#include "VulkanClasses/VulkanPhysicalDevice.h"
-#include "VulkanClasses/VulkanRenderPass.h"
-#include "VulkanClasses/VulkanSurface.h"
-#include "VulkanClasses/VulkanVertexBuffer.h"
+#include "VulkanClasses/VulkanCommandBuffer/VulkanCommandBuffer.h"
+#include "VulkanClasses/VulkanDevice/VulkanDevice.h"
+#include "VulkanClasses/VulkanDevice/VulkanPhysicalDevice.h"
+#include "VulkanClasses/VulkanBuffer/VulkanVertexBuffer.h"
+#include "VulkanClasses/VulkanPipeline/VulkanGraphicsPipeline.h"
+#include "VulkanClasses/VulkanRenderPass/VulkanRenderPass.h"
+#include "VulkanClasses/VulkanSurface/VulkanSurface.h"
+#include "VulkanClasses/VulkanSwapChain/VulkanSwapChain.h"
+#include "VulkanHelpers/VulkanLogger.h"
 
 
 AVulkanRenderer::AVulkanRenderer() {

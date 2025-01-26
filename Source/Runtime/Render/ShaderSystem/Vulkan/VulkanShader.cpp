@@ -3,7 +3,7 @@
 #include "../../../Engine/Statics/GameplayStatics.h"
 #include "../../../Utils/TemplateUtils.h"
 #include "../../RenderAPIs/Vulkan/VulkanRenderer.h"
-#include "../../RenderAPIs/Vulkan/VulkanClasses/VulkanDevice.h"
+#include "../../RenderAPIs/Vulkan/VulkanClasses/VulkanDevice/VulkanDevice.h"
 
 
 AVulkanShader::AVulkanShader(){

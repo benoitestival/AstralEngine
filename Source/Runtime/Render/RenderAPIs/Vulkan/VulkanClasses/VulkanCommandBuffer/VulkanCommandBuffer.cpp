@@ -1,12 +1,14 @@
 #include "VulkanCommandBuffer.h"
 
-#include "VulkanDevice.h"
-#include "VulkanGraphicsPipeline.h"
-#include "VulkanPhysicalDevice.h"
-#include "VulkanRenderPass.h"
-#include "VulkanVertexBuffer.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
+
+#include "../../VulkanRenderer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanDevice/VulkanPhysicalDevice.h"
+#include "../VulkanBuffer/VulkanVertexBuffer.h"
+#include "../VulkanPipeline/VulkanGraphicsPipeline.h"
+#include "../VulkanRenderPass/VulkanRenderPass.h"
+#include "../VulkanSwapChain/VulkanFrameBuffer.h"
+#include "../VulkanSwapChain/VulkanSwapChain.h"
 
 FVulkanCommandBuffer::FVulkanCommandBuffer() {
 }
@@ -85,6 +87,10 @@ VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     vkCmdEndRenderPass(GetPrivateRessource());
 
     return vkEndCommandBuffer(GetPrivateRessource());
+}
+
+VkCommandPool& FVulkanCommandBuffer::GetCommandPool() {
+    return CommandPool;
 }
 
 FVulkanDevice* FVulkanCommandBuffer::GetVkDevice() const {

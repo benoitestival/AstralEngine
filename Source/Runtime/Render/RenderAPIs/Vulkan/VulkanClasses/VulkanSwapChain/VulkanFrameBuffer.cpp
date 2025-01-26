@@ -1,10 +1,10 @@
 #include "VulkanFrameBuffer.h"
 
-#include "VulkanDevice.h"
-#include "VulkanRenderPass.h"
+#include "../../VulkanRenderer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanRenderPass/VulkanRenderPass.h"
 #include "VulkanSwapChain.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
+
 
 FVulkanFrameBuffer::FVulkanFrameBuffer(){
 }

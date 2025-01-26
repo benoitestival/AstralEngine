@@ -1,10 +1,8 @@
 #include "VulkanDevice.h"
 
-#include "VulkanLogger.h"
+#include "../../VulkanRenderer.h"
+#include "../../VulkanHelpers/VulkanLogger.h"
 #include "VulkanPhysicalDevice.h"
-#include "VulkanSurface.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
 
 FVulkanDevice::FVulkanDevice() {
 }

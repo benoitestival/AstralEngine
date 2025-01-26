@@ -3,14 +3,13 @@
 #include <algorithm>
 #include <GLFW/glfw3.h>
 
-#include "VulkanDevice.h"
+#include "../../../../../Engine/Engine/Engine.h"
+#include "../../VulkanRenderer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanDevice/VulkanPhysicalDevice.h"
+#include "../VulkanSurface/VulkanSurface.h"
 #include "VulkanFrameBuffer.h"
-#include "VulkanPhysicalDevice.h"
-#include "VulkanSurface.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Engine/Engine.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
-#include "../../../../Window/Implementations/GLFWWindow.h"
+
 
 FVulkanSwapChain::FVulkanSwapChain(): SwapChainImageFormat(), SwapChainExtent(), Viewport(), Scissor() {
 }
