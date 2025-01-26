@@ -6,6 +6,7 @@
 
 #include "../../../Engine/Engine/Engine.h"
 #include "../../../Window/Implementations/GLFWWindow.h"
+#include "VulkanClasses/VulkanBuffer/VulkanIndexBuffer.h"
 #include "VulkanClasses/VulkanCommandBuffer/VulkanCommandBuffer.h"
 #include "VulkanClasses/VulkanDevice/VulkanDevice.h"
 #include "VulkanClasses/VulkanDevice/VulkanPhysicalDevice.h"
@@ -37,6 +38,7 @@ void AVulkanRenderer::Init() {
         CreateVulkanGraphicsPipeline();
         CreateVulkanFrameBuffers();
         CreateVulkanVertexBuffer();
+        CreateVulkanIndexBuffer();
         CreateVulkanCommandBuffers();
         CreateSyncObjects();
     }
@@ -48,6 +50,7 @@ void AVulkanRenderer::DeInit() {
     
     CleanSyncObjects();
     CleanVulkanCommandBuffers();
+    CleanVulkanIndexBuffer();
     CleanVulkanVertexBuffer();
     CleanVulkanFrameBuffers();
     CleanVulkanGraphicsPipeline();
@@ -158,6 +161,10 @@ FVulkanGraphicsPipeline* AVulkanRenderer::GetVkGraphicsPipeline() const {
 
 FVulkanVertexBuffer* AVulkanRenderer::GetVkVertexBuffer() const {
     return VulkanVertexBuffer;
+}
+
+FVulkanIndexBuffer* AVulkanRenderer::GetVkIndexBuffer() const {
+    return VulkanIndexBuffer;
 }
 
 FVulkanCommandBuffer* AVulkanRenderer::GetVkCommandBuffer(int INDEX) const {
@@ -328,6 +335,17 @@ void AVulkanRenderer::CleanVulkanVertexBuffer() {
     VulkanVertexBuffer->Clean();
     delete VulkanVertexBuffer;
     VulkanVertexBuffer = nullptr;
+}
+
+VkResult AVulkanRenderer::CreateVulkanIndexBuffer() {
+    VulkanIndexBuffer = new FVulkanIndexBuffer();
+    return VulkanIndexBuffer->Init();
+}
+
+void AVulkanRenderer::CleanVulkanIndexBuffer() {
+    VulkanIndexBuffer->Clean();
+    delete VulkanIndexBuffer;
+    VulkanIndexBuffer = nullptr;
 }
 
 VkResult AVulkanRenderer::CreateVulkanCommandBuffers() {

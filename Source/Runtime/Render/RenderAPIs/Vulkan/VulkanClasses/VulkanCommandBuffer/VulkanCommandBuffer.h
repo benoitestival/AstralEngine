@@ -2,6 +2,7 @@
 #include "../../VulkanObject.h"
 #include "../../VulkanHelpers/VulkanRessource.h"
 
+class FVulkanIndexBuffer;
 class FVulkanSwapChain;
 class FVulkanRenderPass;
 class FVulkanDevice;
@@ -28,6 +29,7 @@ private:
     FVulkanSwapChain* GetVkSwapChain() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
     FVulkanVertexBuffer* GetVkVertexBuffer() const;
+    FVulkanIndexBuffer* GetVkIndexBuffer() const;
 private:
     VkCommandPool CommandPool = VK_NULL_HANDLE;
     

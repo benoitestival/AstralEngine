@@ -3,6 +3,7 @@
 #include "vulkan/vulkan.h"
 
 
+class FVulkanIndexBuffer;
 class FVulkanPhysicalDevice;
 class FVulkanVertexBuffer;
 class AGLFWWindow;
@@ -38,6 +39,7 @@ public:
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
     FVulkanVertexBuffer* GetVkVertexBuffer() const;
+    FVulkanIndexBuffer* GetVkIndexBuffer() const;
     FVulkanCommandBuffer* GetVkCommandBuffer(int INDEX) const;
 private:
     AGLFWWindow* GetWindow() const;
@@ -77,6 +79,10 @@ private:
     //Vulkan VertexBuffer
     VkResult CreateVulkanVertexBuffer();
     void CleanVulkanVertexBuffer();
+
+    //Vulkan IndexBuffer
+    VkResult CreateVulkanIndexBuffer();
+    void CleanVulkanIndexBuffer();
     
     //Vulkan CommandBuffer methods
     VkResult CreateVulkanCommandBuffers();
@@ -102,6 +108,7 @@ private:
     FVulkanRenderPass* VulkanRenderPass = nullptr;
     FVulkanGraphicsPipeline* VulkanGraphicsPipeline = nullptr;
     FVulkanVertexBuffer* VulkanVertexBuffer = nullptr;
+    FVulkanIndexBuffer* VulkanIndexBuffer = nullptr;
     TArray<FVulkanCommandBuffer*> VulkanCommandBuffers;
     
     FVulkanLogger* VulkanLogger = nullptr;

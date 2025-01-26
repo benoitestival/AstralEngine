@@ -13,7 +13,7 @@ public:
     virtual VkResult Init() override;
     virtual void Clean() override;
 
-    int GetNumVertex() const;
+    int GetNumVertices() const;
 
 private:
     TArray<FVertex> Vertices;

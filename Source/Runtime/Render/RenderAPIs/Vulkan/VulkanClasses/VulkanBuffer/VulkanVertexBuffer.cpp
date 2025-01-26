@@ -42,9 +42,8 @@ void FVulkanVertexBuffer::Clean() {
     vkFreeMemory(GetVkDevice()->GetPrivateRessource(), GetPrivateMemoryRessource(), nullptr);
 }
 
-int FVulkanVertexBuffer::GetNumVertex() const {
+int FVulkanVertexBuffer::GetNumVertices() const {
     return Vertices.Lenght();
 }
-
 
 

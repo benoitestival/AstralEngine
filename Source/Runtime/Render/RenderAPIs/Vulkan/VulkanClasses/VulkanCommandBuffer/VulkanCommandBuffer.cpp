@@ -2,6 +2,7 @@
 
 
 #include "../../VulkanRenderer.h"
+#include "../VulkanBuffer/VulkanIndexBuffer.h"
 #include "../VulkanDevice/VulkanDevice.h"
 #include "../VulkanDevice/VulkanPhysicalDevice.h"
 #include "../VulkanBuffer/VulkanVertexBuffer.h"
@@ -80,8 +81,10 @@ VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     TArray<VkDeviceSize> Offsets = {0};
     
     vkCmdBindVertexBuffers(GetPrivateRessource(), 0, 1, VertexBuffers.Data(), Offsets.Data());
-    
-    vkCmdDraw(GetPrivateRessource(), GetVkVertexBuffer()->GetNumVertex(), 1, 0, 0);
+
+    vkCmdBindIndexBuffer(GetPrivateRessource(), GetVkIndexBuffer()->GetPrivateRessource(), 0, VK_INDEX_TYPE_UINT16);
+
+    vkCmdDrawIndexed(GetPrivateRessource(), GetVkIndexBuffer()->GetNumIndices(), 1, 0, 0, 0);
 
     //End the render pass
     vkCmdEndRenderPass(GetPrivateRessource());
@@ -111,4 +114,8 @@ FVulkanGraphicsPipeline* FVulkanCommandBuffer::GetVkGraphicsPipeline() const {
 
 FVulkanVertexBuffer* FVulkanCommandBuffer::GetVkVertexBuffer() const {
     return GetVKRenderer()->GetVkVertexBuffer();
+}
+
+FVulkanIndexBuffer* FVulkanCommandBuffer::GetVkIndexBuffer() const {
+    return GetVKRenderer()->GetVkIndexBuffer();
 }
