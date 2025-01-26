@@ -1,7 +1,6 @@
 #pragma once
-#include "../VulkanObject.h"
-#include "../VulkanHelpers/VulkanRessource.h"
-#include "vulkan/vulkan.h"
+#include "../../VulkanObject.h"
+#include "../../VulkanHelpers/VulkanRessource.h"
 
 class AGLFWWindow;
 class AVulkanRenderer;

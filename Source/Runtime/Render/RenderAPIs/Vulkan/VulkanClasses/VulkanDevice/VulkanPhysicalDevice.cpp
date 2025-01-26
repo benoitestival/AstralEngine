@@ -1,7 +1,8 @@
 ﻿#include "VulkanPhysicalDevice.h"
 
-#include "VulkanSurface.h"
-#include "../VulkanRenderer.h"
+#include "../../VulkanRenderer.h"
+#include "../VulkanSurface/VulkanSurface.h"
+
 
 FVulkanPhysicalDevice::FVulkanPhysicalDevice() {
 }

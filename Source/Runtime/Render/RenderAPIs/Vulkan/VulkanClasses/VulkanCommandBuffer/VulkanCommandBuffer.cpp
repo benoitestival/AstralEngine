@@ -1,11 +1,15 @@
 #include "VulkanCommandBuffer.h"
 
-#include "VulkanDevice.h"
-#include "VulkanGraphicsPipeline.h"
-#include "VulkanPhysicalDevice.h"
-#include "VulkanRenderPass.h"
-#include "../VulkanRenderer.h"
-#include "../../../../Engine/Statics/GameplayStatics.h"
+
+#include "../../VulkanRenderer.h"
+#include "../VulkanBuffer/VulkanIndexBuffer.h"
+#include "../VulkanDevice/VulkanDevice.h"
+#include "../VulkanDevice/VulkanPhysicalDevice.h"
+#include "../VulkanBuffer/VulkanVertexBuffer.h"
+#include "../VulkanPipeline/VulkanGraphicsPipeline.h"
+#include "../VulkanRenderPass/VulkanRenderPass.h"
+#include "../VulkanSwapChain/VulkanFrameBuffer.h"
+#include "../VulkanSwapChain/VulkanSwapChain.h"
 
 FVulkanCommandBuffer::FVulkanCommandBuffer() {
 }
@@ -66,19 +70,30 @@ VkResult FVulkanCommandBuffer::RecordRenderPassCommand(int FRAME_INDEX) {
     vkCmdBeginRenderPass(GetPrivateRessource(), &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
     
     vkCmdBindPipeline(GetPrivateRessource(), VK_PIPELINE_BIND_POINT_GRAPHICS, GetVkGraphicsPipeline()->GetPrivateRessource());
-
+    
     VkViewport Viewport = GetVkSwapChain()->GetViewport();
     vkCmdSetViewport(GetPrivateRessource(), 0, 1, &Viewport);
 
     VkRect2D Scissor = GetVkSwapChain()->GetScissor();
     vkCmdSetScissor(GetPrivateRessource(), 0, 1, &Scissor);
 
-    vkCmdDraw(GetPrivateRessource(), 3, 1, 0, 0);
+    TArray<VkBuffer> VertexBuffers = {GetVkVertexBuffer()->GetPrivateRessource()};
+    TArray<VkDeviceSize> Offsets = {0};
+    
+    vkCmdBindVertexBuffers(GetPrivateRessource(), 0, 1, VertexBuffers.Data(), Offsets.Data());
+
+    vkCmdBindIndexBuffer(GetPrivateRessource(), GetVkIndexBuffer()->GetPrivateRessource(), 0, VK_INDEX_TYPE_UINT16);
+
+    vkCmdDrawIndexed(GetPrivateRessource(), GetVkIndexBuffer()->GetNumIndices(), 1, 0, 0, 0);
 
     //End the render pass
     vkCmdEndRenderPass(GetPrivateRessource());
 
     return vkEndCommandBuffer(GetPrivateRessource());
+}
+
+VkCommandPool& FVulkanCommandBuffer::GetCommandPool() {
+    return CommandPool;
 }
 
 FVulkanDevice* FVulkanCommandBuffer::GetVkDevice() const {
@@ -95,4 +110,12 @@ FVulkanSwapChain* FVulkanCommandBuffer::GetVkSwapChain() const {
 
 FVulkanGraphicsPipeline* FVulkanCommandBuffer::GetVkGraphicsPipeline() const {
     return GetVKRenderer()->GetVkGraphicsPipeline();
+}
+
+FVulkanVertexBuffer* FVulkanCommandBuffer::GetVkVertexBuffer() const {
+    return GetVKRenderer()->GetVkVertexBuffer();
+}
+
+FVulkanIndexBuffer* FVulkanCommandBuffer::GetVkIndexBuffer() const {
+    return GetVKRenderer()->GetVkIndexBuffer();
 }

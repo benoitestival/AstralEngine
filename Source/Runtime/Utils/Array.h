@@ -141,7 +141,7 @@ public:
 
     
     
-    int Lenght() {
+    int Lenght() const {
         return ToSTDVector().size();
     }
     
@@ -158,6 +158,10 @@ public:
     }
 
     T* Data() {
+        return ToSTDVector().data();
+    }
+
+    const T* Data() const {
         return ToSTDVector().data();
     }
 

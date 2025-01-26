@@ -1,9 +1,8 @@
 #pragma once
 #include <vulkan/vulkan_core.h>
 
-#include "../VulkanObject.h"
-#include "../../../../Utils/Array.h"
-#include "../VulkanHelpers/VulkanRessource.h"
+#include "../../VulkanObject.h"
+#include "../../VulkanHelpers/VulkanRessource.h"
 
 
 class FVulkanRenderPass;
@@ -40,6 +39,7 @@ private:
     FVulkanRenderPass* GetVkRenderPass() const;
 
 private:
+    VkPipelineLayout Test = VK_NULL_HANDLE;
     FVulkanPipelineLayout* VulkanPipelineLayout = nullptr;
     TArray<VkDynamicState> DynamicStates = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 };

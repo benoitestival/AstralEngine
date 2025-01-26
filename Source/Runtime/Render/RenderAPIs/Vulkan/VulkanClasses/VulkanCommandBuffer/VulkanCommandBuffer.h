@@ -1,6 +1,12 @@
 #pragma once
-#include "VulkanFrameBuffer.h"
+#include "../../VulkanObject.h"
+#include "../../VulkanHelpers/VulkanRessource.h"
 
+class FVulkanIndexBuffer;
+class FVulkanSwapChain;
+class FVulkanRenderPass;
+class FVulkanDevice;
+class FVulkanVertexBuffer;
 class FVulkanGraphicsPipeline;
 
 class FVulkanCommandBuffer : public FVulkanObject, public TVulkanRessource<VkCommandBuffer>{
@@ -15,12 +21,15 @@ public:
     void CleanCommandPool();
 
     VkResult RecordRenderPassCommand(int FRAME_INDEX);
+    VkCommandPool& GetCommandPool();
 private:
 
     FVulkanDevice* GetVkDevice() const;
     FVulkanRenderPass* GetVkRenderPass() const;
     FVulkanSwapChain* GetVkSwapChain() const;
     FVulkanGraphicsPipeline* GetVkGraphicsPipeline() const;
+    FVulkanVertexBuffer* GetVkVertexBuffer() const;
+    FVulkanIndexBuffer* GetVkIndexBuffer() const;
 private:
     VkCommandPool CommandPool = VK_NULL_HANDLE;
     
