@@ -112,6 +112,6 @@ void TVector2D<T>::Log() const {
 }
 
 template <typename T>
-TMatrix<T, 3, 1> TVector2D<T>::ToMatrix() const {
-    return TMatrix<T, 3, 1>(*this);
+TMatrix<T, 1, 3> TVector2D<T>::ToMatrix() const {
+    return TMatrix<T, 1, 3>(*this);
 }

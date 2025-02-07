@@ -30,7 +30,7 @@ struct TVector2D {
 
     void Log() const;
 
-    TMatrix<T, 3, 1> ToMatrix() const;
+    TMatrix<T, 1, 3> ToMatrix() const;
 public:
     T X;
     T Y;

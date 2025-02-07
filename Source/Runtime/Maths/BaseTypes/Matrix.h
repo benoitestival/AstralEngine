@@ -2,8 +2,6 @@
 #include "../Utils/CoreIncludes.h"
 #include "../Utils/BaseTypesForward.h"
 
-#define LENGHT2D 3
-
 template<typename T, int R, int C>
 struct TMatrix {
 public:
@@ -15,21 +13,18 @@ public:
 
     template<int OtherR, int OtherC>
     TMatrix<T, R, OtherC> operator*(const TMatrix<T, OtherR, OtherC>& OtherMatrix);
+private:
+    T MultiplyRowByColumn(const TArray<T> Row, const TArray<T> Column);
+public:
     TVector2D<T> operator*(const TVector2D<T>& Vector);
-
-
+    TVector3D<T> operator*(const TVector3D<T>& Vector);
+    
     TVector2D<T> ToVector2D() const;
+    TVector3D<T> ToVector3D() const;
 private:
     void InitMatrixArray();
-    
-public:
-    // int RowNumbers = 0;
-    // int ColumnNumbers = 0;
-
 private:
     TArray<TArray<T>> Matrix;
 };
-
-
 
 #include "Matrix.inl"
