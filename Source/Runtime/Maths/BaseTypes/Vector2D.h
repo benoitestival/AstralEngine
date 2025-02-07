@@ -1,88 +1,43 @@
 #pragma once
-#include <complex>
-#include <iostream>
-
+#include "../Utils/BaseTypesForward.h"
 
 template<typename T>
 struct TVector2D {
-    TVector2D(){};
-    TVector2D(T XY) : X(XY), Y(XY){};
-    TVector2D(T X_, T Y_) : X(X_), Y(Y_){};
+    TVector2D();
+    TVector2D(T XY);
+    TVector2D(T X_, T Y_);
 
-    bool operator==(const TVector2D& Other) const{return X == Other.X && Y == Other.Y;};
-    bool operator!=(const TVector2D& Other) const{return !(*this == Other);};
+    bool operator==(const TVector2D& Other) const;
+    bool operator!=(const TVector2D& Other) const;
 
-    TVector2D operator+(const TVector2D& Other) const {
-        TVector2D Result = TVector2D();
-        Result.X = X + Other.X;
-        Result.Y = Y + Other.Y;
-        return Result;
-    };
-    TVector2D operator-(const TVector2D& Other) const {
-        TVector2D Result = TVector2D();
-        Result.X = X - Other.X;
-        Result.Y = Y - Other.Y;
-        return Result;
-    };
-    TVector2D operator*(const TVector2D& Other) const {
-        TVector2D Result = TVector2D();
-        Result.X = X * Other.X;
-        Result.Y = Y * Other.Y;
-        return Result;
-    };
-    TVector2D operator/(const TVector2D& Other) const {
-        TVector2D Result = TVector2D();
-        Result.X = X / Other.X;
-        Result.Y = Y / Other.Y;
-        return Result;
-    };
+    TVector2D operator+(const TVector2D& Other) const;
+    TVector2D operator-(const TVector2D& Other) const;
+    TVector2D operator*(const TVector2D& Other) const;
+    TVector2D operator/(const TVector2D& Other) const;
 
-    TVector2D operator+(const T& Other) const {
-        return *this + TVector2D(Other);
-    }
-    TVector2D operator-(const T& Other) const {
-        return *this - TVector2D(Other);
-    }
-    TVector2D operator*(const T& Other) const {
-        return *this * TVector2D(Other);
-    }
-    TVector2D operator/(const T& Other) const {
-        return *this / TVector2D(Other);
-    }
+    TVector2D operator+(const T& Other) const;
+    TVector2D operator-(const T& Other) const;
+    TVector2D operator*(const T& Other) const;
+    TVector2D operator/(const T& Other) const;
 
-    void Normalize() {
-        *this = *this/Lenght();
-    };
-
-    void SafeNormalize() {
-        if (Lenght() > 0) {
-            Normalize();
-        }
-    };
-
-    void Remap(T MinXY, T MaxXY) {
-        //TODO
-    }
+    void Normalize();
+    void SafeNormalize();
     
-    float Lenght() {
-        return std::sqrt(std::pow(X, 2) + std::pow(Y, 2));
-    };
+    float Lenght();
     
-    float Dot(const TVector2D& Other) const {
-        return X * Other.X + Y * Other.Y;  
-    };
-    static float Dot(const TVector2D& A, const TVector2D& B) {
-        return A.Dot(B);
-    };
+    float Dot(const TVector2D& Other) const;
+    static float Dot(const TVector2D& A, const TVector2D& B);
 
-    void Log() const{
-        std::cout << "X: " << X << "; Y: " << Y << std::endl;
-    }
+    void Log() const;
 
-    
+    TMatrix<T, 3, 1> ToMatrix() const;
 public:
     T X;
     T Y;
     
 };
+
+
+
+#include "Vector2D.inl"
 

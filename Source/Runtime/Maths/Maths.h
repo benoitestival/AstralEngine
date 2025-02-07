@@ -34,7 +34,9 @@ DECLARE_CONCRETE_MATH_TYPE(FMatrix4X4, TMatrix<float COMMA 4 COMMA 4>)
 // - Equation
 // - Circle
 // - Sphere
-// - Mesh
+// - Plane
+// - Line
+// - Quat
 
 class AMathsUtils {
 public:

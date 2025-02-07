@@ -32,6 +32,8 @@ void ABaseObject::SetOuter(ABaseObject* ObjectOuter) {
 }
 
 void ABaseObject::Serialize(FArchive& Archive) {
+    //Archive.InsertDataInArchive("Class", GetClass());
+    
 }
 
 void ABaseObject::Deserialize(FArchive& Archive) {

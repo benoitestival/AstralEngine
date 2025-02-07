@@ -33,6 +33,15 @@ int ADebugMain::DebugMain() {
     // GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
 
     //Depending on if you want to block the engine or allow it to continue after the main enable your return code
+    //
+    // FArchive Archive;
+    // FClass Class;
+    //
+    // ABaseObject* Object;
+    //
+    // Archive << Class;
+    // Archive << TSerializableField<ABaseObject>(Object);
+    
     return CONTINUE_CODE;
     //return EXIT_CODE;
 }
