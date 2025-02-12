@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include "Vector3D.h"
+#include "../Utils/MathUtility.h"
+
 
 template <typename T>
 TVector3D<T>::TVector3D() {
@@ -77,6 +79,37 @@ TVector3D<T> TVector3D<T>::operator*(const T& Other) const {
 template <typename T>
 TVector3D<T> TVector3D<T>::operator/(const T& Other) const {
     return *this / TVector3D(Other);
+}
+
+template <typename T>
+float TVector3D<T>::Lenght() const {
+    return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y) + FMath::Square(Z));
+}
+
+template <typename T>
+void TVector3D<T>::Normalize() {
+    *this / Lenght();
+}
+
+template <typename T>
+void TVector3D<T>::SafeNormalize() {
+    if (Lenght() > 0) {
+        Normalize();
+    }
+}
+
+template <typename T>
+float TVector3D<T>::Dot(const TVector3D<T>& Other) const {
+    return X * Other.X + Y * Other.Y + Z * Other.Z;
+}
+
+template <typename T>
+TVector3D<T> TVector3D<T>::Cross(const TVector3D<T>& Other) const {
+    TVector3D<T> Result = TVector3D<T>();
+    Result.X = Y * Other.Z - Z * Other.Y;
+    Result.Y = Z * Other.X - X * Other.Z;
+    Result.Z = X * Other.Y - Y * Other.X;
+    return Result;
 }
 
 template <typename T>

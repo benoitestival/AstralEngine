@@ -1,6 +1,7 @@
 #pragma once
 #include <type_traits>
 
+
 class ABaseObject;
 
 template<class TypeA, class TypeB>

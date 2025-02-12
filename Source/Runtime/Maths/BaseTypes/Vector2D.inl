@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Vector2D.h"
 #include "Matrix.h"
+#include "../Utils/MathUtility.h"
 
 template <typename T>
 TVector2D<T>::TVector2D() {
@@ -92,7 +93,7 @@ void TVector2D<T>::Normalize() {
 
 template <typename T>
 float TVector2D<T>::Lenght() {
-    return std::sqrt(std::pow(X, 2) + std::pow(Y, 2));
+    return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y));
 }
 
 template <typename T>
@@ -102,8 +103,8 @@ float TVector2D<T>::Dot(const TVector2D& Other) const {
 }
 
 template <typename T>
-float TVector2D<T>::Dot(const TVector2D& A, const TVector2D& B) {
-    return A.Dot(B);
+float TVector2D<T>::Cross(const TVector2D<T>& Other) const {
+    return X * Other.Y - Y * Other.X;
 }
 
 template <typename T>

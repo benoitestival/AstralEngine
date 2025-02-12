@@ -41,6 +41,9 @@ int ADebugMain::DebugMain() {
     //
     // Archive << Class;
     // Archive << TSerializableField<ABaseObject>(Object);
+
+    int archive;
+    AMathsUtils::Sqrt(archive);
     
     return CONTINUE_CODE;
     //return EXIT_CODE;

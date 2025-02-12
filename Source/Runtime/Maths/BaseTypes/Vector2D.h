@@ -26,10 +26,11 @@ struct TVector2D {
     float Lenght();
     
     float Dot(const TVector2D& Other) const;
-    static float Dot(const TVector2D& A, const TVector2D& B);
-
+    float Cross(const TVector2D<T>& Other) const;
+    
     void Log() const;
 
+    
     TMatrix<T, 1, 3> ToMatrix() const;
 public:
     T X;

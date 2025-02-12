@@ -37,7 +37,6 @@ DECLARE_CONCRETE_MATH_TYPE(FMatrix4X4, TMatrix<float COMMA 4 COMMA 4>)
 // - Plane
 // - Line
 // - Quat
-
 class AMathsUtils {
 public:
     static bool IsNearlyEqual(const FVector2D& Vec1, const FVector2D& Vec2, float Tolerance = 0.00001f);
