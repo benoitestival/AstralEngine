@@ -81,6 +81,11 @@ TVector3D<T> TVector3D<T>::operator/(const T& Other) const {
     return *this / TVector3D(Other);
 }
 
+template<typename T, IsNumber N>
+TVector3D<T> operator*(N Number, const TVector3D<T>& V){
+    return V * Number;
+}
+
 template <typename T>
 float TVector3D<T>::Lenght() const {
     return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y) + FMath::Square(Z));

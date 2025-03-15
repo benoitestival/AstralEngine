@@ -79,6 +79,11 @@ TVector2D<T> TVector2D<T>::operator/(const T& Other) const {
     return *this / TVector2D(Other);
 }
 
+template<typename T, IsNumber N>
+TVector2D<T> operator*(N Number, const TVector2D<T>& V){
+    return V * Number;
+}
+
 template <typename T>
 void TVector2D<T>::SafeNormalize() {
     if (Lenght() > 0) {
@@ -92,7 +97,7 @@ void TVector2D<T>::Normalize() {
 }
 
 template <typename T>
-float TVector2D<T>::Lenght() {
+float TVector2D<T>::Lenght() const {
     return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y));
 }
 

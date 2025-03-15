@@ -42,8 +42,7 @@ int ADebugMain::DebugMain() {
     // Archive << Class;
     // Archive << TSerializableField<ABaseObject>(Object);
 
-    int archive;
-    AMathsUtils::Sqrt(archive);
+    float Result = FMath::Pow(10.f, 5);
     
     return CONTINUE_CODE;
     //return EXIT_CODE;
