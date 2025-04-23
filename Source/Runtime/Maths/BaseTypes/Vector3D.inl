@@ -2,6 +2,8 @@
 #include "Vector3D.h"
 #include "../Utils/MathUtility.h"
 
+#define LENGHT3D 3
+
 
 template <typename T>
 TVector3D<T>::TVector3D() {
@@ -87,8 +89,34 @@ TVector3D<T> operator*(N Number, const TVector3D<T>& V){
 }
 
 template <typename T>
+TMatrix<T, 1, 3> TVector3D<T>::ToMatrix() const {
+    return TMatrix<T, 1, 3>(*this);
+}
+
+template <typename T>
+TMatrix<T, 1, 4> TVector3D<T>::ToTransformMatrix() const {
+    return TMatrix<T, 1, 4>(*this);
+}
+
+template <typename T>
+TVector3D<T> TVector3D<T>::operator*(const TMatrix<T, 3, 3>& Other) const{
+    return (ToMatrix() * Other).ToVector3D();
+}
+
+template <typename T>
+TVector3D<T> TVector3D<T>::operator*(const TMatrix<T, 4, 4>& Other) const{
+    return (ToTransformMatrix() * Other).ToVector3D();
+}
+
+
+template <typename T>
 float TVector3D<T>::Lenght() const {
     return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y) + FMath::Square(Z));
+}
+
+template <typename T>
+int TVector3D<T>::Num() const {
+    return LENGHT3D;
 }
 
 template <typename T>
@@ -117,7 +145,3 @@ TVector3D<T> TVector3D<T>::Cross(const TVector3D<T>& Other) const {
     return Result;
 }
 
-template <typename T>
-TMatrix<T, 1, 4> TVector3D<T>::ToMatrix() const {
-    return TMatrix<T, 1, 4>(*this);
-}

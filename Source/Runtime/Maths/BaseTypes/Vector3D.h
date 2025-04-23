@@ -20,7 +20,13 @@ struct TVector3D {
     TVector3D operator*(const T& Other) const;
     TVector3D operator/(const T& Other) const;
 
+    TMatrix<T, 1, 3> ToMatrix() const;
+    TMatrix<T, 1, 4> ToTransformMatrix() const;
+    TVector3D operator*(const TMatrix<T, 3, 3>& Other) const;
+    TVector3D operator*(const TMatrix<T, 4, 4>& Other) const;
+    
     float Lenght() const;
+    int Num() const;
     
     void Normalize();
     void SafeNormalize();
@@ -28,7 +34,7 @@ struct TVector3D {
     float Dot(const TVector3D<T>& Other) const;
     TVector3D<T> Cross(const TVector3D<T>& Other) const;
     
-    TMatrix<T, 1, 4> ToMatrix() const;
+    
 public:
     T X;
     T Y;

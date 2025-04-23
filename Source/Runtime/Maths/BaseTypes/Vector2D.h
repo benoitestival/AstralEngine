@@ -20,6 +20,11 @@ struct TVector2D {
     TVector2D operator-(const T& Other) const;
     TVector2D operator*(const T& Other) const;
     TVector2D operator/(const T& Other) const;
+
+    TMatrix<T, 1, 2> ToMatrix() const;
+    TMatrix<T, 1, 3> ToTransformMatrix() const;
+    TVector2D operator*(const TMatrix<T, 2, 2>& Other) const;
+    TVector2D operator*(const TMatrix<T, 3, 3>& Other) const;
     
     void Normalize();
     void SafeNormalize();
@@ -30,8 +35,8 @@ struct TVector2D {
     float Cross(const TVector2D<T>& Other) const;
     
     void Log() const;
+    int Num() const;
     
-    TMatrix<T, 1, 3> ToMatrix() const;
 public:
     T X;
     T Y;
