@@ -14,6 +14,7 @@ public:
 
     template<int OtherR, int OtherC>
     TMatrix<T, R, OtherC> operator*(const TMatrix<T, OtherR, OtherC>& OtherMatrix);
+    static TMatrix<T, R, C> Identity();
 public:
     TVector2D<T> ToVector2D() const;
     TVector3D<T> ToVector3D() const;

@@ -7,7 +7,7 @@
 #define COMMA ,
 
 #define DECLARE_CONCRETE_MATH_TYPE(ConcreteName, GenericType)\
-    using ConcreteName = GenericType;
+    using ConcreteName = GenericType; 
 
 
 //Vector 2D
@@ -47,6 +47,10 @@ public:
     static bool IsNearlyEqual(float Number1, float Number2, float Tolerance = 0.00001f);
 
     /////////////////////////////////Vector////////////////////////////////////////
+    static FVector WorldForwardVector();
+    static FVector WorldRightVector();
+    static FVector WorldUpVector();
+    
     static bool IsNearlyEqual(const FVector2D& Vec1, const FVector2D& Vec2, float Tolerance = 0.00001f);
     static FVector2D Normalize(const FVector2D& Vec);
     static FVector Normalize(const FVector& Vec);
@@ -57,10 +61,23 @@ public:
     static FVector2D MirrorByNormal(const FVector2D& Vec, const FVector2D& Normal);
     static FVector MirrorByNormal(const FVector& Vec, const FVector& Normal);
 
+    /////////////////////////////////Rotator///////////////////////////////////////
+    static FRotator MakeRotFromForwardVector(const FVector& Start, const FVector& End);
+    static FRotator MakeRotFromRightVector(const FVector& Start, const FVector& End);
+    static FRotator MakeRotFromUpVector(const FVector& Start, const FVector& End);
+
+    inline static FRotator FindLookAtRotation(const FVector& Start, const FVector& End);//Just an another name for Find by forward vector
+    
     /////////////////////////////////Matrix////////////////////////////////////////
     //Use to rotate an existing transformation matrix around an axis
     FMatrix4X4 RotateMatrixAroundAxis(FMatrix4X4& Matrix, const FVector& Axis, float Angle);
     FMatrix4X4 BuildRodriguesMatrixAroundAxis(const FVector& Axis, float Angle);
-    //FMatrix4X4 LookAtMatrix();
+    //Return a transformation matrix for the LookAtDirection 
+    FMatrix4X4 FindLookAtMatrixFromForward(const FVector& Start, const FVector& End);//From Z
+    FMatrix4X4 FindLookAtMatrixFromRight(const FVector& Start, const FVector& End);//From X
+    FMatrix4X4 FindLookAtMatrixFromUp(const FVector& Start, const FVector& End);//From Y
+    FMatrix4X4 ConstructRotationMatrix(const FVector& Forward, const FVector& Right, const FVector& Up);//All Vectors must be normalized
+    //Return the Camera transformation matrix for the LookAtDirection
+    FMatrix4X4 FindCameraLookAtMatrix(const FVector& CameraPos, const FVector& LookAtPosition);
 };
 

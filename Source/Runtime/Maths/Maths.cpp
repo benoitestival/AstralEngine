@@ -4,9 +4,23 @@ bool AMathsUtils::IsNearlyEqual(float Number1, float Number2, float Tolerance) {
     return (Number1 - Number2) < Tolerance ;
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////VECTOR/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+FVector AMathsUtils::WorldForwardVector() {
+    return {0.0f, 0.0f, 1.0f};
+}
+
+FVector AMathsUtils::WorldRightVector() {
+    return {1.0f, 0.0f, 0.0f};
+}
+
+FVector AMathsUtils::WorldUpVector() {
+    return {0.0f, 1.0f, 0.0f};
+}
 
 
 bool AMathsUtils::IsNearlyEqual(const FVector2D& Vec1, const FVector2D& Vec2, float Tolerance) {
@@ -45,6 +59,36 @@ FVector2D AMathsUtils::MirrorByNormal(const FVector2D& Vec, const FVector2D& Nor
 FVector AMathsUtils::MirrorByNormal(const FVector& Vec, const FVector& Normal) {
     return Vec - 2 * AMathsUtils::DotProduct3D(Vec, Normal) * Normal;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////ROTATOR////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+FRotator AMathsUtils::MakeRotFromForwardVector(const FVector& Start, const FVector& End) {
+    FRotator Result = FRotator();
+    
+    return Result;
+}
+
+FRotator AMathsUtils::MakeRotFromRightVector(const FVector& Start, const FVector& End) {
+    FRotator Result = FRotator();
+    
+    return Result;
+}
+
+FRotator AMathsUtils::MakeRotFromUpVector(const FVector& Start, const FVector& End) {
+    FRotator Result = FRotator();
+    
+    return Result;
+}
+
+
+
+FRotator AMathsUtils::FindLookAtRotation(const FVector& Start, const FVector& End) {
+    return AMathsUtils::MakeRotFromForwardVector(Start, End);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////MATRIX/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,4 +135,80 @@ FMatrix4X4 AMathsUtils::BuildRodriguesMatrixAroundAxis(const FVector& Axis, floa
     RodriguesMatrix[2][2] = CosAngle + AxisCosCoef.Z * AxisNormalize.Z;
     
     return RodriguesMatrix;
+}
+
+FMatrix4X4 AMathsUtils::FindLookAtMatrixFromForward(const FVector& Start, const FVector& End) {
+    //Z is the Forward Vector
+    FVector Forward = AMathsUtils::Normalize(End - Start);
+    FVector Right = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(AMathsUtils::WorldUpVector(), Forward));
+    FVector Up = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(Forward, Right));
+    
+    FMatrix4X4 LookAtMatrix = ConstructRotationMatrix(Forward, Right, Up);
+    
+    LookAtMatrix[3][0] = AMathsUtils::DotProduct3D(Start, Right);
+    LookAtMatrix[3][1] = AMathsUtils::DotProduct3D(Start, Up);
+    LookAtMatrix[3][2] = AMathsUtils::DotProduct3D(Start, Forward);
+    
+    return LookAtMatrix;
+}
+
+FMatrix4X4 AMathsUtils::FindLookAtMatrixFromRight(const FVector& Start, const FVector& End) {
+    //X is the Right Vector
+    FVector Right = AMathsUtils::Normalize(End - Start);
+    FVector Forward = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(AMathsUtils::WorldUpVector(), Right));
+    FVector Up = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(Forward, Right));
+    
+    FMatrix4X4 LookAtMatrix = ConstructRotationMatrix(Forward, Right, Up);
+    
+    LookAtMatrix[3][0] = AMathsUtils::DotProduct3D(Start, Right);
+    LookAtMatrix[3][1] = AMathsUtils::DotProduct3D(Start, Up);
+    LookAtMatrix[3][2] = AMathsUtils::DotProduct3D(Start, Forward);
+    
+    return LookAtMatrix;
+}
+
+FMatrix4X4 AMathsUtils::FindLookAtMatrixFromUp(const FVector& Start, const FVector& End) {
+    //Y is the Up Vector
+    FVector Up = AMathsUtils::Normalize(End - Start);
+    FVector Forward = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(AMathsUtils::WorldUpVector(), Up));
+    FVector Right = AMathsUtils::Normalize(AMathsUtils::CrossProduct3D(Up, Forward));
+
+    FMatrix4X4 LookAtMatrix = ConstructRotationMatrix(Forward, Right, Up);
+    
+    LookAtMatrix[3][0] = AMathsUtils::DotProduct3D(Start, Right);
+    LookAtMatrix[3][1] = AMathsUtils::DotProduct3D(Start, Up);
+    LookAtMatrix[3][2] = AMathsUtils::DotProduct3D(Start, Forward);
+    
+    return LookAtMatrix;
+}
+
+
+
+FMatrix4X4 AMathsUtils::ConstructRotationMatrix(const FVector& Forward, const FVector& Right, const FVector& Up) {
+    //Matrix Build in row major for (vector * metrice) multiplication 
+    FMatrix4X4 RotationMatrix = FMatrix4X4();
+    RotationMatrix[0][0] = Right.X;
+    RotationMatrix[1][0] = Up.X;
+    RotationMatrix[2][0] = Forward.X;
+    
+    RotationMatrix[0][1] = Right.Y;
+    RotationMatrix[1][1] = Up.Y;
+    RotationMatrix[2][1] = Forward.Y;
+    
+    RotationMatrix[0][2] = Right.Z;
+    RotationMatrix[1][2] = Up.Z;
+    RotationMatrix[2][2] = Forward.Z;
+    return RotationMatrix;
+}
+
+FMatrix4X4 AMathsUtils::FindCameraLookAtMatrix(const FVector& CameraPos, const FVector& LookAtPosition) {
+    FMatrix4X4 LookAtMatrix = FindLookAtMatrixFromForward(CameraPos, LookAtPosition);
+    
+    //Here we revert all translation position so they can be revert to camera space, if the camera is in (3,0,0) and the point is in (8,0,0) the translation is (5, 0, 0)
+    //We dont want to have the position in world space but the reverse to go to the camera space so we want (-5, 0, 0) so we multiply translation by -1
+    LookAtMatrix[3][0] *= -1;
+    LookAtMatrix[3][1] *= -1;
+    LookAtMatrix[3][2] *= -1;
+    
+    return LookAtMatrix;
 }

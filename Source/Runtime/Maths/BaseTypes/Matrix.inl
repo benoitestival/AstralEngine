@@ -82,6 +82,14 @@ TMatrix<T, R, OtherC> TMatrix<T, R, C>::operator*(const TMatrix<T, OtherR, Other
     return ResultMatrix;
 }
 
+//TODO add concept for detecting square matrix
+template <typename T, int R, int C>
+TMatrix<T, R, C> TMatrix<T, R, C>::Identity() {
+    TMatrix<T, R, C> IdentityMatrix = TMatrix<T, R, C>(T(0.0f));
+    
+    return IdentityMatrix;
+}
+
 template <typename T, int R, int C>
 TVector2D<T> TMatrix<T, R, C>::ToVector2D() const {
     return TVector2D<T>(Matrix[0][0], Matrix[0][1]);
