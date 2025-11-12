@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include <iostream>
-#include "Vector2D.h"
 #include "Matrix.h"
-#include "../Utils/MathUtility.h"
 
 #define LENGHT2D 2
 

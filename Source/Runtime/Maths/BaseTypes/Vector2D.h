@@ -1,5 +1,7 @@
 #pragma once
 #include "../Utils/BaseTypesForward.h"
+#include "../Utils/MathUtility.h"
+
 
 template<typename T>
 struct TVector2D {

@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Vector3D.h"
 #include "../Utils/MathUtility.h"
 
 #define LENGHT3D 3

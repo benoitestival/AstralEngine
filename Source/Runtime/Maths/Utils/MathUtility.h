@@ -1,6 +1,6 @@
 // ReSharper disable All
 #pragma once
-#include <complex>
+#include <cmath>
 #include <type_traits>
 
 #define PI 3.1415926535
@@ -113,4 +113,4 @@ struct FMath {
     inline static float ATanDeg(const float& Value) {
         return RADIAN_TO_DEGREE(FMath::ATanRad(Value));
     }
-}
+};

@@ -62,8 +62,8 @@ concept SupportStringSerialization = requires(std::stringstream& Stream, T& valu
 };
 
 template <typename T>
-concept SupportAstralObjectSerialization = requires(FArchive& Archive, T& value) {
-    {value.Serialize(Archive)};
+concept SupportAstralObjectSerialization = requires(FArchive& Archive, T& Value) {
+    {Value.Serialize(Archive)};
 };
 
 struct FStream {

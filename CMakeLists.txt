@@ -26,8 +26,13 @@ find_package(jsoncpp CONFIG REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES ${PROJECT_SOURCE_DIR}/Source/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/Source/*.h)
+file(GLOB_RECURSE INL_FILES ${PROJECT_SOURCE_DIR}/Source/*.inl)
+
+list(APPEND HEADER_FILES ${INL_FILES})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
+
+set_source_files_properties(${INL_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 target_link_libraries(${PROJECT_NAME} OpenGL::GL glfw GLEW::GLEW)
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan GPUOpen::VulkanMemoryAllocator unofficial::spirv-reflect)

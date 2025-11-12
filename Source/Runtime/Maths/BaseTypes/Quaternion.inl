@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Quaternion.h"
 
 
 template <typename T>

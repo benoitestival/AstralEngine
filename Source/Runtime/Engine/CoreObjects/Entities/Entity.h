@@ -15,7 +15,7 @@ public:
     virtual void Tick(float DeltaTime);
 
 public:
-
+    
     AInputComponent* EntityInputComponent;
 };
 
