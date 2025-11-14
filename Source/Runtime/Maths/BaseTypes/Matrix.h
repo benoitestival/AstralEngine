@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector.h"
 #include "../Utils/BaseTypesForward.h"
 
 template<typename T, int R, int C>
@@ -21,7 +22,7 @@ public:
 private:
     void InitMatrixArray(const T& Val);
 private:
-    T Matrix[R][C];
+    TVector<T, C> Matrix[R]; //N dimension matrix represented by an array of vector of N size (currently only supported is 2D and 3D)
 };
 
 #include "Matrix.inl"

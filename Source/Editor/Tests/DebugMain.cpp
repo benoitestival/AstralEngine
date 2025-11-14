@@ -67,7 +67,7 @@ int ADebugMain::DebugMain() {
     // AInputComponent* InputComponent = NewObject<AInputComponent>(AInputComponent::StaticClass());
     // InputComponent->RegisterAction(EKey::MOUSEAXISXY, InputAction);
     //
-    // GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
+    //GameplayStatics::GetInputManager()->RegisterInputComponent(InputComponent);
 
     //Depending on if you want to block the engine or allow it to continue after the main enable your return code
     //

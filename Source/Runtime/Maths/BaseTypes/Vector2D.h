@@ -1,27 +1,15 @@
 #pragma once
+#include "Vector.h"
 #include "../Utils/BaseTypesForward.h"
 #include "../Utils/MathUtility.h"
 
 
 template<typename T>
-struct TVector2D {
+struct TVector2D : public TVector<T, 2>{
     
     TVector2D();
     TVector2D(T XY);
     TVector2D(T X_, T Y_);
-
-    bool operator==(const TVector2D& Other) const;
-    bool operator!=(const TVector2D& Other) const;
-
-    TVector2D operator+(const TVector2D& Other) const;
-    TVector2D operator-(const TVector2D& Other) const;
-    TVector2D operator*(const TVector2D& Other) const;
-    TVector2D operator/(const TVector2D& Other) const;
-
-    TVector2D operator+(const T& Other) const;
-    TVector2D operator-(const T& Other) const;
-    TVector2D operator*(const T& Other) const;
-    TVector2D operator/(const T& Other) const;
 
     TMatrix<T, 1, 2> ToMatrix() const;
     TMatrix<T, 1, 3> ToTransformMatrix() const;
