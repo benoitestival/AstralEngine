@@ -7,18 +7,16 @@ struct TMatrix {
 public:
     TMatrix();
     TMatrix(const T& Val);
-    TMatrix(const TVector2D<T> Vector);
-    TMatrix(const TVector3D<T> Vector);
+    TMatrix(const TVector<T, C> Vector);
 
-    T* operator[](int Index);
-    const T* operator[](int Index) const;
+    TVector<T, C>* operator[](int Index);
+    const TVector<T, C>* operator[](int Index) const;
 
     template<int OtherR, int OtherC>
     TMatrix<T, R, OtherC> operator*(const TMatrix<T, OtherR, OtherC>& OtherMatrix);
     static TMatrix<T, R, C> Identity();
 public:
-    TVector2D<T> ToVector2D() const;
-    TVector3D<T> ToVector3D() const;
+    TVector<T, C> ToVector() const;
 private:
     void InitMatrixArray(const T& Val);
 private:

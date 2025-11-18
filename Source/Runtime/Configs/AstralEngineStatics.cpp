@@ -48,7 +48,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
     REGISTER_ASTRAL_CLASS(AManager)
     REGISTER_ASTRAL_SINGLETON_CLASS(AObjectManager)
     REGISTER_ASTRAL_CLASS(AInputManager)
-    REGISTER_ASTRAL_CLASS(ASFMLInputManager)
+    //REGISTER_ASTRAL_CLASS(ASFMLInputManager)
     REGISTER_ASTRAL_CLASS(AOpenGLInputManager)
     REGISTER_ASTRAL_CLASS(AShaderManager)
     REGISTER_ASTRAL_CLASS(ARenderer)
@@ -65,7 +65,7 @@ void AstralEngineStatics::RegisterAstralClasses() {
 
     //Windows
     REGISTER_ASTRAL_CLASS(AWindow)
-    REGISTER_ASTRAL_CLASS(ASFMLWindow)
+    //REGISTER_ASTRAL_CLASS(ASFMLWindow)
     REGISTER_ASTRAL_CLASS(AGLFWWindow)
 
     //Render
@@ -104,7 +104,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
     LINK_ASTRAL_CLASS_PARENTS(AManager, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(AObjectManager, ABaseObject)
     LINK_ASTRAL_CLASS_PARENTS(AInputManager, AManager)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
+    //LINK_ASTRAL_CLASS_PARENTS(ASFMLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AOpenGLInputManager, AInputManager)
     LINK_ASTRAL_CLASS_PARENTS(AShaderManager, AManager)
     LINK_ASTRAL_CLASS_PARENTS(ARenderer, AManager)
@@ -117,7 +117,7 @@ void AstralEngineStatics::LinkAstralClassesParents() {
 
     //Windows
     LINK_ASTRAL_CLASS_PARENTS(AWindow, ABaseObject)
-    LINK_ASTRAL_CLASS_PARENTS(ASFMLWindow, AWindow)
+    //LINK_ASTRAL_CLASS_PARENTS(ASFMLWindow, AWindow)
     LINK_ASTRAL_CLASS_PARENTS(AGLFWWindow, AWindow)
 
     //Render

@@ -1,7 +1,4 @@
 ﻿#pragma once
-#include "Vector2D.h"
-#include "Vector3D.h"
-
 #include "../Utils/CoreIncludes.h"
 
 #define MAX_ROW_FROM_VECTOR 1
@@ -17,14 +14,12 @@ TMatrix<T, R, C>::TMatrix(const T& Val) {
 }
 
 template <typename T, int R, int C>
-TMatrix<T, R, C>::TMatrix(const TVector2D<T> Vector) : TMatrix<T, R, C>() {
+TMatrix<T, R, C>::TMatrix(const TVector<T, C> Vector) {
     if (R == MAX_ROW_FROM_VECTOR) {
-        TArray<float> Datas = {Vector.X,  Vector.Y};
-    
         for (int ROW_INDEX = 0; ROW_INDEX < R; ROW_INDEX++) {
             for (int COLUMN_INDEX = 0; COLUMN_INDEX < C; COLUMN_INDEX++) {
-                if (COLUMN_INDEX < Datas.Lenght()) {
-                    Matrix[ROW_INDEX][COLUMN_INDEX] = Datas[COLUMN_INDEX];
+                if (COLUMN_INDEX < Vector.Num()) {
+                    Matrix[ROW_INDEX][COLUMN_INDEX] = Vector[COLUMN_INDEX];
                 }
                 else {
                     Matrix[ROW_INDEX][COLUMN_INDEX] = 1.0f;
@@ -34,32 +29,15 @@ TMatrix<T, R, C>::TMatrix(const TVector2D<T> Vector) : TMatrix<T, R, C>() {
     }
 }
 
+
 template <typename T, int R, int C>
-TMatrix<T, R, C>::TMatrix(const TVector3D<T> Vector) : TMatrix<T, R, C>() {
-    if (R == MAX_ROW_FROM_VECTOR) {
-        TArray<float> Datas = {Vector.X,  Vector.Y, Vector.Z};
-    
-        for (int ROW_INDEX = 0; ROW_INDEX < R; ROW_INDEX++) {
-            for (int COLUMN_INDEX = 0; COLUMN_INDEX < C; COLUMN_INDEX++) {
-                if (COLUMN_INDEX < Datas.Lenght()) {
-                    Matrix[ROW_INDEX][COLUMN_INDEX] = Datas[COLUMN_INDEX];
-                }
-                else {
-                    Matrix[ROW_INDEX][COLUMN_INDEX] = 1.0f;
-                }
-            }
-        }
-    }
+TVector<T, C>* TMatrix<T, R, C>::operator[](int Index) {
+    return &Matrix[Index];
 }
 
 template <typename T, int R, int C>
-T* TMatrix<T, R, C>::operator[](int Index) {
-    return Matrix[Index];
-}
-
-template <typename T, int R, int C>
-const T* TMatrix<T, R, C>::operator[](int Index) const {
-    return Matrix[Index];
+const TVector<T, C>* TMatrix<T, R, C>::operator[](int Index) const {
+    return &Matrix[Index];
 }
 
 template <typename T, int R, int C>
@@ -89,13 +67,12 @@ TMatrix<T, R, C> TMatrix<T, R, C>::Identity() {
 }
 
 template <typename T, int R, int C>
-TVector2D<T> TMatrix<T, R, C>::ToVector2D() const {
-    return TVector2D<T>(Matrix[0][0], Matrix[0][1]);
-}
-
-template <typename T, int R, int C>
-TVector3D<T> TMatrix<T, R, C>::ToVector3D() const {
-    return TVector3D<T>(Matrix[0][0], Matrix[0][1], Matrix[0][2]);
+TVector<T, C> TMatrix<T, R, C>::ToVector() const {
+    TVector<T, C> Vector = TVector<T, C>();
+    for (int INDEX = 0; INDEX < 0; INDEX++) {
+        
+    }
+    return Vector;
 }
 
 template <typename T, int R, int C>

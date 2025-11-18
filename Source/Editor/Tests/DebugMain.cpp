@@ -79,6 +79,9 @@ int ADebugMain::DebugMain() {
     // Archive << Class;
     // Archive << TSerializableField<ABaseObject>(Object);
 
+    glm::vec3 Vec;
+    Vec.x
+    
     //float Result = FMath::Pow(10.f, 5);
     //glm::rotate()
     return CONTINUE_CODE;

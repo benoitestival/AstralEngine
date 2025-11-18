@@ -103,7 +103,7 @@ FInputValue::FInputValue(EInputValueType DesiredType, FInputParams InputParams) 
       InputBool = InputUtils::IsInputActive(InputParams.InputState) ? true : false;
    }
    else if(DesiredType == EInputValueType::EInputAxis1D) {
-      InputFloat = InputParams.InputValue.X;
+      InputFloat = InputParams.InputValue.X();
    }
    else if(DesiredType == EInputValueType::EInputAxis2D) {
       InputVector2D = InputParams.InputValue;

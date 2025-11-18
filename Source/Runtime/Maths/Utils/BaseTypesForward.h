@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+template<typename T, int Size>
+struct TVector;
+
 template<typename T>
 struct TVector2D;
 template<typename T>

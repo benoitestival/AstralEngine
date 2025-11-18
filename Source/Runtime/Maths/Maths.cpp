@@ -24,7 +24,7 @@ FVector AMathsUtils::WorldUpVector() {
 
 
 bool AMathsUtils::IsNearlyEqual(const FVector2D& Vec1, const FVector2D& Vec2, float Tolerance) {
-    return AMathsUtils::IsNearlyEqual(Vec1.X, Vec2.X, Tolerance) && AMathsUtils::IsNearlyEqual(Vec1.Y, Vec2.Y, Tolerance);
+    return AMathsUtils::IsNearlyEqual(Vec1.X(), Vec2.X(), Tolerance) && AMathsUtils::IsNearlyEqual(Vec1.Y(), Vec2.Y(), Tolerance);
 }
 
 
@@ -122,17 +122,17 @@ FMatrix4X4 AMathsUtils::BuildRodriguesMatrixAroundAxis(const FVector& Axis, floa
     FVector AxisCosCoef = (1.0f - CosAngle) * AxisNormalize;
     
     FMatrix4X4 RodriguesMatrix = FMatrix4X4();
-    RodriguesMatrix[0][0] = CosAngle + AxisCosCoef.X * AxisNormalize.X;
-    RodriguesMatrix[0][1] = AxisCosCoef.X * AxisNormalize.Y + SinAngle * AxisNormalize.Z;
-    RodriguesMatrix[0][2] = AxisCosCoef.X * AxisNormalize.Z - SinAngle * AxisNormalize.Y;
+    RodriguesMatrix[0][0] = CosAngle + AxisCosCoef.X() * AxisNormalize.X();
+    RodriguesMatrix[0][1] = AxisCosCoef.X() * AxisNormalize.Y() + SinAngle * AxisNormalize.Z();
+    RodriguesMatrix[0][2] = AxisCosCoef.X() * AxisNormalize.Z() - SinAngle * AxisNormalize.Y();
     
-    RodriguesMatrix[1][0] = AxisCosCoef.Y * AxisNormalize.X - SinAngle * AxisNormalize.Z;
-    RodriguesMatrix[1][1] = CosAngle + AxisCosCoef.Y * AxisNormalize.Y;
-    RodriguesMatrix[1][2] = AxisCosCoef.Y * AxisNormalize.Z + SinAngle * AxisNormalize.X;
+    RodriguesMatrix[1][0] = AxisCosCoef.Y() * AxisNormalize.X() - SinAngle * AxisNormalize.Z();
+    RodriguesMatrix[1][1] = CosAngle + AxisCosCoef.Y() * AxisNormalize.Y();
+    RodriguesMatrix[1][2] = AxisCosCoef.Y() * AxisNormalize.Z() + SinAngle * AxisNormalize.X();
     
-    RodriguesMatrix[2][0] = AxisCosCoef.Z * AxisNormalize.X + SinAngle * AxisNormalize.Y;
-    RodriguesMatrix[2][1] = AxisCosCoef.Z * AxisNormalize.Y - SinAngle * AxisNormalize.X;
-    RodriguesMatrix[2][2] = CosAngle + AxisCosCoef.Z * AxisNormalize.Z;
+    RodriguesMatrix[2][0] = AxisCosCoef.Z() * AxisNormalize.X() + SinAngle * AxisNormalize.Y();
+    RodriguesMatrix[2][1] = AxisCosCoef.Z() * AxisNormalize.Y() - SinAngle * AxisNormalize.X();
+    RodriguesMatrix[2][2] = CosAngle + AxisCosCoef.Z() * AxisNormalize.Z();
     
     return RodriguesMatrix;
 }
@@ -185,19 +185,19 @@ FMatrix4X4 AMathsUtils::FindLookAtMatrixFromUp(const FVector& Start, const FVect
 
 
 FMatrix4X4 AMathsUtils::ConstructRotationMatrix(const FVector& Forward, const FVector& Right, const FVector& Up) {
-    //Matrix Build in row major for (vector * metrice) multiplication 
+    //Matrix Build in row major for (vector * matrice) multiplication 
     FMatrix4X4 RotationMatrix = FMatrix4X4();
-    RotationMatrix[0][0] = Right.X;
-    RotationMatrix[1][0] = Up.X;
-    RotationMatrix[2][0] = Forward.X;
+    RotationMatrix[0][0] = Right.X();
+    RotationMatrix[1][0] = Up.X();
+    RotationMatrix[2][0] = Forward.X();
     
-    RotationMatrix[0][1] = Right.Y;
-    RotationMatrix[1][1] = Up.Y;
-    RotationMatrix[2][1] = Forward.Y;
+    RotationMatrix[0][1] = Right.Y();
+    RotationMatrix[1][1] = Up.Y();
+    RotationMatrix[2][1] = Forward.Y();
     
-    RotationMatrix[0][2] = Right.Z;
-    RotationMatrix[1][2] = Up.Z;
-    RotationMatrix[2][2] = Forward.Z;
+    RotationMatrix[0][2] = Right.Z();
+    RotationMatrix[1][2] = Up.Z();
+    RotationMatrix[2][2] = Forward.Z();
     return RotationMatrix;
 }
 

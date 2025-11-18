@@ -1,31 +1,21 @@
 #pragma once
-#include "../Utils/BaseTypesForward.h"
+#include "Vector.h"
 
 template<typename T>
 struct TVector3D : public TVector<T, 3>{
     TVector3D();
     TVector3D(T XYZ);
     TVector3D(T X_, T Y_, T Z_);
+    TVector3D(const TVector<T, 3>& Other);
 
-    TMatrix<T, 1, 3> ToMatrix() const;
-    TMatrix<T, 1, 4> ToTransformMatrix() const;
-    TVector3D operator*(const TMatrix<T, 3, 3>& Other) const;
-    TVector3D operator*(const TMatrix<T, 4, 4>& Other) const;
-    
-    float Lenght() const;
-    int Num() const;
-    
-    void Normalize();
-    void SafeNormalize();
-
-    float Dot(const TVector3D<T>& Other) const;
     TVector3D<T> Cross(const TVector3D<T>& Other) const;
     
-    
-public:
-    T X;
-    T Y;
-    T Z;
+    T& X();
+    const T& X() const;
+    T& Y();
+    const T& Y() const;
+    T& Z();
+    const T& Z() const;
 };
 
 

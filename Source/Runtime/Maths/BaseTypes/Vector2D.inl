@@ -1,78 +1,50 @@
 ﻿#pragma once
-#include <iostream>
-#include "Matrix.h"
-
-#define LENGHT2D 2
 
 template <typename T>
-TVector2D<T>::TVector2D() {
+TVector2D<T>::TVector2D() : TVector2D(T()){
 }
 
 template <typename T>
-TVector2D<T>::TVector2D(T XY)  : X(XY), Y(XY){
+TVector2D<T>::TVector2D(T XY){
+    this->Datas[0] = XY;
+    this->Datas[1] = XY;
 }
 
 template <typename T>
-TVector2D<T>::TVector2D(T X_, T Y_) : X(X_), Y(Y_){
-}
-
-
-template <typename T>
-TMatrix<T, 1, 2> TVector2D<T>::ToMatrix() const {
-    return TMatrix<T, 1, 2>(*this);
+TVector2D<T>::TVector2D(T X_, T Y_){
+    this->Datas[0] = X_;
+    this->Datas[1] = Y_;
 }
 
 template <typename T>
-TMatrix<T, 1, 3> TVector2D<T>::ToTransformMatrix() const {
-    return TMatrix<T, 1, 3>(*this);
-}
-
-template <typename T>
-TVector2D<T> TVector2D<T>::operator*(const TMatrix<T, 2, 2>& Other) const{
-    return (ToMatrix() * Other).ToVector2D();
-}
-
-template <typename T>
-TVector2D<T> TVector2D<T>::operator*(const TMatrix<T, 3, 3>& Other) const{
-    return (ToTransformMatrix() * Other).ToVector2D();
-}
-
-
-template <typename T>
-void TVector2D<T>::SafeNormalize() {
-    if (Lenght() > 0) {
-        Normalize();
-    }
-}
-
-template <typename T>
-void TVector2D<T>::Normalize() {
-    *this = *this/Lenght();
-}
-
-template <typename T>
-float TVector2D<T>::Lenght() const {
-    return FMath::Sqrt(FMath::Square(X) + FMath::Square(Y));
-}
-
-template <typename T>
-float TVector2D<T>::Dot(const TVector2D& Other) const {
-    return X * Other.X + Y * Other.Y;  
-
+TVector2D<T>::TVector2D(const TVector<T, 2>& Other) {
+    this->Datas[0] = Other[0];
+    this->Datas[1] = Other[1];
 }
 
 template <typename T>
 float TVector2D<T>::Cross(const TVector2D<T>& Other) const {
-    return X * Other.Y - Y * Other.X;
+    return X() * Other.Y() - Y() * Other.X();
 }
 
 template <typename T>
-void TVector2D<T>::Log() const {
-    std::cout << "X: " << X << "; Y: " << Y << std::endl;
+T& TVector2D<T>::X() {
+    return this->Datas[0];
+    
 }
 
 template <typename T>
-int TVector2D<T>::Num() const{
-    return LENGHT2D;
+const T& TVector2D<T>::X() const{
+    return this->Datas[0];
+}
+
+template <typename T>
+T& TVector2D<T>::Y() {
+    return this->Datas[1];
+}
+
+template <typename T>
+const T& TVector2D<T>::Y() const {
+    return this->Datas[1];
 }
 

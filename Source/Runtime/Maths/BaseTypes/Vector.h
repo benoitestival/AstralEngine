@@ -1,100 +1,56 @@
 #pragma once
-
+#include "Utils/BaseTypesForward.h"
 
 template<typename T, int Size>
 struct TVector {
     TVector() = default;
 
-    bool operator==(const TVector<T, Size>& Other) const {
-        bool Result = true;
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            if (Datas[CoordIndex] != Other[CoordIndex]) {
-                Result = false;
-            }
-        }
-        return Result;
-    }
-    bool operator!=(const TVector<T, Size>& Other) const {
-        return !(*this) == Other;
-    }
+    //Matrix Conversion
+    TMatrix<T, 1, Size> ToMatrix() const;
+    TMatrix<T, 1, Size + 1> ToHomogeneousMatrix() const;
     
-    TVector<T, Size> operator+(const TVector<T, Size>& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] + Other[CoordIndex];
-        }
-        return Result;
-    }
-    TVector<T, Size> operator-(const TVector<T, Size>& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] - Other[CoordIndex];
-        }
-        return Result;
-    }
-    TVector<T, Size> operator*(const TVector<T, Size>& Other) {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] * Other[CoordIndex];
-        }
-        return Result;
-    }
-    TVector<T, Size> operator/(const TVector<T, Size>& Other) {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] / Other[CoordIndex];
-        }
-        return Result;
-    }
-
-    TVector<T, Size> operator+(const T& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] + Other;
-        }
-        return Result;
-    }
-    TVector<T, Size> operator-(const T& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] - Other;
-        }
-        return Result;
-    }
-    TVector<T, Size> operator*(const T& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] * Other;
-        }
-        return Result;
-    }
-    TVector<T, Size> operator/(const T& Other) const {
-        TVector<T, Size> Result = TVector();
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            Result[CoordIndex] = Datas[CoordIndex] / Other;
-        }
-        return Result;
-    }
-
-    T& operator[](int Index) const {
-        return Datas[Index];
-    }
-
-    const T& operator[](int Index){
-        return Datas[Index];
-    }
-
-    //Matrix conversion
-
-    float Dot(const TVector<T, Size>& Other) {
-        float DotResult = 0.0f;
-        for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-            DotResult += static_cast<float>(Datas[CoordIndex]) * static_cast<float>(Other[CoordIndex]);
-        }
-        return DotResult;
-    }
+    //Boolean Operators
+    bool operator==(const TVector<T, Size>& Other) const;
+    bool operator!=(const TVector<T, Size>& Other) const;
     
+    //Maths operators
+    TVector<T, Size> operator+(const TVector<T, Size>& Other) const;
+    TVector<T, Size> operator-(const TVector<T, Size>& Other) const;
+    TVector<T, Size> operator*(const TVector<T, Size>& Other) const;
+    TVector<T, Size> operator/(const TVector<T, Size>& Other) const;
     
-private:
+    TVector<T, Size> operator+(const T& Other) const;
+    TVector<T, Size> operator-(const T& Other) const;
+    TVector<T, Size> operator*(const T& Other) const;
+    TVector<T, Size> operator/(const T& Other) const;
+
+    TVector<T, Size> operator*(const TMatrix<T, Size, Size>& Other) const;
+    TVector<T, Size> operator*(const TMatrix<T, Size + 1, Size + 1>& Other) const;
+
+    //Access operators
+    T& operator[](int Index);
+    const T& operator[](int Index) const;
+    
+    //Common Vector methods in any dimension
+    int Num() const;
+    float Lenght() const;
+    
+    float Dot(const TVector<T, Size>& Other) const;
+
+    void Normalize();
+    void SafeNormalize();
+
+protected:
     T Datas[Size];
 };
+
+template<typename T, int Size>
+TVector<T, Size> operator+(const T& OtherN, const TVector<T, Size>& OtherV);
+template<typename T, int Size>
+TVector<T, Size> operator-(const T& OtherN, const TVector<T, Size>& OtherV);
+template<typename T, int Size>
+TVector<T, Size> operator*(const T& OtherN, const TVector<T, Size>& OtherV);
+template<typename T, int Size>
+TVector<T, Size> operator/(const T& OtherN, const TVector<T, Size>& OtherV);
+
+#include "Vector.inl"

@@ -166,8 +166,8 @@ void AOpenGLInputManager::HandleOpenGLMouseMotionEvent(const FOpenGLMouseMotionI
     MouseMoving = true;
     
     FVector2D MouseMotionDirection = {0.0f};
-    MouseMotionDirection.X = Event.NewCoord.X - PreviousCursorPosition.X;
-    MouseMotionDirection.Y = PreviousCursorPosition.Y - Event.NewCoord.Y;//reverse because opengl Y is inverted
+    MouseMotionDirection.X() = Event.NewCoord.X() - PreviousCursorPosition.X();
+    MouseMotionDirection.Y() = PreviousCursorPosition.Y() - Event.NewCoord.Y();//reverse because opengl Y is inverted
 
     MouseMotionDirection.SafeNormalize();
 
@@ -194,7 +194,7 @@ FVector2D AOpenGLInputManager::GetCursorPosition() const {
 }
 
 void AOpenGLInputManager::SetCursorPosition(const FVector2D& Pos) {
-    glfwSetCursorPos(GetActualWindow()->GetPrivateWindow(), Pos.X, Pos.Y);
+    glfwSetCursorPos(GetActualWindow()->GetPrivateWindow(), Pos.X(), Pos.Y());
 }
 
 EKey AOpenGLInputManager::OpenGLKeyboardCodeToAstralEngineKeyboardCode(int Key) const {
