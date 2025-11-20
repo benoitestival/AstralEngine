@@ -9,8 +9,8 @@ public:
     TMatrix(const T& Val);
     TMatrix(const TVector<T, C> Vector);
 
-    TVector<T, C>* operator[](int Index);
-    const TVector<T, C>* operator[](int Index) const;
+    TVector<T, C>& operator[](int Index);
+    const TVector<T, C>& operator[](int Index) const;
 
     template<int OtherR, int OtherC>
     TMatrix<T, R, OtherC> operator*(const TMatrix<T, OtherR, OtherC>& OtherMatrix);

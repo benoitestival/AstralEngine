@@ -2,6 +2,7 @@
 #include "DebugMain.h"
 
 #include <iostream>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 
 #include <glm/gtx/transform.hpp>
@@ -79,8 +80,7 @@ int ADebugMain::DebugMain() {
     // Archive << Class;
     // Archive << TSerializableField<ABaseObject>(Object);
 
-    glm::vec3 Vec;
-    Vec.x
+    //glm::perspective()
     
     //float Result = FMath::Pow(10.f, 5);
     //glm::rotate()

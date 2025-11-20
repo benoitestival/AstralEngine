@@ -79,5 +79,6 @@ public:
     FMatrix4X4 ConstructRotationMatrix(const FVector& Forward, const FVector& Right, const FVector& Up);//All Vectors must be normalized
     //Return the Camera transformation matrix for the LookAtDirection
     FMatrix4X4 FindCameraLookAtMatrix(const FVector& CameraPos, const FVector& LookAtPosition);
+    //Return Vulkan perspective matrix
 };
 

@@ -31,13 +31,13 @@ TMatrix<T, R, C>::TMatrix(const TVector<T, C> Vector) {
 
 
 template <typename T, int R, int C>
-TVector<T, C>* TMatrix<T, R, C>::operator[](int Index) {
-    return &Matrix[Index];
+TVector<T, C>& TMatrix<T, R, C>::operator[](int Index) {
+    return Matrix[Index];
 }
 
 template <typename T, int R, int C>
-const TVector<T, C>* TMatrix<T, R, C>::operator[](int Index) const {
-    return &Matrix[Index];
+const TVector<T, C>& TMatrix<T, R, C>::operator[](int Index) const {
+    return Matrix[Index];
 }
 
 template <typename T, int R, int C>

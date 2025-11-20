@@ -170,7 +170,7 @@ template <typename T, int Size>
 float TVector<T, Size>::Lenght() const {
     float SquareSum = 0;
     for (int CoordIndex = 0; CoordIndex < Size; CoordIndex++) {
-        SquareSum += FMath::Pow(static_cast<float>(Datas[CoordIndex]), 2);
+        SquareSum += FMath::Pow<float>(static_cast<float>(Datas[CoordIndex]), 2);
     }
     return FMath::Sqrt(SquareSum);
 }
