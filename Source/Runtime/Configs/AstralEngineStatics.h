@@ -7,27 +7,20 @@
 #include "../Utils/Factory.h"
 #include "../Utils/Map.h"
 
-#define REGISTER_ASTRAL_CLASS(Class)\
-    if(!AstralEngineStatics::IsClassRegister(#Class)){\
-        FClass* Instance##Class = CREATE_RTTI_BASE_CLASS_INSTANCE(Class);\
-        AstralEngineStatics::RegisterClass(Instance##Class);\
-        AstralEngineStatics::RegisterCreator(Instance##Class, new DerivedCreator<ABaseObject, Class>());\
-    }\
 
-#define REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, ...)\
-    if(!AstralEngineStatics::IsClassRegister(#Class)){\
-        FClass* Instance##Class = CREATE_RTTI_BASE_CLASS_INSTANCE(Class);\
-        AstralEngineStatics::RegisterClass(Instance##Class);\
-    }\
 
-#define REGISTER_ASTRAL_SINGLETON_CLASS(Class, ...)\
-    REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, __VA_ARGS__)
+// #define REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, ...)\
+//     if(!AstralEngineStatics::IsClassRegister(#Class)){\
+//         FClass* Instance##Class = CREATE_RTTI_BASE_CLASS_INSTANCE(Class);\
+//         AstralEngineStatics::RegisterClass(Instance##Class);\
+//     }\
+//
+// #define REGISTER_ASTRAL_SINGLETON_CLASS(Class, ...)\
+//     REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, __VA_ARGS__)
 
-#define REGISTER_ASTRAL_PURE_CLASS(Class, ...)\
-    REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, __VA_ARGS__)
+// #define REGISTER_ASTRAL_PURE_CLASS(Class, ...)\
+//     REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, __VA_ARGS__)
 
-#define LINK_ASTRAL_CLASS_PARENTS(Class, ...)\
-    Class::StaticClass()->AddParents({VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});        
 
 class Application;
 struct FClass;
@@ -37,8 +30,8 @@ public:
     static void InitAstralEngineStatics(Application* App); 
     static void ClearAstralEngineStatics();
 
-    static void RegisterAstralClasses();
-    static void LinkAstralClassesParents();
+    // static void RegisterAstralClasses();
+    // static void LinkAstralClassesParents();
 
     static bool IsClassRegister(const std::string& ClassName);
     static bool IsCreatorRegister(const FClass* Class);
