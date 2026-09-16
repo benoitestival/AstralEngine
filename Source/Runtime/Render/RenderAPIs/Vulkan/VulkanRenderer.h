@@ -16,7 +16,7 @@ class FVulkanDevice;
 class FVulkanSurface;
 
 #define MANUAL_VULKAN_DEBUG 1;
-#define IS_VULKAN_DEBUG IS_DEBUG && MANUAL_VULKAN_DEBUG;
+#define IS_VULKAN_DEBUG IS_DEBUG && MANUAL_VULKAN_DEBUG
 
 class AVulkanRenderer : public ARenderer {
 public:

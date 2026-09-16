@@ -13,7 +13,7 @@ public:
     }
     TArray(int Size) : InternVector(Size){};
     TArray(const std::vector<T>& Vector) : InternVector(Vector) {};
-    TArray(const std::initializer_list<T>& List) : InternVector(List) {};
+    TArray(std::initializer_list<T> List) : InternVector(List) {};
 
     ///////COPY CONSTRUCTOR///////
     TArray(const TArray<T>& Array) : InternVector(Array.ToSTDVector()) {};

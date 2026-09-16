@@ -19,8 +19,7 @@ bool FField::operator!=(const FField& Other) const {
 FClass::FClass() : FClass("", {}){
 }
 
-FClass::FClass(std::string ClassID_, const TArray<FClass*>& Parents) : FField(ClassID_), DirectParents(Parents){
-    
+FClass::FClass(const std::string& ClassID_, const TArray<FClass*>& Parents) : FField(ClassID_), IsClassFactoryEligible(true) ,DirectParents(Parents){
 }
 
 FClass::~FClass() {
@@ -51,6 +50,21 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
         AddParent(Parent);
     }
 }
+
+bool FClass::IsFactoryEligible() const {
+    return IsClassFactoryEligible;
+}
+
+
+//TODO make a real flag system
+void FClass::AddFlag(EClassFlags Flag) {
+    IsClassFactoryEligible = false;
+}
+
+void FClass::RemoveFlag(EClassFlags Flag) {
+    IsClassFactoryEligible = false;
+}
+
 //
 // FArchive& operator<<(FArchive& Ar, FClass* Class) {
 //

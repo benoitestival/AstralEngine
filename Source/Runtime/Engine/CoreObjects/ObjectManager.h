@@ -9,7 +9,7 @@
 class AObjectManager : public ABaseObject {
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(AObjectManager, ABaseObject)
-    
+
 private:
     AObjectManager();
     static AObjectManager* ObjectManager;
@@ -63,3 +63,4 @@ private:
     
 };
 
+DECLARE_CLASS_FLAGS(AObjectManager, Class->AddFlag(EClassFlags::ECF_Singleton););

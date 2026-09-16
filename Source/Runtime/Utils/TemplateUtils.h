@@ -29,10 +29,11 @@ static constexpr bool IsPrimaryType() {
     return std::is_integral<T>::value || std::is_floating_point<T>::value;
 }
 
-// template<class T>
-// static bool IsAstralObject() {
-//     return false;
-// }
+template<class T>
+static constexpr bool IsClassConstructible() {
+    return std::is_default_constructible_v<T>;
+}
+
 
 template<class T, class S = ABaseObject>
 static T* Cast(S* BaseObject) {

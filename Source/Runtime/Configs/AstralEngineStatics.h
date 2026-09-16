@@ -6,7 +6,7 @@
 #include "../Utils/Array.h"
 #include "../Utils/Factory.h"
 #include "../Utils/Map.h"
-
+#include "../Utils/TemplateUtils.h"
 
 
 // #define REGISTER_ASTRAL_NO_FACTORY_CLASS(Class, ...)\
@@ -30,16 +30,27 @@ public:
     static void InitAstralEngineStatics(Application* App); 
     static void ClearAstralEngineStatics();
 
-    // static void RegisterAstralClasses();
-    // static void LinkAstralClassesParents();
-
     static bool IsClassRegister(const std::string& ClassName);
-    static bool IsCreatorRegister(const FClass* Class);
+
+    template<class T>
+    static FClass* RegisterClassInternal(FClass* Class, const TArray<FClass*>& Parents) {
+        Class->AddParents(Parents);
+        GetClassRegistry().Insert(std::make_pair(Class->GetClassName(), Class));
+
+        if (Class->IsFactoryEligible()) {
+            if constexpr (IsClassConstructible<T>()){//Safety compilation check in case the class is abstract but we forgot to marked it
+                AstralEngineStatics::RegisterCreatorInternal(Class, new DerivedCreator<ABaseObject, T>());
+            }
+        }
+        GetClassRegistry().Insert(std::make_pair(Class->GetClassName(), Class));
+        
+        return Class;
+    }
     
-    static void RegisterClass(FClass* Class);
-    static void RegisterCreator(FClass* Class, Creator<ABaseObject>* Creator);
+    static void RegisterCreatorInternal(FClass* Class, Creator<ABaseObject>* Creator);
 
     static Application* GetApp();
+
     static FClass* GetClass(const std::string& ClassName);
     static Creator<ABaseObject>* GetCreator(const FClass* Class);
 
@@ -47,6 +58,18 @@ public:
     static TArray<FClass*> GetAllFactoryClasses();
 private:
     static Application* AstralEngineApp ;
-    static TMap<std::string, FClass*> ClassRegistry; 
-    static TMap<std::string, Creator<ABaseObject>*> CreatorRegistry;
+
+    static TMap<std::string, FClass*>& GetClassRegistry(){
+        static TMap<std::string, FClass*> Instance;
+        return Instance;
+    }
+
+    static TMap<std::string, Creator<ABaseObject>*>& GetCreatorRegistry(){
+        static TMap<std::string, Creator<ABaseObject>*> Instance;
+        return Instance;
+    }
+    
+    // static TMap<std::string, FClass*> ClassRegistry; 
+    // static TMap<std::string, Creator<ABaseObject>*> CreatorRegistry;
 };
+    

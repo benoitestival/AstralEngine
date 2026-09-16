@@ -11,6 +11,10 @@ include(${CMAKE_TOOLCHAIN_FILE})
 
 project(AstralEngine CXX)#project definition + check and initialization of all settings and compilateur suffs
 
+if (MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
+
 find_package(OpenGL REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(GLEW CONFIG REQUIRED)

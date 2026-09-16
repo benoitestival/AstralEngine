@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../Components/Component.h"
 #include "../Objects/BaseObject.h"
 
 class AInputComponent;

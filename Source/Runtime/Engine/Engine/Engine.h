@@ -14,8 +14,7 @@ class AInputManager;
 class AEngine : public ABaseObject{
 public:
     DECLARE_ASTRAL_ENGINE_CLASS(AEngine, ABaseObject)
-public:
-
+    
     DECLARE_DELEGATE(FOnEngineStop)
     FOnEngineStop OnEngineStop;
     

@@ -21,9 +21,8 @@ enum ObjectFlags {
 
 
 #define DECLARE_ASTRAL_ENGINE_CLASS(CLASS, ...)\
-    DECLARE_RTTI(CLASS)\
+    DECLARE_RTTI(CLASS, __VA_ARGS__)\
     DECLARE_SUPER(__VA_ARGS__)\
-
 
 /**
  * Base class for all game anb memory managed objects

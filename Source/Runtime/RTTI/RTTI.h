@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_map>
-
 #include "../Utils/Macro.h"
 #include "Field.h"
 
@@ -13,60 +11,38 @@ public:
     virtual FClass* GetClass() = 0;
 };
 
+struct FClassAutoRegister{
+    explicit FClassAutoRegister(FClass* (*RegisterFunction)()) {
+        RegisterFunction();
+    }
+};
+
 #define RTTI_CLASS\
-    public RTTI
+    virtual public RTTI
 
 #define INTERNAL_GET_PARENT_CLASS(ClassID)\
-    ClassID::StaticClass()
-
-#define INTERNAL_CHECK_AND_REGISTER(ClassID)\
-    if (!AstralEngineStatics::IsClassRegister(#ClassID)){\
-        ClassID::StaticClass();\
-    }\
+    ClassID::StaticClass(),
 
 #define CREATE_RTTI_BASE_CLASS_INSTANCE(ClassID)\
-    new FClass(#ClassID, {})
+    TClassConstructor<ClassID>::ConstructClass(#ClassID)
 
-#define REGISTER_ASTRAL_CLASS(Class)\
-    if(!AstralEngineStatics::IsClassRegister(#Class)){\
-        FClass* Instance##Class = CREATE_RTTI_BASE_CLASS_INSTANCE(Class);\
-        AstralEngineStatics::RegisterClass(Instance##Class);\
-        AstralEngineStatics::RegisterCreator(Instance##Class, new DerivedCreator<ABaseObject, Class>());\
-    }\
+#define GET_ASTRAL_CLASS(ClassID, ...)\
+    [](){\
+        TArray<FClass*> Parents = {VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)};\
+        return AstralEngineStatics::IsClassRegister(#ClassID) ? AstralEngineStatics::GetClass(#ClassID) : AstralEngineStatics::RegisterClassInternal<ClassID>(CREATE_RTTI_BASE_CLASS_INSTANCE(ClassID), Parents);\
+    }()\
 
-#define LINK_ASTRAL_CLASS_PARENTS(Class, ...)\
-    Class::StaticClass()->AddParents({VA_ARGS_CODE_EXECUTE(INTERNAL_GET_PARENT_CLASS, __VA_ARGS__)});     
-
+//Final Macro
 #define DECLARE_RTTI(ClassID, ...)\
     [[nodiscard]] virtual FClass* GetClass() override {\
         return ClassID::StaticClass();\
     };\
     [[nodiscard]] static FClass* StaticClass() {\
-        FClass* Class = nullptr;\
-        if(AstralEngineStatics::IsClassRegister(#ClassID)){\
-            Class = AstralEngineStatics::GetClass(#ClassID);\
-        }\
-        else{\
-            VA_ARGS_CODE_EXECUTE(INTERNAL_CHECK_AND_REGISTER,__VA_ARGS__)\
-            REGISTER_ASTRAL_CLASS(ClassID)\
-            LINK_ASTRAL_CLASS_PARENTS(ClassID, __VA_ARGS__)\
-            Class = AstralEngineStatics::GetClass(#ClassID);\
-        }\
+        static FClass* Class = GET_ASTRAL_CLASS(ClassID, __VA_ARGS__);/*Only one call*/\
         return Class;\
-    };
+    };\
+    inline static const FClassAutoRegister AutoReg_##ClassID{ &ClassID::StaticClass };\
 
 #define DECLARE_SUPER(MainParent)\
     using Super = MainParent;
-
-   
-
-
-
-
-
-
-
-
-
-
 
