@@ -3,16 +3,16 @@
 
 #include "AstralClock.h"
 #include "TimerHandle.h"
-#include "../CoreObjects/Managers/Manager.h"
+#include "../CoreObjects/Systems/EngineSystem.h"
 #include "../CoreObjects/Objects/BaseObject.h"
 
 
 
 
-class ATimerManager : public AManager{
+class ATimerManager : public AEngineSystem{
 public:
     ATimerManager();
-    DECLARE_ASTRAL_ENGINE_CLASS(ATimerManager, AManager)
+    DECLARE_ASTRAL_ENGINE_CLASS(ATimerManager, AEngineSystem)
 
     void Tick(float DeltaTime);
 

@@ -19,8 +19,8 @@ void AstralEngine::Start() {
     GetActiveWindow()->Construct();
     SetShowMouseCursor(true);//By default the cursor is hidden, its depending of the scene or the controller to change it
     
-    for (auto Manager : EngineManagers) {
-        Manager->Init();
+    for (auto System : EngineSystems) {
+        System->Init();
     }
     
     bool START_ENGINE_LOOP = true;
@@ -62,8 +62,8 @@ void AstralEngine::Tick(float DeltaTime) {
 
 void AstralEngine::End() {
     
-    for (auto& Manager : EngineManagers) {
-        Manager->DeInit();
+    for (auto& System : EngineSystems) {
+        System->DeInit();
     }
     GetActiveWindow()->Close();
     

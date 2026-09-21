@@ -81,6 +81,11 @@ public:
         ToSTDUnorderedMap().erase(Key);
     }
 
+    std::pair<K, T>& GetPair(int Index) {
+        auto It = InternMap.begin();
+        std::advance(It, Index);
+        return *It;
+    }
     
     void RemoveValue(const T& Value) {
         TArray<K> KeysToRemove = TArray<K>();

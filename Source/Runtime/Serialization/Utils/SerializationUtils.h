@@ -62,9 +62,20 @@ concept SupportStringSerialization = requires(std::stringstream& Stream, T& valu
 };
 
 template <typename T>
-concept SupportAstralObjectSerialization = requires(FArchive& Archive, T& Value) {
+concept ImplementSpecificSerialization = requires(FArchive& Archive, T& Value) {
     {Value.Serialize(Archive)};
+    {Value.DeSerialize(Archive)};
 };
+
+template <typename T>
+concept IsBasicType = std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, std::string>;
+
+
+
+// template <typename T, class ArchiveClass>
+// concept IsBasicType = requires(FArchive<ArchiveClass>& Ar, T& Value) {
+//     return std::is_floating_point<T>();//add int, char
+// };
 
 struct FStream {
 public:

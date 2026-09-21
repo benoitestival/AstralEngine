@@ -1,5 +1,7 @@
 #include "Field.h"
 
+#include "../Utils/EnumUtils.h"
+
 FField::FField() : FField(""){
 }
 
@@ -19,7 +21,8 @@ bool FField::operator!=(const FField& Other) const {
 FClass::FClass() : FClass("", {}){
 }
 
-FClass::FClass(const std::string& ClassID_, const TArray<FClass*>& Parents) : FField(ClassID_), IsClassFactoryEligible(true) ,DirectParents(Parents){
+FClass::FClass(const std::string& ClassID_, const TArray<FClass*>& Parents) : FField(ClassID_), ClassFlags(0) ,DirectParents(Parents){
+    ConstructDefaultClassFlags();
 }
 
 FClass::~FClass() {
@@ -52,17 +55,20 @@ void FClass::AddParents(const TArray<FClass*>& ParentsClass) {
 }
 
 bool FClass::IsFactoryEligible() const {
-    return IsClassFactoryEligible;
+    return EnumUtils::DoesntHasFlag(EClassFlags::ECF_Abstact, ClassFlags) && EnumUtils::DoesntHasFlag(EClassFlags::ECF_CPP_Singleton, ClassFlags);
 }
 
 
-//TODO make a real flag system
 void FClass::AddFlag(EClassFlags Flag) {
-    IsClassFactoryEligible = false;
+    EnumUtils::AddFlag(Flag, ClassFlags);
 }
 
 void FClass::RemoveFlag(EClassFlags Flag) {
-    IsClassFactoryEligible = false;
+    EnumUtils::RemoveFlag(Flag, ClassFlags);
+}
+
+void FClass::ConstructDefaultClassFlags() {
+    
 }
 
 //

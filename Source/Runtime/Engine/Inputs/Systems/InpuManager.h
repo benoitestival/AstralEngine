@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../Maths/Maths.h"
-#include "../../CoreObjects/Managers/Manager.h"
+#include "../../CoreObjects/Systems/EngineSystem.h"
 #include "../Utils/InputUtils.h"
 
 class AInputComponent;
@@ -8,9 +8,9 @@ class AInputAction;
 
 
 
-class AInputManager : public AManager {
+class AInputManager : public AEngineSystem {
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(AInputManager, AManager)
+    DECLARE_ASTRAL_ENGINE_CLASS(AInputManager, AEngineSystem)
 
     virtual void Init() override;
     void RegisterInputComponent(AInputComponent* InputComponent);

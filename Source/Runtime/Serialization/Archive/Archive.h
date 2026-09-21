@@ -2,171 +2,128 @@
 #include "../../Utils/Array.h"
 #include "../../Utils/Map.h"
 #include "../Utils/SerializationUtils.h"
-#include "SerializableField.h"
-
-#define MAP_KEY "MAP_KEY_ELEMENT"
-#define MAP_VALUE "MAP_KEY_VALUE"
-
-#define ARRAY_KEY "ARRAY_KEY"
 
 class FArchive {
 public:
 
-    FArchive() {
-    };
-    FArchive(const FArchive& Archive) {
-        //TODO copy constructor
-    };
-    FArchive(FArchive&& Archive) noexcept {
-        //TODO move constructor
-    }
-    virtual ~FArchive() {
-        SubArchives.Clear();
-    };
+    FArchive() = default;
+    virtual ~FArchive() = default;
+
+    //Basic type function
+    virtual void Serialize(const std::string& Key, int& Data) = 0;
+    virtual void Serialize(const std::string& Key, float& Data) = 0;
+    virtual void Serialize(const std::string& Key, std::string& Data) = 0;
+
+    virtual void DeSerialize(const std::string& Key, int& Data) = 0;
+    virtual void DeSerialize(const std::string& Key, float& Data) = 0;
+    virtual void DeSerialize(const std::string& Key, std::string& Data) = 0;
+
+    //Nodes Function
+    virtual void BeginSubNode(const std::string& NodeName){};
+    virtual void EndSubNode(){};
+
+    //Containers Functions
+    virtual void BeginContainer(const std::string& NodeName, int& Size){};
+    virtual void EndContainer(){};
     
-    template<class T>
-    void InsertDataInArchive(const std::string& Key, T& Data) {
-        InsertDataInArchive(TSerializableField<T>(Key, Data));
-    }
-    template<class T>
-    void InsertDataInArchive(const std::string& Key, T* Data) {
-        if (Data != nullptr) {
-            InsertDataInArchive(TSerializableField<T>(Key, Data));
+    template<class DataType>
+    void Serialize(const std::string& Key, DataType& Data) {
+        if constexpr (ImplementSpecificSerialization<DataType>) {
+            BeginSubNode(Key);
+            Data.Serialize(*this);
+            EndSubNode();
+        }
+        else if constexpr (IsBasicType<DataType>){
+            FArchive::Serialize(Key, Data);
+        }
+        else {
+            //Add log not supported
         }
     }
-
-    template<class T>
-    void InsertDataInArchive(const TSerializableField<T>& Field){
-        *this << Field;
+    template<class DataType>
+    void DeSerialize(const std::string& Key, DataType& Data) {
+        if constexpr (ImplementSpecificSerialization<DataType>) {
+            BeginSubNode(Key);
+            Data.DeSerialize(*this);
+            EndSubNode();
+        }
+        else if constexpr (IsBasicType<DataType>){
+            FArchive::DeSerialize(Key, Data);
+        }
+        else {
+            //Add log not supported
+        }
     }
 
     
-    template<class T>
-    void ReadDataInArchive(const std::string& Key, T& Data) {
-        ReadDataInArchive(TSerializableField<T>(Key, Data));
+    template<class DataType>
+    void Serialize(const std::string& Key, DataType* Data) {
+         Serialize(Key, *Data);
+    }
+    template<class DataType>
+    void DeSerialize(const std::string& Key, DataType* Data) {
+        DeSerialize(Key, *Data);
     }
     
-    template<class T>
-    void ReadDataInArchive(const std::string& Key, T* Data) {
-        if (Data != nullptr) {
-             ReadDataInArchive(TSerializableField<T>(Key, Data));
+    template<class DataType>
+    void Serialize(const std::string& Key, TArray<DataType>& Datas) {
+        int Size = Datas.Lenght();
+        BeginContainer(Key, Size);
+        for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
+            Serialize<DataType>("", Datas[INDEX]);
         }
+        EndContainer();
     }
+    template<class DataType>
+    void DeSerialize(const std::string& Key, TArray<DataType>& Datas) {
 
-    template<class T>
-    void ReadDataInArchive(const TSerializableField<T>& Field) {
-        *this >> Field;
-    }
-    
-private:
-    ///////////////////BASIC STRING SERIALIZABLE/////////////////////
-    template<SupportStringSerialization T>
-    FArchive& operator<<(const TSerializableField<T>& Field) {
-        FStream Stream = FStream();
-        Stream.Stream() << Field.GetData();
-        ArchiveData = {Field.Key(), Stream.ToString()};
-        return *this;
-    }
-
-    template<SupportStringSerialization T>
-    FArchive& operator>>(const TSerializableField<T>& Field) {
-        FStream Stream = FStream(ArchiveData.second);
-        Stream.Stream() >> *Field.GetData(); 
-        return *this;
-    }
-
-    /////////////////ASTRA OBJECT SERIALIZABLE////////////////////
-
-    template<SupportAstralObjectSerialization T>
-    FArchive& operator<<(const TSerializableField<T>& AstralObjectField) {
-        if (AstralObjectField.GetData() != nullptr) {
-            AstralObjectField.GetData()->Serialize(this);
-        }
-       return *this;
-    }
-
-    template<SupportAstralObjectSerialization T>
-    FArchive& operator>>(TSerializableField<T>& AstralObjectField) {
-        if (AstralObjectField.GetData() != nullptr) {
-            AstralObjectField.GetData()->Deserialize(this);
-        }
-        return *this;
-    }
-
-    /////////////////CONTAINER SERIALIZABLE//////////////////////
-    template<class K, class T>
-    FArchive& operator<<(const TSerializableField<TMap<K,T>>& MapField) {
-        FArchive MapArchive = SubArchive(MapField.Key());
-
-        MapArchive << TSerializableField<int>("MapSize", MapField.GetData()->Lenght());
-        for (auto& MapElement : *MapField.GetData()) {
-            MapArchive.SubArchive(MapField.Key(), SubArchives.Lenght()).InsertDataInArchive(TSerializableField<K>(MAP_KEY, MapElement.first));
-            MapArchive.SubArchive(MapField.Key(), SubArchives.Lenght()).InsertDataInArchive(TSerializableField<K>(MAP_VALUE, MapElement.second));
-        }
-        return *this;
-    }
-
-    template<class K, class T>
-    FArchive& operator>>(const TSerializableField<TMap<K,T>>& MapField) {
-        FArchive MapArchive = SubArchive(MapField.Key());
+        int Size = 0;
+        BeginContainer(Key, Size);
+        Datas.Resize(Size);
         
-        int MapSize = 0;
-        MapArchive >> TSerializableField<int>("MapsSize", MapSize);
-        for (int Index = 0; Index < MapSize * 2; Index+= 2) {
-            K KeyElement;
-            T ValueElement;
-        
-            MapArchive.SubArchive(MapField.Key(), Index).ReadDataInArchive(TSerializableField<K>(MAP_KEY, KeyElement));
-            MapArchive.SubArchive(MapField.Key(), Index + 1).ReadDataInArchive(TSerializableField<K>(MAP_VALUE, ValueElement));
-        
-            MapField.GetData()->Insert({KeyElement, ValueElement});
+        for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
+            DeSerialize<DataType>("", Datas[INDEX]);
         }
-        return *this;
+        EndContainer();
     }
 
-    template<class T>
-    FArchive& operator<<(const TSerializableField<TArray<T>>& ArrayField) {
-        FArchive ArrayArchive = SubArchive(ArrayField.Key());
+    template<class DataKey, class DataType>
+    void Serialize(const std::string& Key, TMap<DataKey, DataType>& Datas) {
+        int Size = Datas.Lenght();
+        BeginContainer(Key, Size);
 
-        ArrayArchive << TSerializableField<int>("ArraySize", ArrayField.GetData()->Lenght());
-        for (auto& ArrayElem : *ArrayField.GetData()) {
-            ArrayArchive.SubArchive(ArrayField.Key(), SubArchives.Lenght()).InsertDataInArchive(TSerializableField<T>(ARRAY_KEY, ArrayElem));
-        }
-        return *this;
-    }
+        for (auto& Pair : Datas) {
+            BeginSubNode("");
 
-    template<class K, class T>
-    FArchive& operator>>(const TSerializableField<TArray<T>>& ArrayField) {
-        FArchive ArrayArchive = SubArchive(ArrayField.Key());
-        
-        int ArraySize = 0;
-        ArrayArchive >> TSerializableField<int>("ArraySize", ArraySize);
-        for (int Index = 0; Index < ArraySize; Index++) {
-            T ValueElement;
-        
-            ArrayArchive.SubArchive(ArrayField.Key(), Index).ReadDataInArchive(TSerializableField<K>(MAP_KEY, ValueElement));
-        
-            ArrayField.GetData()->Add(ValueElement);
+            DataKey KeyVal = Pair.first;//No ref to remove const and force copy
+            Serialize<DataKey>("Key", KeyVal);
+
+            DataType& DataVal = Pair.second;
+            Serialize<DataType>("Value", DataVal);
+            
+            EndSubNode();
         }
-        return *this;
+        EndContainer();
     }
 
-    FArchive& SubArchive(const std::string& Key, int SuffixOffset = -1) {
-        std::string FinalKey = Key;
-        if (SuffixOffset >= 0) {
-            FinalKey = FinalKey + std::to_string(SuffixOffset);
+    template<class DataKey, class DataType>
+    void DeSerialize(const std::string& Key, TMap<DataKey, DataType>& Datas) {
+        int Size = 0;
+        BeginContainer(Key, Size);
+
+        for (int INDEX = 0; INDEX < Size ;INDEX++) {
+            BeginSubNode("");
+
+            DataKey KeyVal = DataKey();
+            DeSerialize<DataKey>("Key", KeyVal);
+
+            DataType DataVal = DataType();
+            DeSerialize<DataType>("Value", DataVal);
+
+            Datas.Insert(KeyVal, DataVal);
+            
+            EndSubNode();
         }
-        if (!SubArchives.Contains(Key)) {
-            SubArchives.Insert({FinalKey, FArchive()});
-        }
-        return SubArchives.Find(Key);
+        EndContainer();
     }
-public:
-    FArchive& operator[](const std::string& Key) {
-        return SubArchive(Key);
-    }
-private:
-    std::pair<std::string, std::string> ArchiveData;
-    TMap<std::string, FArchive> SubArchives;
-    
 };

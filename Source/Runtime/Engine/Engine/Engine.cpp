@@ -15,9 +15,9 @@
 void AEngine::Start() {
     ActiveWindow = NewObject<AWindow>(ConfigUtils::GetWindowClass());
     
-    EngineManagers.Add(NewObject<AInputManager>(ConfigUtils::GetInputManagerClass()));
-    EngineManagers.Add(NewObject<ARenderer>(ConfigUtils::GetRenderManagerClass()));
-    EngineManagers.Add(NewObject<ATimerManager>(ATimerManager::StaticClass()));
+    EngineSystems.Add(NewObject<AInputManager>(ConfigUtils::GetInputManagerClass()));
+    EngineSystems.Add(NewObject<ARenderer>(ConfigUtils::GetRenderManagerClass()));
+    EngineSystems.Add(NewObject<ATimerManager>(ATimerManager::StaticClass()));
     
     EngineClock = FAstralClock();
 }
@@ -45,15 +45,15 @@ float AEngine::CalculateDeltaSeconds() {
 }
 
 AInputManager* AEngine::GetInputManager() {
-    return GetManager<AInputManager>();
+    return GetEngineSystem<AInputManager>();
 }
 
 ARenderer* AEngine::GetRenderManager() {
-    return GetManager<ARenderer>();
+    return GetEngineSystem<ARenderer>();
 }
 
 ATimerManager* AEngine::GetTimerManager() {
-    return GetManager<ATimerManager>();
+    return GetEngineSystem<ATimerManager>();
 }
 
 AWindow* AEngine::GetActiveWindow() {

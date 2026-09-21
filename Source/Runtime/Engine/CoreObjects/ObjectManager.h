@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "../../Utils/TemplateUtils.h"
-#include "Managers/Manager.h"
+#include "Systems/EngineSystem.h"
 #include "Objects/BaseObject.h"
 
 
@@ -25,25 +25,19 @@ public:
         ABaseObject* NewObject = nullptr;
         if (IsEngineSubClass(Class)) {
             if (Engine == nullptr) {
-                NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
-                Engine = NewObject;
+                Engine = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
+                NewObject = Engine;
             }
         }
-        else if (IsManagerSubClass(Class)) {
-            bool CanCreateManager = true;
-            for (auto Manager : ManagerRegistry) {
-                if (Manager->GetClass() == Class) {
-                    CanCreateManager = false;
-                }
-            }
-            if (CanCreateManager) {
+        else if (IsSystemClass(Class)) {
+            if (!IsSystemAlreadyInstancied(Class)) {
                 NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
-                ManagerRegistry.Add(NewObject);
+                SystemsRegistry.Add(NewObject);
             }
         }
         else {
             NewObject = InternFactory->ConstructNew(Class, ParentObject != nullptr ? ParentObject : RootObject);
-            ObjectRegistry.Add(NewObject);
+            ObjectsRegistry.Add(NewObject);
         }
         return Cast<T>(NewObject);
     }
@@ -53,14 +47,18 @@ public:
     void ClearManagers();
     void Clear();
 private:
-    bool IsManagerSubClass(FClass* Class) const;
+    bool IsSystemClass(FClass* Class) const;
     bool IsEngineSubClass(FClass* Class) const;
+
+    bool IsSystemAlreadyInstancied(FClass* Class);
 private:
     ABaseObject* RootObject = nullptr;
-    TArray<ABaseObject*> ObjectRegistry;
-    TArray<ABaseObject*> ManagerRegistry;
+    TArray<ABaseObject*> ObjectsRegistry;
+    TArray<ABaseObject*> SystemsRegistry;
     ABaseObject* Engine = nullptr;
     
 };
 
-DECLARE_CLASS_FLAGS(AObjectManager, Class->AddFlag(EClassFlags::ECF_Singleton););
+DECLARE_CLASS_FLAGS(AObjectManager,
+    Class->AddFlag(EClassFlags::ECF_CPP_Singleton);
+    );

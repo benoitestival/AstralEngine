@@ -1,10 +1,9 @@
 #pragma once
-#include "../CoreObjects/Managers/Manager.h"
+#include "../CoreObjects/Systems/EngineSystem.h"
 #include "../CoreObjects/Objects/BaseObject.h"
 #include "../Time/AstralClock.h"
 
 class ARenderer;
-class AManager;
 class AWindow;
 class AWorld;
 class ATimerManager;
@@ -25,12 +24,12 @@ public:
     float CalculateDeltaSeconds();
 
     AWindow* GetActiveWindow();
-    template<class T = AManager>
-    T* GetManager() {
-        AManager* Object = nullptr;
-        for (auto Manager : EngineManagers) {
-            if (T::StaticClass() == Manager->GetClass() || Manager->IsChildOf(T::StaticClass())) {
-                Object = Manager;
+    template<class T = AEngineSystem>
+    T* GetEngineSystem() {
+        AEngineSystem* Object = nullptr;
+        for (auto System : EngineSystems) {
+            if (T::StaticClass() == System->GetClass() || System->IsChildOf(T::StaticClass())) {
+                Object = System;
             }
         }
         return Cast<T>(Object);
@@ -54,7 +53,7 @@ protected:
     float EngineDeltaTime = 0.0f;
 
     AWindow* ActiveWindow = nullptr;
-    TArray<AManager*> EngineManagers;
+    TArray<AEngineSystem*> EngineSystems;
     
     AWorld* ActiveWorld = nullptr;
 

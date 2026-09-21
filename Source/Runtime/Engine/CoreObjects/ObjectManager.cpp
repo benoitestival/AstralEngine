@@ -28,40 +28,50 @@ AObjectManager* AObjectManager::Get() {
 }
 
 bool AObjectManager::DestroyObject(ABaseObject* TargetObject) {
-    bool SuccessfullyDestroy = ObjectRegistry.Remove(TargetObject);
+    bool SuccessfullyDestroy = ObjectsRegistry.Remove(TargetObject);
     delete TargetObject;
     TargetObject = nullptr;
     return SuccessfullyDestroy;
 }
 
 void AObjectManager::ClearLivingObjects() {
-    for (int INDEX = ObjectRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
-        delete ObjectRegistry[INDEX];
-        ObjectRegistry[INDEX] = nullptr;
+    for (int INDEX = ObjectsRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
+        delete ObjectsRegistry[INDEX];
+        ObjectsRegistry[INDEX] = nullptr;
     }
-    ObjectRegistry.Clear();
+    ObjectsRegistry.Clear();
 }
 
 void AObjectManager::ClearManagers() {
-    for (int INDEX = ManagerRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
-        delete ManagerRegistry[INDEX];
-        ManagerRegistry[INDEX] = nullptr;
+    for (int INDEX = SystemsRegistry.Lenght() -1; INDEX >= 0; INDEX--) {
+        delete SystemsRegistry[INDEX];
+        SystemsRegistry[INDEX] = nullptr;
     }
-    ManagerRegistry.Clear();
+    SystemsRegistry.Clear();
 }
 
 void AObjectManager::Clear() {
     delete InternFactory;
     InternFactory = nullptr;
 
-    ObjectRegistry.Clear();
+    ObjectsRegistry.Clear();
 }
 
-bool AObjectManager::IsManagerSubClass(FClass* Class) const{
-    return Class->GetAllParents().Contains(AManager::StaticClass());
+bool AObjectManager::IsSystemClass(FClass* Class) const{
+    return Class->GetAllParents().Contains(AEngineSystem::StaticClass());
 }
 
 bool AObjectManager::IsEngineSubClass(FClass* Class) const{
     return Class->GetAllParents().Contains(AEngine::StaticClass());
+}
+
+bool AObjectManager::IsSystemAlreadyInstancied(FClass* Class) {
+    bool IsSystemInstancied = false;
+    for (auto System : SystemsRegistry) {
+        if (System->GetClass() == Class) {
+            IsSystemInstancied = true;
+        }
+    }
+    return IsSystemInstancied;
 }
 

@@ -111,12 +111,11 @@ FMatrix4X4 AMathsUtils::BuildRodriguesMatrixAroundAxis(const FVector& Axis, floa
     //                                             Matrix Part
     //
     //---- cross(u, v)*sin(𝛉) [the cross product can be convert to anti symmetric matrix of the first vector multiply by the second vector that look like AntiSym(U) * V * sin(𝛉)
-    //                         So now we have a matrix but because we are in left handed the cross product should be inverse so add a negate to the mlutiplication that give AntiSym(U) * V * (-sin(𝛉))]
-
+    //
     //Now we just need to developp and factorise all those matrix that give us the following formula:
 
     const float CosAngle = FMath::CosDeg(Angle); 
-    const float SinAngle = FMath::SinDeg(Angle) * -1.0f; 
+    const float SinAngle = FMath::SinDeg(Angle); 
 
     FVector AxisNormalize = AMathsUtils::Normalize(Axis);
     FVector AxisCosCoef = (1.0f - CosAngle) * AxisNormalize;

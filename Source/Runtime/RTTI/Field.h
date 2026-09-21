@@ -18,7 +18,8 @@ protected:
 };
 
 enum EClassFlags {
-    ECF_Singleton,
+    ECF_CPP_Singleton,
+    ECF_Engine_Singleton,
     ECF_Abstact,
 };
 
@@ -33,19 +34,19 @@ public:
     void AddParents(const TArray<FClass*>& ParentsClass);
     bool IsFactoryEligible() const;
 
-    //TODO make a real flag system
     void AddFlag(EClassFlags Flag);
     void RemoveFlag(EClassFlags Flag);
     
-    friend FArchive& operator<<(FArchive& Ar, TSerializableField<FClass> Class);
-    friend FArchive& operator>>(FArchive& Ar, TSerializableField<FClass> Class);
-    
+    friend FArchive& operator<<(FArchive& Ar, FClass* Class);
+    friend FArchive& operator>>(FArchive& Ar, FClass* Class);
+
+private:
+    void ConstructDefaultClassFlags();
+     
 protected:
-    bool IsClassFactoryEligible;//TODO make it a flag
+    int ClassFlags;
     TArray<FClass*> DirectParents;
 };
-
-
 
 template<typename T>
 struct TClassFlags {
