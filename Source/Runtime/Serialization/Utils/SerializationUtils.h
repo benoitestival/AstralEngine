@@ -68,7 +68,7 @@ concept ImplementSpecificSerialization = requires(FArchive& Archive, T& Value) {
 };
 
 template <typename T>
-concept IsBasicType = std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, std::string>;
+concept IsBasicType = std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, std::string> || std::is_same_v<T, bool>;
 
 
 

@@ -23,7 +23,8 @@ find_package(Vulkan REQUIRED)
 find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 find_package(unofficial-spirv-reflect CONFIG REQUIRED)
 
-find_package(jsoncpp CONFIG REQUIRED)
+find_package(nlohmann_json REQUIRED)
+
 
 file(GLOB_RECURSE SOURCE_FILES ${PROJECT_SOURCE_DIR}/Source/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/Source/*.h)
@@ -38,5 +39,4 @@ set_source_files_properties(${INL_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 target_link_libraries(${PROJECT_NAME} OpenGL::GL glfw GLEW::GLEW)
 target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan GPUOpen::VulkanMemoryAllocator unofficial::spirv-reflect)
 
-target_link_libraries(${PROJECT_NAME} JsonCpp::JsonCpp)
-
+target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)

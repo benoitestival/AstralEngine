@@ -9,29 +9,36 @@ public:
     FArchive() = default;
     virtual ~FArchive() = default;
 
+    virtual bool IsReading() = 0;
+    
     //Basic type function
+    virtual void Serialize(const std::string& Key, bool& Data) = 0;
     virtual void Serialize(const std::string& Key, int& Data) = 0;
     virtual void Serialize(const std::string& Key, float& Data) = 0;
     virtual void Serialize(const std::string& Key, std::string& Data) = 0;
 
+    virtual void DeSerialize(const std::string& Key, bool& Data) = 0;
     virtual void DeSerialize(const std::string& Key, int& Data) = 0;
     virtual void DeSerialize(const std::string& Key, float& Data) = 0;
     virtual void DeSerialize(const std::string& Key, std::string& Data) = 0;
 
     //Nodes Function
     virtual void BeginSubNode(const std::string& NodeName){};
-    virtual void EndSubNode(){};
+    virtual void EndSubNode(const std::string& NodeName){};
 
     //Containers Functions
     virtual void BeginContainer(const std::string& NodeName, int& Size){};
     virtual void EndContainer(){};
+    
+    virtual void BeginAnonymousElement() {};
+    virtual void EndAnonymousElement() {};
     
     template<class DataType>
     void Serialize(const std::string& Key, DataType& Data) {
         if constexpr (ImplementSpecificSerialization<DataType>) {
             BeginSubNode(Key);
             Data.Serialize(*this);
-            EndSubNode();
+            EndSubNode(Key);
         }
         else if constexpr (IsBasicType<DataType>){
             FArchive::Serialize(Key, Data);
@@ -45,7 +52,7 @@ public:
         if constexpr (ImplementSpecificSerialization<DataType>) {
             BeginSubNode(Key);
             Data.DeSerialize(*this);
-            EndSubNode();
+            EndSubNode(Key);
         }
         else if constexpr (IsBasicType<DataType>){
             FArchive::DeSerialize(Key, Data);
@@ -62,6 +69,7 @@ public:
     }
     template<class DataType>
     void DeSerialize(const std::string& Key, DataType* Data) {
+        //TODO make recreation of astral object here
         DeSerialize(Key, *Data);
     }
     
@@ -70,7 +78,9 @@ public:
         int Size = Datas.Lenght();
         BeginContainer(Key, Size);
         for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
+            BeginAnonymousElement();
             Serialize<DataType>("", Datas[INDEX]);
+            EndAnonymousElement();
         }
         EndContainer();
     }
@@ -82,7 +92,9 @@ public:
         Datas.Resize(Size);
         
         for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
+            BeginAnonymousElement();
             DeSerialize<DataType>("", Datas[INDEX]);
+            EndAnonymousElement();
         }
         EndContainer();
     }
@@ -93,7 +105,7 @@ public:
         BeginContainer(Key, Size);
 
         for (auto& Pair : Datas) {
-            BeginSubNode("");
+            BeginAnonymousElement();
 
             DataKey KeyVal = Pair.first;//No ref to remove const and force copy
             Serialize<DataKey>("Key", KeyVal);
@@ -101,7 +113,7 @@ public:
             DataType& DataVal = Pair.second;
             Serialize<DataType>("Value", DataVal);
             
-            EndSubNode();
+            EndAnonymousElement();
         }
         EndContainer();
     }
@@ -112,7 +124,7 @@ public:
         BeginContainer(Key, Size);
 
         for (int INDEX = 0; INDEX < Size ;INDEX++) {
-            BeginSubNode("");
+            BeginAnonymousElement();
 
             DataKey KeyVal = DataKey();
             DeSerialize<DataKey>("Key", KeyVal);
@@ -122,8 +134,10 @@ public:
 
             Datas.Insert(KeyVal, DataVal);
             
-            EndSubNode();
+            EndAnonymousElement();
         }
         EndContainer();
     }
 };
+
+

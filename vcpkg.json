@@ -14,9 +14,7 @@
 	    "vulkan-memory-allocator",
         "spirv-reflect",
 
-        "sfml",
-
-        "jsoncpp"
-	
+        "nlohmann-json"
+      
     ]
 }

@@ -106,7 +106,7 @@ public:
 
     bool RemoveAt(int Index) {
         bool SuccessfullyRemove = false;
-        if (Index >= LastIndex()) {
+        if (Index <= LastIndex()) {
             ToSTDVector().erase(begin() + Index);
             SuccessfullyRemove = true;
         }
@@ -154,7 +154,7 @@ public:
     }
     
     T& Last() {
-        return *this[LastIndex()];
+        return (*this)[LastIndex()];
     }
 
     T* Data() {
