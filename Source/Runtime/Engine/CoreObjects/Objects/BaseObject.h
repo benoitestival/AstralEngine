@@ -1,12 +1,10 @@
 ﻿// ReSharper disable CppInitializedValueIsAlwaysRewritten
 #pragma once
-#include <string>
-
 #include "../../../Configs/AstralEngineStatics.h"
-#include "../../../Utils/TemplateUtils.h"
 #include "../../../Utils/Delegate.h"
 #include "../../../Utils/Array.h"
 #include "../../../RTTI/RTTI.h"
+#include "../../../Serialization/Archive/Archive.h"
 
 class FBinaryArchive;
 
@@ -29,7 +27,7 @@ enum ObjectFlags {
  */
 
 
-class ABaseObject : RTTI_CLASS {
+class ABaseObject : virtual public RTTI {
 public:
     ABaseObject();
     DECLARE_ASTRAL_ENGINE_CLASS_NO_PARENTS(ABaseObject)
@@ -44,8 +42,8 @@ public:
     //Can only work once, you cannot override an outer already set
     void SetOuter(ABaseObject* ObjectOuter);
 
-    void Serialize(FArchive& Archive);
-    void Deserialize(FArchive& Archive);
+    virtual void Serialize(FArchive& Archive);
+    virtual void DeSerialize(FArchive& Archive);
 
 protected:
     ABaseObject* Outer = nullptr;

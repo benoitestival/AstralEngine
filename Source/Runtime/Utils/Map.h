@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <unordered_map>
 
+#include "Array.h"
+
 template<class K, class T>
 class TMap{
 public:

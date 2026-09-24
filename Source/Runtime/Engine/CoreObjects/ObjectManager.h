@@ -1,20 +1,19 @@
 ﻿#pragma once
 #include <vector>
 
+#include "../../Utils/Factory.h"
 #include "../../Utils/TemplateUtils.h"
-#include "Systems/EngineSystem.h"
-#include "Objects/BaseObject.h"
 
+class ABaseObject;
 
-class AObjectManager : public ABaseObject {
+class AObjectManager {
 public:
-    DECLARE_ASTRAL_ENGINE_CLASS(AObjectManager, ABaseObject)
 
 private:
     AObjectManager();
     static AObjectManager* ObjectManager;
 public:
-    ~AObjectManager() override;
+    ~AObjectManager();
     static AObjectManager* Get();
     
 private:
@@ -59,6 +58,3 @@ private:
     
 };
 
-DECLARE_CLASS_FLAGS(AObjectManager,
-    Class->AddFlag(EClassFlags::ECF_CPP_Singleton);
-    );

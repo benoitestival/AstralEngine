@@ -89,12 +89,12 @@ void FClass::ConstructDefaultClassFlags() {
 //
 //     return Ar; 
 // }
-FArchive& operator<<(FArchive& Ar, TSerializableField<FClass> Class) {
-    Ar.InsertDataInArchive("ClassName", Class.GetData()->FieldID);
-    return Ar;
-}
-
-FArchive& operator>>(FArchive& Ar, TSerializableField<FClass> Class) {
-    Ar.ReadDataInArchive("ClassName", Class.GetData()->FieldID);
-    return Ar;
-}
+// FArchive& operator<<(FArchive& Ar, TSerializableField<FClass> Class) {
+//     Ar.InsertDataInArchive("ClassName", Class.GetData()->FieldID);
+//     return Ar;
+// }
+//
+// FArchive& operator>>(FArchive& Ar, TSerializableField<FClass> Class) {
+//     Ar.ReadDataInArchive("ClassName", Class.GetData()->FieldID);
+//     return Ar;
+// }

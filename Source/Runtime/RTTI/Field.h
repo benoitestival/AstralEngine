@@ -1,8 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-
-#include "../Serialization/Archive/Archive.h"
 #include "../Utils/Array.h"
 
 
@@ -37,8 +35,8 @@ public:
     void AddFlag(EClassFlags Flag);
     void RemoveFlag(EClassFlags Flag);
     
-    friend FArchive& operator<<(FArchive& Ar, FClass* Class);
-    friend FArchive& operator>>(FArchive& Ar, FClass* Class);
+    // friend FArchive& operator<<(FArchive& Ar, FClass* Class);
+    // friend FArchive& operator>>(FArchive& Ar, FClass* Class);
 
 private:
     void ConstructDefaultClassFlags();

@@ -36,5 +36,5 @@ void ABaseObject::Serialize(FArchive& Archive) {
     
 }
 
-void ABaseObject::Deserialize(FArchive& Archive) {
+void ABaseObject::DeSerialize(FArchive& Archive) {
 }

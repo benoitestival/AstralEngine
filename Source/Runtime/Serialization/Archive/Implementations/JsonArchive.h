@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+
 #include "../Archive.h"
 #include "nlohmann/json.hpp"
 
@@ -30,6 +32,20 @@ public:
     virtual void EndAnonymousElement() override;
 
     virtual bool IsReading() override;
+
+    bool LoadFromFile(const std::string& Path) {
+        std::ifstream File(Path);
+        if (!File.is_open()) return false;
+        File >> RootNode;
+        ArchiveNodes.Clear();
+        ArchiveNodes.Add(&RootNode);
+        return true;
+    }
+    void SaveToFile(const std::string& Path) {
+        std::ofstream File(Path);
+        File << RootNode.dump(4);
+    }
+    
 private:
     JsonObject& GetCurrentNode();
 
@@ -54,6 +70,7 @@ private:
     }
     
 private:
+    JsonObject RootNode;
     TArray<JsonObject*> ArchiveNodes;
 
     //We have this stack to go threw a list of anonymous eleents, it s a TArray in case we have an array in an array

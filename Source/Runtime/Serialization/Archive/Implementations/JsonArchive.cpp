@@ -1,6 +1,7 @@
 #include "JsonArchive.h"
 
 JsonArchive::JsonArchive(bool IsLoadingArchive) : FArchive(), IsLoadingArchiveType(IsLoadingArchive){
+    ArchiveNodes.Add(&RootNode);
 }
 
 void JsonArchive::Serialize(const std::string& Key, bool& Data) {

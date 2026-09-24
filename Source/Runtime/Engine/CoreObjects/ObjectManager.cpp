@@ -4,6 +4,8 @@
 #include "../Engine/Engine.h"
 #include "../Inputs/Systems/InpuManager.h"
 #include "../Time/TimerManager.h"
+#include "Objects/BaseObject.h"
+
 
 
 AObjectManager* AObjectManager::ObjectManager = nullptr;
@@ -75,3 +77,6 @@ bool AObjectManager::IsSystemAlreadyInstancied(FClass* Class) {
     return IsSystemInstancied;
 }
 
+DECLARE_CLASS_FLAGS(AObjectManager,
+    Class->AddFlag(EClassFlags::ECF_CPP_Singleton);
+    );

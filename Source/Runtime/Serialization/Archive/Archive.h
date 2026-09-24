@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "../../Configs/AstralEngineStatics.h"
 #include "../../Engine/CoreObjects/Utils/ObjectCoreUtility.h"
 #include "../../RTTI/Field.h"
 #include "../../Utils/Array.h"
@@ -75,7 +76,7 @@ public:
             std::string ClassName = Data->GetClass()->GetClassName();
             Serialize("ASTRAL_CLASS", ClassName);
             
-            Data.Serialize(*this);
+            Data->Serialize(*this);
             EndSubNode(Key);
         }
         else {
@@ -94,7 +95,7 @@ public:
             
             if (Class != nullptr) {
                 Data = NewObject<DataType>(Class);
-                Data.DeSerialize(*this);
+                Data->DeSerialize(*this);
             }
             EndSubNode(Key);
         }
