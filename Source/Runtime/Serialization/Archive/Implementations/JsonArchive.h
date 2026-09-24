@@ -24,7 +24,7 @@ public:
 
     //Containers Functions
     virtual void BeginContainer(const std::string& NodeName, int& Size) override;
-    virtual void EndContainer() override;
+    virtual void EndContainer(const std::string& NodeName) override;
 
     virtual void BeginAnonymousElement() override;
     virtual void EndAnonymousElement() override;

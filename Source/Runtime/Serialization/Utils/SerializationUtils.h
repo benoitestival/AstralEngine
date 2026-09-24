@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <sstream>
 
+#include "SerializationUtils.h"
+
 #define INVALID_STRING "INVALID"
 
 class FArchive;
@@ -69,8 +71,6 @@ concept ImplementSpecificSerialization = requires(FArchive& Archive, T& Value) {
 
 template <typename T>
 concept IsBasicType = std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, std::string> || std::is_same_v<T, bool>;
-
-
 
 // template <typename T, class ArchiveClass>
 // concept IsBasicType = requires(FArchive<ArchiveClass>& Ar, T& Value) {

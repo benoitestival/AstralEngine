@@ -1,6 +1,9 @@
 ﻿#pragma once
+#include "../../Engine/CoreObjects/Utils/ObjectCoreUtility.h"
+#include "../../RTTI/Field.h"
 #include "../../Utils/Array.h"
 #include "../../Utils/Map.h"
+#include "../../Utils/TemplateUtils.h"
 #include "../Utils/SerializationUtils.h"
 
 class FArchive {
@@ -28,7 +31,7 @@ public:
 
     //Containers Functions
     virtual void BeginContainer(const std::string& NodeName, int& Size){};
-    virtual void EndContainer(){};
+    virtual void EndContainer(const std::string& NodeName){};
     
     virtual void BeginAnonymousElement() {};
     virtual void EndAnonymousElement() {};
@@ -65,12 +68,39 @@ public:
     
     template<class DataType>
     void Serialize(const std::string& Key, DataType* Data) {
-         Serialize(Key, *Data);
+        if constexpr (IsAstralObject<DataType>()) {
+            BeginSubNode(Key);//New node for an Astral object from pointer
+
+            //we do this its polymorphic and need to save FClass
+            std::string ClassName = Data->GetClass()->GetClassName();
+            Serialize("ASTRAL_CLASS", ClassName);
+            
+            Data.Serialize(*this);
+            EndSubNode(Key);
+        }
+        else {
+            Serialize(Key, *Data);
+        }
     }
     template<class DataType>
-    void DeSerialize(const std::string& Key, DataType* Data) {
-        //TODO make recreation of astral object here
-        DeSerialize(Key, *Data);
+    void DeSerialize(const std::string& Key, DataType*& Data) {//Pass pointer by ref because we need to change the adress and the data its pointing to
+        if constexpr (IsAstralObject<DataType>()) {
+            BeginSubNode(Key);//New node for an Astral object from pointer
+
+            //we do this its polymorphic and need to load FClass
+            std::string ClassName;
+            DeSerialize("ASTRAL_CLASS", ClassName);
+            FClass* Class = AstralEngineStatics::GetClass(ClassName);
+            
+            if (Class != nullptr) {
+                Data = NewObject<DataType>(Class);
+                Data.DeSerialize(*this);
+            }
+            EndSubNode(Key);
+        }
+        else {
+            DeSerialize(Key, *Data);    
+        }
     }
     
     template<class DataType>
@@ -79,10 +109,10 @@ public:
         BeginContainer(Key, Size);
         for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
             BeginAnonymousElement();
-            Serialize<DataType>("", Datas[INDEX]);
+            Serialize("", Datas[INDEX]);
             EndAnonymousElement();
         }
-        EndContainer();
+        EndContainer(Key);
     }
     template<class DataType>
     void DeSerialize(const std::string& Key, TArray<DataType>& Datas) {
@@ -93,10 +123,10 @@ public:
         
         for (int INDEX = 0; INDEX < Datas.Lenght() ;INDEX++) {
             BeginAnonymousElement();
-            DeSerialize<DataType>("", Datas[INDEX]);
+            DeSerialize("", Datas[INDEX]);
             EndAnonymousElement();
         }
-        EndContainer();
+        EndContainer(Key);
     }
 
     template<class DataKey, class DataType>
@@ -108,14 +138,14 @@ public:
             BeginAnonymousElement();
 
             DataKey KeyVal = Pair.first;//No ref to remove const and force copy
-            Serialize<DataKey>("Key", KeyVal);
+            Serialize("Key", KeyVal);
 
             DataType& DataVal = Pair.second;
-            Serialize<DataType>("Value", DataVal);
+            Serialize("Value", DataVal);
             
             EndAnonymousElement();
         }
-        EndContainer();
+        EndContainer(Key);
     }
 
     template<class DataKey, class DataType>
@@ -127,17 +157,15 @@ public:
             BeginAnonymousElement();
 
             DataKey KeyVal = DataKey();
-            DeSerialize<DataKey>("Key", KeyVal);
+            DeSerialize("Key", KeyVal);
 
             DataType DataVal = DataType();
-            DeSerialize<DataType>("Value", DataVal);
+            DeSerialize("Value", DataVal);
 
             Datas.Insert(KeyVal, DataVal);
             
             EndAnonymousElement();
         }
-        EndContainer();
+        EndContainer(Key);
     }
 };
-
-

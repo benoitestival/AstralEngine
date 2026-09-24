@@ -34,6 +34,11 @@ static constexpr bool IsClassConstructible() {
     return std::is_default_constructible_v<T>;
 }
 
+template<class T>
+static constexpr bool IsAstralObject() {
+    return std::is_base_of<ABaseObject, T>();
+}
+
 
 template<class T, class S = ABaseObject>
 static T* Cast(S* BaseObject) {

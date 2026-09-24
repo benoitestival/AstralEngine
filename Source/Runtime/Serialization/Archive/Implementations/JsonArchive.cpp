@@ -55,25 +55,37 @@ void JsonArchive::EndSubNode(const std::string& NodeName) {
 }
 
 void JsonArchive::BeginContainer(const std::string& NodeName, int& Size) {
-    if (IsReading()) {
-        JsonObject& SubNode = GetCurrentNode()[NodeName];
-        ArchiveNodes.Add(&SubNode);//Push subnode so its the new current node
+    if (!NodeName.empty()) {
+        if (IsReading()) {
+            JsonObject& SubNode = GetCurrentNode()[NodeName];
+            ArchiveNodes.Add(&SubNode);//Push subnode so its the new current node
 
-        Size = SubNode.size();
+            Size = SubNode.size();
         
-        AnonymousReadIteratorStack.Add(SubNode.begin());//Register actual node as a container
+            AnonymousReadIteratorStack.Add(SubNode.begin());//Register actual node as a container
+        }
+        else {
+            GetCurrentNode()[NodeName] = JsonObject::array();
+            ArchiveNodes.Add(&GetCurrentNode()[NodeName]);
+        }
     }
     else {
-        GetCurrentNode()[NodeName] = JsonObject::array();
-        ArchiveNodes.Add(&GetCurrentNode()[NodeName]);
+        //Test if name is empty then its an array in an array so we still need the size
+        if (IsReading()) {
+            Size = GetCurrentNode().size();
+            AnonymousReadIteratorStack.Add(GetCurrentNode().begin());
+            //On bouge juste le curseur le reste est gérer par anonymous event
+        }
     }
 }
 
-void JsonArchive::EndContainer() {
+void JsonArchive::EndContainer(const std::string& NodeName) {
     if (IsReading()) {
         AnonymousReadIteratorStack.RemoveAt(AnonymousReadIteratorStack.LastIndex());
     }
-    ArchiveNodes.RemoveAt(ArchiveNodes.LastIndex());
+    if (!NodeName.empty()) {
+        ArchiveNodes.RemoveAt(ArchiveNodes.LastIndex());
+    }
 }
 
 void JsonArchive::BeginAnonymousElement() {
