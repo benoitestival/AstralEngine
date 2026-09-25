@@ -14,6 +14,10 @@ public:
     virtual ~FArchive() = default;
 
     virtual bool IsReading() = 0;
+
+    //Files functions
+    virtual bool LoadFromFile(const std::string& Path){return false;};
+    virtual void SaveToFile(const std::string& Path){};
     
     //Basic type function
     virtual void Serialize(const std::string& Key, bool& Data) = 0;

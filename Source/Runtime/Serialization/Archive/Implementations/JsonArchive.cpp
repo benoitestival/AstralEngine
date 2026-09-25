@@ -4,6 +4,22 @@ JsonArchive::JsonArchive(bool IsLoadingArchive) : FArchive(), IsLoadingArchiveTy
     ArchiveNodes.Add(&RootNode);
 }
 
+
+bool JsonArchive::LoadFromFile(const std::string& Path) {
+    std::ifstream File(Path);
+    if (!File.is_open()) return false;
+    File >> RootNode;
+    ArchiveNodes.Clear();
+    ArchiveNodes.Add(&RootNode);
+    return true;
+}
+
+void JsonArchive::SaveToFile(const std::string& Path) {
+    std::ofstream File(Path);
+    File << RootNode.dump(4);
+}
+
+
 void JsonArchive::Serialize(const std::string& Key, bool& Data) {
     WriteData(Key, Data);
 }

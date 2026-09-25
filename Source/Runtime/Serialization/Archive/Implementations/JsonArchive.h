@@ -13,6 +13,9 @@ public:
     
     JsonArchive(bool IsLoadingArchive);
 
+    bool LoadFromFile(const std::string& Path) override;
+    void SaveToFile(const std::string& Path) override;
+    
     virtual void Serialize(const std::string& Key, bool& Data) override;
     virtual void Serialize(const std::string& Key, int& Data) override;
     virtual void Serialize(const std::string& Key, float& Data) override;
@@ -35,19 +38,6 @@ public:
     virtual void EndAnonymousElement() override;
 
     virtual bool IsReading() override;
-
-    bool LoadFromFile(const std::string& Path) {
-        std::ifstream File(Path);
-        if (!File.is_open()) return false;
-        File >> RootNode;
-        ArchiveNodes.Clear();
-        ArchiveNodes.Add(&RootNode);
-        return true;
-    }
-    void SaveToFile(const std::string& Path) {
-        std::ofstream File(Path);
-        File << RootNode.dump(4);
-    }
     
 private:
     JsonObject& GetCurrentNode();
