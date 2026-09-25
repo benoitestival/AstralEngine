@@ -75,6 +75,10 @@ public:
         return ToSTDUnorderedMap().at(Key);
     }
 
+    void Insert(const K& Elem1, const T& Elem2) {
+        ToSTDUnorderedMap().insert(std::make_pair(Elem1, Elem2));
+    }
+    
     void Insert(const std::pair<K, T>& Pair) {
         ToSTDUnorderedMap().insert(Pair);
     }

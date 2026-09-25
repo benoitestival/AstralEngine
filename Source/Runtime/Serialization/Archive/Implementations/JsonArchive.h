@@ -8,6 +8,9 @@ using JsonObject = nlohmann::json;
 
 class JsonArchive : public FArchive {
 public:
+    using FArchive::Serialize;
+    using FArchive::DeSerialize;
+    
     JsonArchive(bool IsLoadingArchive);
 
     virtual void Serialize(const std::string& Key, bool& Data) override;
