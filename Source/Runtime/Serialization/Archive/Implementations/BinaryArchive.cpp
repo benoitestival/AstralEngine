@@ -1,32 +1,15 @@
 #include "BinaryArchive.h"
 
-#include <fstream>
-
-BinaryArchive::BinaryArchive(bool IsLoadingArchive) : IsReadingArchive(IsLoadingArchive), ReadOffset(0){
+BinaryArchive::BinaryArchive(bool IsLoadingArchive, EChecksumType ArChecksumType) : FArchive(ArChecksumType), IsReadingArchive(IsLoadingArchive), ReadOffset(0){
 }
 
-bool BinaryArchive::LoadFromFile(const std::string& Path) {
-    bool Success = false;
-    
-    std::ifstream Stream = std::ifstream(Path, std::ifstream::binary);
-    if (Stream.is_open()) {
-        int Size = std::filesystem::file_size(Path);
-        Buffer.Resize(Size);
-        Stream.read(Buffer.Data(), Size);
-
-        if (!Stream.fail()) {            
-            ReadOffset = 0;                
-            Success = true;             
-        }
-    }
-    return Success;
+TArray<char> BinaryArchive::GetArchiveRawDatas() {
+    return Buffer;
 }
 
-void BinaryArchive::SaveToFile(const std::string& Path) {
-    std::ofstream Stream = std::ofstream(Path, std::ofstream::binary);
-    if (Stream.is_open()) {
-        Stream.write(Buffer.Data(), Buffer.Lenght());
-    }
+void BinaryArchive::SetArchiveRawDatas(TArray<char>& RawDatas) {
+    Buffer = RawDatas;
+    ReadOffset = 0;
 }
 
 void BinaryArchive::Serialize(const std::string& Key, bool& Data) {

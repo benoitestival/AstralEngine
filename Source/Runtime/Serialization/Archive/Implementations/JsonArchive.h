@@ -11,10 +11,10 @@ public:
     using FArchive::Serialize;
     using FArchive::DeSerialize;
     
-    JsonArchive(bool IsLoadingArchive);
-
-    bool LoadFromFile(const std::string& Path) override;
-    void SaveToFile(const std::string& Path) override;
+    JsonArchive(bool IsLoadingArchive, EChecksumType ArChecksumType);
+    
+    virtual TArray<char> GetArchiveRawDatas() override;
+    virtual void SetArchiveRawDatas(TArray<char>& RawDatas) override;
     
     virtual void Serialize(const std::string& Key, bool& Data) override;
     virtual void Serialize(const std::string& Key, int& Data) override;

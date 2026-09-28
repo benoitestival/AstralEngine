@@ -1,61 +1,15 @@
 ﻿#pragma once
-#include <sstream>
 
-#include "SerializationUtils.h"
-
-#define INVALID_STRING "INVALID"
+#include "SerializationCoreIncludes.h"
 
 class FArchive;
 
-enum EArchiveType {
-    ART_BINARY = 0,
-    ART_STRING = 1,
+enum class EChecksumType : uint8_t {
+    ECT_CRC32 = 0,
+    ECT_XXHASH32 = 1,
+    ECT_XXHASH64 = 2,
+    ECT_HMAC = 3,
 };
-
-enum class ENodeType {
-    NT_NONE = 0,
-    NT_ROOT = 1,
-    NT_PARENT = 2,
-    NT_LEAF = 3,
-};
-
-enum class EArchiveAction {
-   AR_ENTER_SUB_ARCHIVE = 0,
-   AR_EXIT_SUB_ARCHIVE = 0,
-};
-
-enum class EArchiveWriteEntryType {
-    AR_W_INVALID = 0,
-    AR_W_KEY = 1,
-    AR_W_VALUE = 2,
-    AR_W_START_SUB_ARCHIVE = 3,
-    AR_W_END_SUB_ARCHIVE = 4,
-};
-
-enum class EArchiveReadEntryType {
-    AR_R_INVALID = 0,
-    AR_R_KEY = 1,
-    AR_R_VALUE = 2,
-    AR_START_SUB_ARCHIVE = 3,
-    AR_END_SUB_ARCHIVE = 4,
-};
-
-enum class EArchiveEntryTypeOption {
-    AR_ARRAY_START = 0,
-    AR_ARRAY_END = 0,
-};
-
-enum class EArchiveFlag {
-    AR_NoFlags = 0x00000000,
-    AR_Array = 0x00000001,
-    //AR_SubArchive = 0x00000002,
-};
-
-enum class ENodeDataType {
-    NT_RawString = 0,
-    NT_SubNodes = 1,
-};
-
 
 template <typename T>
 concept SupportStringSerialization = requires(std::stringstream& Stream, T& value) {
@@ -72,26 +26,11 @@ concept ImplementSpecificSerialization = requires(FArchive& Archive, T& Value) {
 template <typename T>
 concept IsBasicType = std::is_same_v<T, int> || std::is_same_v<T, float> || std::is_same_v<T, std::string> || std::is_same_v<T, bool>;
 
-// template <typename T, class ArchiveClass>
-// concept IsBasicType = requires(FArchive<ArchiveClass>& Ar, T& Value) {
-//     return std::is_floating_point<T>();//add int, char
-// };
-
-struct FStream {
-public:
-    FStream() = default;
-    FStream(const std::string& String) : InternStream(String) {}
-    std::string ToString() {
-        return InternStream.str();
-    }
-    std::stringstream& Stream() {
-        return InternStream;
-    }
-private:
-    std::stringstream InternStream;
-};
-
-
 class SerializationUtils {
 public:
+    static void BuildCRC32Registry();
+    static uint32_t BuildCRC32(const TArray<char>& Buffer);
+private:
+    static TArray<uint32_t> CRC32Table;
 };
+

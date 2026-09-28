@@ -1,16 +1,16 @@
+// ReSharper disable All
 #pragma once
 #include "../Archive.h"
-#include <filesystem>
 
 class BinaryArchive : public FArchive {
 public:
     using FArchive::Serialize;
     using FArchive::DeSerialize;
 
-    BinaryArchive(bool IsLoadingArchive);
+    BinaryArchive(bool IsLoadingArchive, EChecksumType ArChecksumType);
 
-    virtual bool LoadFromFile(const std::string& Path) override;
-    virtual void SaveToFile(const std::string& Path) override;
+    virtual TArray<char> GetArchiveRawDatas() override;
+    virtual void SetArchiveRawDatas(TArray<char>& RawDatas) override;
     
     virtual void Serialize(const std::string& Key, bool& Data) override;
     virtual void Serialize(const std::string& Key, int& Data) override;

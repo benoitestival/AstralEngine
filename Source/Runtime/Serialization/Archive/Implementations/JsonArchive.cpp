@@ -1,22 +1,20 @@
 #include "JsonArchive.h"
 
-JsonArchive::JsonArchive(bool IsLoadingArchive) : FArchive(), IsLoadingArchiveType(IsLoadingArchive){
+JsonArchive::JsonArchive(bool IsLoadingArchive, EChecksumType ArChecksumType) : FArchive(ArChecksumType), IsLoadingArchiveType(IsLoadingArchive){
     ArchiveNodes.Add(&RootNode);
 }
 
+TArray<char> JsonArchive::GetArchiveRawDatas() {
+    std::string ArchiveString = RootNode.dump();
+    return {std::vector<char>(ArchiveString.begin(), ArchiveString.end())};
+}
 
-bool JsonArchive::LoadFromFile(const std::string& Path) {
-    std::ifstream File(Path);
-    if (!File.is_open()) return false;
-    File >> RootNode;
+void JsonArchive::SetArchiveRawDatas(TArray<char>& RawDatas) {
+    std::string Text(RawDatas.Data(), RawDatas.Lenght());
+    RootNode = JsonObject::parse(Text);
     ArchiveNodes.Clear();
+    AnonymousReadIteratorStack.Clear();
     ArchiveNodes.Add(&RootNode);
-    return true;
-}
-
-void JsonArchive::SaveToFile(const std::string& Path) {
-    std::ofstream File(Path);
-    File << RootNode.dump(4);
 }
 
 

@@ -1,23 +1,91 @@
 ﻿#pragma once
+
+#include "../Utils/SerializationCoreIncludes.h"
+
+#include "../Utils/SerializationUtils.h"
 #include "../../Configs/AstralEngineStatics.h"
 #include "../../Engine/CoreObjects/Utils/ObjectCoreUtility.h"
-#include "../../RTTI/Field.h"
-#include "../../Utils/Array.h"
-#include "../../Utils/Map.h"
-#include "../../Utils/TemplateUtils.h"
-#include "../Utils/SerializationUtils.h"
 
 class FArchive {
 public:
 
-    FArchive() = default;
+    FArchive(EChecksumType ArChecksumType) : ChecksumType(ArChecksumType) {
+    };
     virtual ~FArchive() = default;
 
     virtual bool IsReading() = 0;
 
+    //Security Functions
+    TArray<char> ComputeChecksum(const TArray<char>& RawDatas) {
+        TArray<char> Checksum = TArray<char>();
+        if (ChecksumType == EChecksumType::ECT_CRC32) {
+            uint32_t CRC32Checksum = SerializationUtils::BuildCRC32(RawDatas);
+            
+            Checksum.Resize(CRC32Checksum);
+            std::memcpy(Checksum.Data(), reinterpret_cast<char*>(&CRC32Checksum), sizeof(CRC32Checksum));
+        }
+        return Checksum;
+    }
+    
+    bool AreChecksumEqual(const TArray<char>& ChecksumOne, const TArray<char>& ChecksumTwo) {
+        bool IsValid = false;
+        if (ChecksumOne.Lenght() == ChecksumTwo.Lenght()) {
+            int CorrectBytes = 0;
+            for (int i = 0; i < ChecksumOne.Lenght(); ++i) {
+                if (ChecksumOne[i] == ChecksumTwo[i]) {
+                    CorrectBytes++;
+                }
+            }
+            IsValid = CorrectBytes == ChecksumOne.Lenght();
+        }
+        return IsValid;
+    };
+    int GetCheckSumSize() {
+        int Size = 0;
+        if (ChecksumType == EChecksumType::ECT_CRC32) {
+            Size = 4;
+        }
+        return Size;
+    }
+    
     //Files functions
-    virtual bool LoadFromFile(const std::string& Path){return false;};
-    virtual void SaveToFile(const std::string& Path){};
+    bool LoadFromFile(const std::string& Path) {
+        bool SuccessfullySaved = false;
+
+        std::ifstream Stream = std::ifstream(Path, std::ifstream::binary);
+        if (Stream.is_open()) {
+            
+            TArray<char> Checksum = TArray<char>();
+            Checksum.Resize(GetCheckSumSize());
+            Stream.read(Checksum.Data(), GetCheckSumSize());
+            
+            int FileSize = std::filesystem::file_size(Path) - GetCheckSumSize();
+            TArray<char> RawDatas = TArray<char>();
+            RawDatas.Resize(FileSize);
+            Stream.read(RawDatas.Data(), FileSize);
+
+            if (AreChecksumEqual(Checksum, ComputeChecksum(RawDatas))) {
+                SetArchiveRawDatas(RawDatas); 
+                SuccessfullySaved = true;
+            }
+            
+        }
+        return SuccessfullySaved;
+
+    };
+    void SaveToFile(const std::string& Path) {
+        std::ofstream Stream = std::ofstream(Path, std::ofstream::binary);
+        if (Stream.is_open()) {
+            TArray<char> RawDatas = GetArchiveRawDatas();
+            TArray<char> Checksum = ComputeChecksum(RawDatas);
+            
+            Stream.write(Checksum.Data(), GetCheckSumSize());
+            Stream.write(RawDatas.Data(), RawDatas.Lenght());
+        }
+    };
+    
+    virtual TArray<char> GetArchiveRawDatas() = 0;
+    virtual void SetArchiveRawDatas(TArray<char>& RawDatas) = 0;
     
     //Basic type function
     virtual void Serialize(const std::string& Key, bool& Data) = 0;
@@ -40,6 +108,8 @@ public:
     
     virtual void BeginAnonymousElement() {};
     virtual void EndAnonymousElement() {};
+    
+    
     
     template<class DataType>
     void Serialize(const std::string& Key, DataType& Data) {
@@ -173,4 +243,7 @@ public:
         }
         EndContainer(Key);
     }
+    
+private:
+    EChecksumType ChecksumType;
 };
