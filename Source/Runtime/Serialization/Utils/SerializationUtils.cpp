@@ -94,3 +94,97 @@ uint32_t SerializationUtils::BuildCRC32(const TArray<char>& Buffer) {
     }
     return CRC ^ 0xFFFFFFFF;
 }
+
+constexpr uint32_t PRIME_1 = 0x9E3779B1u;
+constexpr uint32_t PRIME_2 = 0x85EBCA77u;
+constexpr uint32_t PRIME_3 = 0xC2B2AE3Du;
+constexpr uint32_t PRIME_4 = 0x27D4EB2Fu;
+constexpr uint32_t PRIME_5 = 0x165667B1u;
+
+uint32_t SerializationUtils::BuildxxHash32(const TArray<char>& Buffer, int Seed) {
+    
+    uint32_t Hash = 0;
+    
+    int RemainingBytes = Buffer.Lenght();
+    const char* BufferPtr = Buffer.Data();
+    
+    //Only if the buffer is longer than 16 bytes we use the accumulator
+    if (RemainingBytes >= 16) {
+        //With xxHash we move 4 bytes 4 times for speed so we will have 4 variables to accumulate and init them to the following values
+        uint32_t FirstAccumulator = Seed + PRIME_1 + PRIME_2;
+        uint32_t SecondAccumulator = Seed + PRIME_2;
+        uint32_t ThirdAccumulator = Seed;
+        uint32_t FourthAccumulator = Seed - PRIME_1;
+    
+       
+        while (RemainingBytes >= 16) {//while we have more bytes than the last 16 go in that loop
+            FirstAccumulator = Accumulate(FirstAccumulator, Compute4BytesPayload(BufferPtr));//Accumulate with the payload from the buffer
+            BufferPtr += 4;
+        
+            SecondAccumulator = Accumulate(SecondAccumulator, Compute4BytesPayload(BufferPtr));//Accumulate with the payload from the buffer
+            BufferPtr += 4;
+        
+            ThirdAccumulator = Accumulate(ThirdAccumulator, Compute4BytesPayload(BufferPtr));//Accumulate with the payload from the buffer
+            BufferPtr += 4;
+        
+            FourthAccumulator = Accumulate(FourthAccumulator, Compute4BytesPayload(BufferPtr));//Accumulate with the payload from the buffer
+            BufferPtr += 4;
+        
+            RemainingBytes -= 16;
+        }
+        
+        //Make the hash by combining all the accumulator, we apply a rotation on each to avoid similarity on them
+        Hash = RotateByNumBits(FirstAccumulator, 1) + RotateByNumBits(SecondAccumulator, 7) + RotateByNumBits(ThirdAccumulator, 12) + RotateByNumBits(FourthAccumulator, 18);//1, 7, 12 and 18 are empiric values 
+   
+    }
+   
+    Hash += Buffer.Lenght();//Add the lenght to ensure that the file has always the same lenght
+    
+    //We need to read the remaining bytes so we did it until we have only up to four left
+    while (RemainingBytes >= 4) {
+        Hash += Compute4BytesPayload(BufferPtr) * PRIME_3;
+        BufferPtr += 4;
+
+        Hash = RotateByNumBits(Hash, 17) * PRIME_4;
+        RemainingBytes -= 4;
+    }
+    
+    //Compute the last bytes
+    while (RemainingBytes >= 1) {
+        Hash += static_cast<uint8_t>(*BufferPtr) * PRIME_5;//Now we move byte per byte
+        BufferPtr += 1;
+        
+        Hash = RotateByNumBits(Hash, 11) * PRIME_1;
+        RemainingBytes -= 1;
+    }
+    
+    //Last operations to ensure good propagation and blend with not to much influence from the last bytes  
+    Hash ^= Hash >> 15;
+    Hash *= PRIME_2;
+    Hash ^= Hash >> 13;
+    Hash *= PRIME_3;
+    Hash ^= Hash >> 16;
+    
+    return Hash;
+}
+
+uint32_t SerializationUtils::Accumulate(uint32_t AccumulatorIn, uint32_t FourBytes) {
+    uint32_t AccumulatorOut = AccumulatorIn + FourBytes * PRIME_2;//Add the FourBytes to the Accumulator, we multiply to ensure to have a big number that cover a lot of bits
+    AccumulatorOut = RotateByNumBits(AccumulatorOut, 13);//Apply a rotation, 13 is an empiric data
+    AccumulatorOut = AccumulatorOut + PRIME_1;
+    return AccumulatorOut;
+}
+
+uint32_t SerializationUtils::RotateByNumBits(uint32_t Value, uint32_t NumBits) {
+    //Doing an OR on the same value but on different side of the bits, this way we rotate the bits around the value
+    return (Value << NumBits) | (Value >> (32 - NumBits));
+}
+
+uint32_t SerializationUtils::Compute4BytesPayload(const char* Buffer) {
+    //Create a 4 bytes payload to be used
+    uint32_t Payload = (static_cast<uint8_t>(Buffer[3]) << 24) | (static_cast<uint8_t>(Buffer[2]) << 16) | (static_cast<uint8_t>(Buffer[1]) << 8) | static_cast<uint8_t>(Buffer[0]);
+    return Payload;
+}
+
+
+

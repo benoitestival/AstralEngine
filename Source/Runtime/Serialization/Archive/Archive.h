@@ -24,6 +24,12 @@ public:
             Checksum.Resize(CRC32Checksum);
             std::memcpy(Checksum.Data(), reinterpret_cast<char*>(&CRC32Checksum), sizeof(CRC32Checksum));
         }
+        else if (ChecksumType == EChecksumType::ECT_XXHASH32) {
+            uint32_t xxHash32Checksum = SerializationUtils::BuildxxHash32(RawDatas);
+
+            Checksum.Resize(xxHash32Checksum);
+            std::memcpy(Checksum.Data(), reinterpret_cast<char*>(&xxHash32Checksum), sizeof(xxHash32Checksum));
+        }
         return Checksum;
     }
     
