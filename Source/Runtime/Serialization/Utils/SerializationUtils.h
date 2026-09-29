@@ -37,6 +37,10 @@ private:
     static uint32_t Accumulate(uint32_t AccumulatorIn, uint32_t FourBytes);
     static uint32_t RotateByNumBits(uint32_t Value, uint32_t NumBits);
     static uint32_t Compute4BytesPayload(const char* Buffer);
+    
+public:
+    
+    
 private:
     static TArray<uint32_t> CRC32Table;
 };

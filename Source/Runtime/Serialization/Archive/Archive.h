@@ -5,6 +5,7 @@
 #include "../Utils/SerializationUtils.h"
 #include "../../Configs/AstralEngineStatics.h"
 #include "../../Engine/CoreObjects/Utils/ObjectCoreUtility.h"
+#include "../../Utils/Path/Path.h"
 
 class FArchive {
 public:
@@ -55,17 +56,20 @@ public:
     }
     
     //Files functions
-    bool LoadFromFile(const std::string& Path) {
+    bool LoadFromFile(const FPath& Path) {
+        std::ifstream Stream = std::ifstream(Path.ToString(), std::ifstream::binary);
+        return LoadFromFile(Path, Stream);
+    };
+    bool LoadFromFile(const FPath& Path, std::ifstream& Stream) {
         bool SuccessfullySaved = false;
 
-        std::ifstream Stream = std::ifstream(Path, std::ifstream::binary);
         if (Stream.is_open()) {
             
             TArray<char> Checksum = TArray<char>();
             Checksum.Resize(GetCheckSumSize());
             Stream.read(Checksum.Data(), GetCheckSumSize());
             
-            int FileSize = std::filesystem::file_size(Path) - GetCheckSumSize();
+            int FileSize = std::filesystem::file_size(Path.ToString()) - GetCheckSumSize();
             TArray<char> RawDatas = TArray<char>();
             RawDatas.Resize(FileSize);
             Stream.read(RawDatas.Data(), FileSize);
@@ -74,13 +78,15 @@ public:
                 SetArchiveRawDatas(RawDatas); 
                 SuccessfullySaved = true;
             }
-            
         }
         return SuccessfullySaved;
 
+    }
+    void SaveToFile(const FPath& Path) {
+        std::ofstream Stream = std::ofstream(Path.ToString(), std::ofstream::binary);
+        SaveToFile(Path, Stream);
     };
-    void SaveToFile(const std::string& Path) {
-        std::ofstream Stream = std::ofstream(Path, std::ofstream::binary);
+    void SaveToFile(const FPath& Path, std::ofstream& Stream) {
         if (Stream.is_open()) {
             TArray<char> RawDatas = GetArchiveRawDatas();
             TArray<char> Checksum = ComputeChecksum(RawDatas);
@@ -88,7 +94,7 @@ public:
             Stream.write(Checksum.Data(), GetCheckSumSize());
             Stream.write(RawDatas.Data(), RawDatas.Lenght());
         }
-    };
+    }
     
     virtual TArray<char> GetArchiveRawDatas() = 0;
     virtual void SetArchiveRawDatas(TArray<char>& RawDatas) = 0;
