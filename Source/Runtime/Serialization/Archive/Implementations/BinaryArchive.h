@@ -9,6 +9,9 @@ public:
 
     BinaryArchive(bool IsLoadingArchive, EChecksumType ArChecksumType);
 
+    virtual void SerializeChecksum(TArray<char>& Checksum) override;
+    virtual TArray<char> DeserializeChecksum() override;
+    
     virtual TArray<char> GetArchiveRawDatas() override;
     virtual void SetArchiveRawDatas(TArray<char>& RawDatas) override;
     

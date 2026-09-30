@@ -3,6 +3,23 @@
 BinaryArchive::BinaryArchive(bool IsLoadingArchive, EChecksumType ArChecksumType) : FArchive(ArChecksumType), IsReadingArchive(IsLoadingArchive), ReadOffset(0){
 }
 
+void BinaryArchive::SerializeChecksum(TArray<char>& Checksum) {
+    Buffer.Append(Checksum);
+}
+
+TArray<char> BinaryArchive::DeserializeChecksum() {
+    TArray<char> Checksum= TArray<char>();
+
+    for (int INDEX = Buffer.Lenght() - GetCheckSumSize(); INDEX < Buffer.Lenght(); INDEX++) {
+        Checksum.Add(Buffer[INDEX]);
+    }
+    
+    for (int INDEX = Buffer.Lenght() - 1; INDEX >= Buffer.Lenght() - GetCheckSumSize(); INDEX--) {
+        Buffer.RemoveAt(INDEX);
+    }
+    return Checksum;
+}
+
 TArray<char> BinaryArchive::GetArchiveRawDatas() {
     return Buffer;
 }

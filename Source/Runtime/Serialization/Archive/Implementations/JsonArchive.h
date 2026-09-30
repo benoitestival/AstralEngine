@@ -13,6 +13,12 @@ public:
     
     JsonArchive(bool IsLoadingArchive, EChecksumType ArChecksumType);
     
+    virtual void SerializeChecksum(TArray<char>& Checksum) override;
+    virtual TArray<char> DeserializeChecksum() override;
+private:
+    char ConvertDecimalToHex(char Num);
+    char ConvertHexToDecimal(char Num);
+public:
     virtual TArray<char> GetArchiveRawDatas() override;
     virtual void SetArchiveRawDatas(TArray<char>& RawDatas) override;
     

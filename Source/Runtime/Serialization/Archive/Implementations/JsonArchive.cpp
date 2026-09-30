@@ -4,6 +4,49 @@ JsonArchive::JsonArchive(bool IsLoadingArchive, EChecksumType ArChecksumType) : 
     ArchiveNodes.Add(&RootNode);
 }
 
+void JsonArchive::SerializeChecksum(TArray<char>& Checksum) {
+    
+    std::string CheckSumString = std::string();
+    CheckSumString.resize(Checksum.Lenght() * 2);
+
+    for (int INDEX = 0; INDEX < CheckSumString.length(); INDEX+=2) {
+        uint8_t Byte = static_cast<uint8_t>(Checksum[INDEX]);
+        CheckSumString[INDEX] = ConvertDecimalToHex(Byte >> 4);
+        CheckSumString[INDEX + 1] = ConvertDecimalToHex(Byte & 0xF);
+    }
+    
+    Serialize("Checksum", CheckSumString);
+}
+
+TArray<char> JsonArchive::DeserializeChecksum() {
+    std::string CheckSumString = std::string();
+    DeSerialize("Checksum", CheckSumString);
+    RootNode.erase("Checksum");
+
+    TArray<char> Checksum = TArray<char>();
+    for (int INDEX = 0; INDEX < CheckSumString.length(); INDEX+=2) {
+        char FirstHalf = ConvertHexToDecimal(CheckSumString[INDEX]);
+        char SecondHalf = ConvertHexToDecimal(CheckSumString[INDEX + 1]);
+        
+        char CompleteChar = 0;
+        CompleteChar += FirstHalf << 4;
+        CompleteChar |= SecondHalf;
+        
+        Checksum.Add(CompleteChar);
+    }
+    
+    return Checksum;
+}
+
+char JsonArchive::ConvertDecimalToHex(char Num) {
+    static char HexDigits[17] = "0123456789ABCDEF";
+    return HexDigits[Num];
+}
+
+char JsonArchive::ConvertHexToDecimal(char Num) {
+    return Num <= '9' ? Num - '0' : Num - 'A' + 10;
+}
+
 TArray<char> JsonArchive::GetArchiveRawDatas() {
     std::string ArchiveString = RootNode.dump();
     return {std::vector<char>(ArchiveString.begin(), ArchiveString.end())};

@@ -49,11 +49,14 @@ public:
     };
     int GetCheckSumSize() {
         int Size = 0;
-        if (ChecksumType == EChecksumType::ECT_CRC32) {
+        if (ChecksumType == EChecksumType::ECT_CRC32 || ChecksumType == EChecksumType::ECT_XXHASH32) {
             Size = 4;
         }
         return Size;
     }
+    
+    virtual void SerializeChecksum(TArray<char>& Checksum) = 0;
+    virtual TArray<char> DeserializeChecksum() = 0;
     
     //Files functions
     bool LoadFromFile(const FPath& Path) {
@@ -65,17 +68,15 @@ public:
 
         if (Stream.is_open()) {
             
-            TArray<char> Checksum = TArray<char>();
-            Checksum.Resize(GetCheckSumSize());
-            Stream.read(Checksum.Data(), GetCheckSumSize());
-            
-            int FileSize = std::filesystem::file_size(Path.ToString()) - GetCheckSumSize();
+            int FileSize = std::filesystem::file_size(Path.ToString());
             TArray<char> RawDatas = TArray<char>();
             RawDatas.Resize(FileSize);
             Stream.read(RawDatas.Data(), FileSize);
-
-            if (AreChecksumEqual(Checksum, ComputeChecksum(RawDatas))) {
-                SetArchiveRawDatas(RawDatas); 
+            SetArchiveRawDatas(RawDatas); 
+            
+            TArray<char> Checksum = DeserializeChecksum();
+            
+            if (AreChecksumEqual(Checksum, ComputeChecksum(GetArchiveRawDatas()))) {
                 SuccessfullySaved = true;
             }
         }
@@ -88,10 +89,11 @@ public:
     };
     void SaveToFile(const FPath& Path, std::ofstream& Stream) {
         if (Stream.is_open()) {
-            TArray<char> RawDatas = GetArchiveRawDatas();
-            TArray<char> Checksum = ComputeChecksum(RawDatas);
+            TArray<char> Checksum = ComputeChecksum(GetArchiveRawDatas());
+            SerializeChecksum(Checksum);
             
-            Stream.write(Checksum.Data(), GetCheckSumSize());
+            TArray<char> RawDatas = GetArchiveRawDatas();
+            
             Stream.write(RawDatas.Data(), RawDatas.Lenght());
         }
     }
