@@ -8,6 +8,8 @@ struct FClass;
 struct FAsset {
     
     FAsset() = default;
+    
+    ABaseObject* GetOrLoad();
 public:
     FGuid AssetID;
     FPath AssetPath;

@@ -14,12 +14,20 @@ void AAssetManager::DeInit() {
     Super::DeInit();
 }
 
+FAsset AAssetManager::GetAssetFromID(const FGuid& AssetID) {
+    return Assets.Find(AssetID);
+}
+
+ABaseObject* AAssetManager::LoadObjectFromID(const FGuid& AssetID) {
+    return Assets.Find(AssetID).GetOrLoad();
+}
+
 void AAssetManager::LoadAllAssetsFromDisk() {
     FPath ContentPath = FPathUtils::GetEngineContentPath();
     for (const FPath& Path : FPathIterator(ContentPath)) {
         if (Path.HasExtension(FPathExtension("meta"))) {
             FAsset Asset = LoadAssetFromDisk(Path.RemoveExtension());
-            Assets.Add(Asset);
+            Assets.Insert(Asset.AssetID, Asset);
         }
     }
 }
@@ -59,7 +67,7 @@ FAsset AAssetManager::LoadAssetFromDisk(const FPath& Path, bool LoadObject) {
 
 void AAssetManager::SaveAllAssetsToDisk() {
     for (auto& Asset : Assets) {
-        SaveAssetToDisk(Asset);
+        SaveAssetToDisk(Asset.second);
     }
 }
 
